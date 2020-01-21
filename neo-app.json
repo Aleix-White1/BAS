@@ -1,0 +1,70 @@
+{
+	"welcomeFile": "/webapp/index.html",
+	"routes": [
+		{
+			"path": "/resources/zui5controlstmb",
+			"target": {
+				"type": "application",
+				"name": "zui5controlstmb"
+			},
+			"description": ""
+		},
+		{
+			"path": "/sap/bc/ui5_ui5/sap/zui5controlstmb",
+			"target": {
+				"type": "application",
+				"name": "zui5controlstmb"
+			},
+			"description": ""
+		},
+		{
+			"path": "/resources",
+			"target": {
+				"type": "service",
+				"name": "sapui5",
+				"entryPath": "/resources",
+				"version": "1.52.28"
+			},
+			"description": "SAPUI5 Resources"
+		},
+		{
+			"path": "/sap/bc/lrep",
+			"target": {
+				"type": "destination",
+				"name": "GTD",
+				"entryPath": "/sap/bc/lrep"
+			},
+			"description": "Sistema GTD"
+		},
+		{
+			"path": "/test-resources",
+			"target": {
+				"type": "service",
+				"name": "sapui5",
+				"entryPath": "/test-resources",
+				"version": "1.52.28"
+			},
+			"description": "SAPUI5 Test Resources"
+		},
+		{
+			"path": "/sap/opu/odata",
+			"target": {
+				"type": "destination",
+				"name": "GTD",
+				"entryPath": "/sap/opu/odata"
+			},
+			"description": "Gateway Central DES"
+		},
+		{
+			"path": "/sap/bc/zrs_analytics",
+			"target": {
+				"type": "destination",
+				"name": "GTD",
+				"entryPath": "/sap/bc/zrs_analytics",
+				"version": "1.52.28"
+			},
+			"description": "Gateway Central DES"
+		}
+	],
+	"sendWelcomeFileRedirect": true
+}

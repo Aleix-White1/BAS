@@ -1,0 +1,11 @@
+<mvc:View
+	controllerName="zdigitalticket.controller.ObjectNotFound"
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc">
+	<MessagePage
+		title="{i18n>title.error.page.not.found}"
+		text="{i18n>error.page.not.found}"
+		icon="sap-icon://product"
+		id="page"
+	/>
+</mvc:View>

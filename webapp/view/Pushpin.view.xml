@@ -1,0 +1,85 @@
+<mvc:View
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:f="sap.ui.layout.form"
+	displayBlock="true"
+	controllerName="zdigitalticket.controller.Pushpin">
+	<Page showHeader="false" class="colorBackground">
+		<content>
+			<ScrollContainer vertical="true" class="sapUiSmallMargin">
+				<HBox>
+					<VBox>
+						<VBox class="formFilters">
+							<Text
+								text="Gerencia 5 - A - {
+									parts: [
+										'i18n>shift',
+										'localBinding>/Shift'
+									],
+									formatter: 'jQuery.sap.formatMessage'
+								}"
+							/> <!-- TODO: Binda "Gerencia 5" i "A" -->
+							<Text text="{localBinding>/Date}"/>
+							<Text text="{i18n>zone.activities.for.today}"/>
+						</VBox>
+						<Text text=" "/>  <!-- Spacer -->
+						<Table class="tableWithNoData">
+							<columns>
+								<Column hAlign="Center">
+									<Text text="{localBinding>/ServiceId}"/>
+								</Column>
+								<Column hAlign="Center">
+									<Text text="{localBinding>/EmployeeId}"/>
+								</Column>
+								<Column hAlign="Center">
+									<Text text="{localBinding>/EmployeeName}"/>
+								</Column>
+							</columns>
+						</Table>
+						<Text text=" "/>  <!-- Spacer -->
+						<Table items="{localBinding>/PieceList}">
+							<columns>
+								<Column width="15%" hAlign="Center">
+									<Text text="{i18n>table.header.HI}"/>
+								</Column>
+								<Column width="14%" hAlign="Center">
+									<Text text="{i18n>table.header.EI}"/>
+								</Column>
+								<Column width="14%" hAlign="Center">
+									<Text text="{i18n>table.header.VI}"/>
+								</Column>
+								<Column width="14%" hAlign="Center">
+									<Text text="{i18n>table.header.TE}"/>
+								</Column>
+								<Column width="15%" hAlign="Center">
+									<Text text="{i18n>table.header.HF}"/>
+								</Column>
+								<Column width="14%" hAlign="Center">
+									<Text text="{i18n>table.header.EF}"/>
+								</Column>
+								<Column width="14%" hAlign="Center">
+									<Text text="{i18n>table.header.VF}"/>
+								</Column>
+							</columns>
+							<items>
+								<ColumnListItem>
+									<cells>
+										<Text text="{localBinding>hi}"/>
+										<Text text="{localBinding>ei}"/>
+										<Text text="{localBinding>vi}"/>
+										<Text text="{localBinding>te}"/>
+										<Text text="{localBinding>hf}"/>
+										<Text text="{localBinding>ef}"/>
+										<Text text="{localBinding>vf}"/>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+						<Text text=" "/>  <!-- Spacer -->
+						<Text text=" "/>  <!-- Spacer -->
+				    </VBox>
+			    </HBox>
+			</ScrollContainer>
+		</content>
+	</Page>
+</mvc:View>

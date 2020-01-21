@@ -1,0 +1,6 @@
+<mvc:View
+	controllerName="zdigitalticket.controller.Clock"
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc">
+	<Text text="La pestaña del reloj"/>
+</mvc:View>
