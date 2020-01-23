@@ -21,6 +21,11 @@
 .digitalticket .colorBackground {
 	background-color: white;
 }
+.digitalticket .colorBackground[data-italic],
+.digitalticket .colorBackground[data-italic] *:not(a) {
+	font-style: italic;
+	color: #aaa;
+}
 .digitalticket .bigFont input {
 	font-size: 25px;
 }
@@ -51,4 +56,29 @@
     padding: 10px;
     width: 100%;
     border: 0;
+}
+.digitalticket a {
+ 	outline: none;
+}
+.digitalticket .lineLogo {
+	font-weight: bold;
+	margin-right: 5px;
+}
+.digitalticket .lineLogo .sapMText {
+	color: white;
+}
+.digitalticket .lineLogo[data-line="1"] {
+	background-color: #cb2508;
+}
+.digitalticket .lineLogo[data-line="2"] {
+	background-color: #90278e;
+}
+.digitalticket .lineLogo[data-line="3"] {
+	background-color: #067634;
+}
+.digitalticket .lineLogo[data-line="4"] {
+	background-color: #ffc10e;
+}
+.digitalticket .lineLogo[data-line="5"] {
+	background-color: #006b9d;
 }

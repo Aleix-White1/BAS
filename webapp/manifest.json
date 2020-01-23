@@ -74,7 +74,7 @@
 				"type": "sap.ui.model.json.JSONModel"
 			},
 			"": {
-				"uri": "/sap/opu/odata/ASO/SERVICE_ASSIGNED_SRV/",
+				"uri": "/sap/opu/odata/sap/ZPPS_DIGITAL_TICKET_SRV/",
 				"type": "sap.ui.model.odata.v2.ODataModel",
 				"settings": {
 					"useBatch": false,

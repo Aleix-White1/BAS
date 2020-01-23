@@ -11,10 +11,9 @@ sap.ui.define(
 			/* =========================================================== */
 			/* lifecycle methods                                           */
 			/* =========================================================== */
-
 			onInit: function() {
 				var sFunctionName = "onInit";
-	
+
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
 					this.getRouter().getRoute("RoutePushpin").attachPatternMatched(this.onPushpinMatched, this);
@@ -27,99 +26,66 @@ sap.ui.define(
 			/* =========================================================== */
 			/* event handlers                       					   */
 			/* =========================================================== */
-			onPushpinMatched: function (oEvent) {
-				var oView = this.getView(); 
-
-				oView.setModel(new JSONModel({
+			onPushpinMatched: function(oEvent) {
+				this.getView().setModel(new JSONModel({
+					today: true,
 					ServiceId: "AAM15232",
 					EmployeeId: "07196",
 					EmployeeName: "RIVERA RIOS",
-					Line: "Línea 5-C",
+					Line: "5",
 					Shift: "1",
-					Date: "Dimarts 21 de maig de 2019",
-					PieceList: [{
-						hi: "05:00",
-						ei: "509",
-						vi: "",
-						te: "",
-						hf: "05:11",
-						ef: "509",
-						vf: ""
-					}, {
-						hi: "05:11",
-						ei: "509",
-						vi: "SAL",
-						te: "7",
-						hf: "06:35",
-						ef: "515",
-						vf: "2"
-					}, {
-						hi: "06:35",
-						ei: "515",
-						vi: "",
-						te: "TRA",
-						hf: "06:49",
-						ef: "517",
-						vf: ""
-					}, {
-						hi: "06:49",
-						ei: "517",
-						vi: "",
-						te: "",
-						hf: "07:10",
-						ef: "517",
-						vf: ""
-					}, {
-						hi: "07:10",
-						ei: "517",
-						vi: "2",
-						te: "20",
-						hf: "08:40",
-						ef: "517",
-						vf: "2"
-					}, {
-						hi: "08:40",
-						ei: "517",
-						vi: "",
-						te: "TRA",
-						hf: "08:53",
-						ef: "509",
-						vf: ""
-					}, {
-						hi: "08:53",
-						ei: "509",
-						vi: "",
-						te: "",
-						hf: "09:30",
-						ef: "509",
-						vf: ""
-					}, {
-						hi: "09:30",
-						ei: "509",
-						vi: "",
-						te: "C2",
-						hf: "10:30",
-						ef: "509",
-						vf: ""
-					}, {
-						hi: "10:30",
-						ei: "509",
-						vi: "",
-						te: "TRA",
-						hf: "10:34",
-						ef: "509",
-						vf: ""
-					}, {
-						hi: "10:34",
-						ei: "509",
-						vi: "",
-						te: "",
-						hf: "12:10",
-						ef: "509",
-						vf: ""
-					}]
+					Date: this._formatDate(new Date())
 				}), "localBinding");
+				this._updateTableData();
 				//TODO: Si l'usuari no és admin, s'hauria de començar a descarregar el famós pdf
+			},
+
+			onChangeDay: function(oEvent) {
+				var oModel = this.getView().getModel("localBinding");
+				var bToday = !this.getView().getModel("localBinding").getProperty("/today");
+				var oDate = new Date();
+
+				oModel.setProperty("/today", bToday);
+				if (!bToday) {
+					oDate.setDate(oDate.getDate() - 1);
+				}
+				oModel.setProperty("/Date", this._formatDate(oDate));
+				this._updateTableData();
+			},
+
+			/* =========================================================== */
+			/* formatters and other public methods                          */
+			/* =========================================================== */
+
+			/* =========================================================== */
+			/* private methods                                             */
+			/* =========================================================== */
+			_updateTableData: function() {
+				var aFilters = [];
+
+				if (this.getView().getModel("localBinding").getProperty("/today")) {
+					//Today
+debugger;
+				}
+				else {
+					//Yesterday
+debugger;
+				}
+				//Afegir filtre par data (ahir, avuir)
+				/* aFilters.push(
+					new Filter(
+						"ServiceGuid",
+						FilterOperator.EQ,
+						this.getView().byId("piece").getBindingContext().getProperty("ServiceGuid")
+					)
+				);*/
+				this.getView().byId("dataTable").getBinding("items").filter(aFilters);
+			},
+			_formatDate: function(date) {
+				var oTranslator = this.getView().getModel("i18n").getResourceBundle();
+
+				return oTranslator.getText("week.day." + date.getDay()) + " " + date.getDate() + " " + oTranslator.getText("month." + date.getMonth()) + " " + oTranslator.getText("year.prefix") + " " + date.getFullYear();
+				//return "Dimarts 21 de maig de 2019";
 			}
 		});
 	}

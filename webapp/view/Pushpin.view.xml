@@ -1,84 +1,108 @@
 <mvc:View
 	xmlns="sap.m"
 	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
 	xmlns:f="sap.ui.layout.form"
 	displayBlock="true"
 	controllerName="zdigitalticket.controller.Pushpin">
 	<Page showHeader="false" class="colorBackground">
+		<customData>
+			<core:CustomData
+				key="italic"
+				value="true"
+				writeToDom="{= !${localBinding>/today} }"
+			/>
+		</customData>
 		<content>
 			<ScrollContainer vertical="true" class="sapUiSmallMargin">
-				<HBox>
-					<VBox>
-						<VBox class="formFilters">
-							<Text
-								text="Gerencia 5 - A - {
-									parts: [
-										'i18n>shift',
-										'localBinding>/Shift'
-									],
-									formatter: 'jQuery.sap.formatMessage'
-								}"
-							/> <!-- TODO: Binda "Gerencia 5" i "A" -->
-							<Text text="{localBinding>/Date}"/>
-							<Text text="{i18n>zone.activities.for.today}"/>
+				<HBox justifyContent="SpaceBetween">
+					<Text text="{localBinding>/Date}"/>
+					<Link text="&lt; {i18n>yesterday}" press="onChangeDay" textAlign="End" visible="{localBinding>/today}"/>
+					<Link text="{i18n>today} >" press="onChangeDay" textAlign="End" visible="{= !${localBinding>/today} }"/>
+				</HBox>
+				<VBox class="formFilters">
+					<HBox>
+						<VBox>
+							<VBox width="40px" height="40px" class="lineLogo" justifyContent="Center" alignItems="Center">
+								<customData>
+									<core:CustomData
+										key="line"
+										value="{localBinding>/Line}"
+										writeToDom="true"
+									/>
+								</customData>
+								<Text text="L{localBinding>/Line}"/>
+							</VBox>
 						</VBox>
-						<Text text=" "/>  <!-- Spacer -->
-						<Table class="tableWithNoData">
-							<columns>
-								<Column hAlign="Center">
-									<Text text="{localBinding>/ServiceId}"/>
-								</Column>
-								<Column hAlign="Center">
-									<Text text="{localBinding>/EmployeeId}"/>
-								</Column>
-								<Column hAlign="Center">
-									<Text text="{localBinding>/EmployeeName}"/>
-								</Column>
-							</columns>
-						</Table>
-						<Text text=" "/>  <!-- Spacer -->
-						<Table items="{localBinding>/PieceList}">
-							<columns>
-								<Column width="15%" hAlign="Center">
-									<Text text="{i18n>table.header.HI}"/>
-								</Column>
-								<Column width="14%" hAlign="Center">
-									<Text text="{i18n>table.header.EI}"/>
-								</Column>
-								<Column width="14%" hAlign="Center">
-									<Text text="{i18n>table.header.VI}"/>
-								</Column>
-								<Column width="14%" hAlign="Center">
-									<Text text="{i18n>table.header.TE}"/>
-								</Column>
-								<Column width="15%" hAlign="Center">
-									<Text text="{i18n>table.header.HF}"/>
-								</Column>
-								<Column width="14%" hAlign="Center">
-									<Text text="{i18n>table.header.EF}"/>
-								</Column>
-								<Column width="14%" hAlign="Center">
-									<Text text="{i18n>table.header.VF}"/>
-								</Column>
-							</columns>
-							<items>
-								<ColumnListItem>
-									<cells>
-										<Text text="{localBinding>hi}"/>
-										<Text text="{localBinding>ei}"/>
-										<Text text="{localBinding>vi}"/>
-										<Text text="{localBinding>te}"/>
-										<Text text="{localBinding>hf}"/>
-										<Text text="{localBinding>ef}"/>
-										<Text text="{localBinding>vf}"/>
-									</cells>
-								</ColumnListItem>
-							</items>
-						</Table>
-						<Text text=" "/>  <!-- Spacer -->
-						<Text text=" "/>  <!-- Spacer -->
-				    </VBox>
-			    </HBox>
+						<VBox>
+							<Text text="A"/> <!-- TODO: Binda "A" -->
+							<Text text="{
+								parts: [
+									'i18n>shift',
+									'localBinding>/Shift'
+								],
+								formatter: 'jQuery.sap.formatMessage'
+							}"/>
+						</VBox>
+					</HBox>
+					<Text text="{i18n>zone.activities.for.today}"/>
+				</VBox>
+				<Text text=" "/>  <!-- Spacer -->
+				<Table class="tableWithNoData">
+					<columns>
+						<Column hAlign="Center">
+							<Text text="{localBinding>/ServiceId}"/>
+						</Column>
+						<Column hAlign="Center">
+							<Text text="{localBinding>/EmployeeId}"/>
+						</Column>
+						<Column hAlign="Center">
+							<Text text="{localBinding>/EmployeeName}"/>
+						</Column>
+					</columns>
+				</Table>
+				<Table id="dataTable" items="{/PieceSet}">
+					<columns>
+						<Column width="15%" hAlign="Center">
+							<Text text="{i18n>table.header.HI}"/>
+						</Column>
+						<Column width="14%" hAlign="Center">
+							<Text text="{i18n>table.header.EI}"/>
+						</Column>
+						<Column width="14%" hAlign="Center">
+							<Text text="{i18n>table.header.VI}"/>
+						</Column>
+						<Column width="14%" hAlign="Center">
+							<Text text="{i18n>table.header.TE}"/>
+						</Column>
+						<Column width="15%" hAlign="Center">
+							<Text text="{i18n>table.header.HF}"/>
+						</Column>
+						<Column width="14%" hAlign="Center">
+							<Text text="{i18n>table.header.EF}"/>
+						</Column>
+						<Column width="14%" hAlign="Center">
+							<Text text="{i18n>table.header.VF}"/>
+						</Column>
+					</columns>
+					<items>
+						<ColumnListItem>
+							<cells>
+								<Text text="{StartTime}"/>
+								<Text text="{StartStation}"/>
+								<Text text="{StartTrack}"/>
+								<Text text="{TrainStation}"/>
+								<Text text="{EndTime}"/>
+								<Text text="{EndStation}"/>
+								<Text text="{EndTrack}"/>
+							</cells>
+						</ColumnListItem>
+					</items>
+				</Table>
+				<VBox>
+					<Text text=" "/>  <!-- Spacer -->
+					<Text text=" "/>  <!-- Spacer -->
+				</VBox>
 			</ScrollContainer>
 		</content>
 	</Page>
