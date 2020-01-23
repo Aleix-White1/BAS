@@ -26,8 +26,8 @@
 					<Link text="{i18n>today} >" press="onChangeDay" textAlign="End" visible="{= !${localBinding>/today} }"/>
 				</HBox>
 				<VBox class="formFilters">
-					<HBox>
-						<VBox>
+					<HBox justifyContent="SpaceBetween" alignItems="Center">
+						<HBox>
 							<VBox width="40px" height="40px" class="lineLogo" justifyContent="Center" alignItems="Center">
 								<customData>
 									<core:CustomData
@@ -38,17 +38,24 @@
 								</customData>
 								<Text text="L{localBinding>/Line}"/>
 							</VBox>
-						</VBox>
-						<VBox>
-							<Text text="A"/> <!-- TODO: Binda "A" -->
-							<Text text="{
-								parts: [
-									'i18n>shift',
-									'localBinding>/Shift'
-								],
-								formatter: 'jQuery.sap.formatMessage'
-							}"/>
-						</VBox>
+							<VBox>
+								<Text text="{
+									parts: [
+										'i18n>zone',
+										'localBinding>/Zone'
+									],
+									formatter: 'jQuery.sap.formatMessage'
+								}"/>
+								<Text text="{
+									parts: [
+										'i18n>shift',
+										'localBinding>/Shift'
+									],
+									formatter: 'jQuery.sap.formatMessage'
+								}"/>
+							</VBox>
+						</HBox>
+							<core:Icon src="sap-icon://download" size="20px" press="onDownloadTicket" visible="{= ${localBinding>/today} }"/> <!-- TODO: L'admin no hauria de poder veure aquest botó -->
 					</HBox>
 					<Text text="{i18n>zone.activities.for.today}"/>
 				</VBox>

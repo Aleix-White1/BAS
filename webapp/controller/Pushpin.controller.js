@@ -37,10 +37,10 @@ sap.ui.define(
 					EmployeeName: "RIVERA RIOS",
 					Line: "5",
 					Shift: "1",
+					Zone: "A",
 					Date: new Date()
 				}), "localBinding");
 				this._updateData();
-				//TODO: Si l'usuari no és admin, s'hauria de començar a descarregar el famós pdf
 			},
 
 			onChangeDay: function(oEvent) {
@@ -54,6 +54,10 @@ sap.ui.define(
 				}
 				oModel.setProperty("/Date", oDate);
 				this._updateData();
+			},
+			
+			onDownloadTicket: function(oEvent) {
+				//TODO: Descarregar el famós pdf
 			},
 
 			/* =========================================================== */
