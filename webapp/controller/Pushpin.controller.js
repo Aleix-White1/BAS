@@ -2,9 +2,12 @@ sap.ui.define(
 	[
 		"zdigitalticket/controller/BaseController",
 		"zui5controlstmb/utils/Analytics",
-		"sap/ui/model/json/JSONModel"
+		"sap/ui/model/json/JSONModel",
+		"sap/ui/model/Filter",
+		"sap/ui/model/FilterOperator",
+		"zui5controlstmb/utils/CommonUtils"
 	],
-	function (BaseController, Analytics, JSONModel) {
+	function (BaseController, Analytics, JSONModel, Filter, FilterOperator, CommonUtils) {
 		"use strict";
 
 		return BaseController.extend("zdigitalticket.controller.Pushpin", {
@@ -34,9 +37,9 @@ sap.ui.define(
 					EmployeeName: "RIVERA RIOS",
 					Line: "5",
 					Shift: "1",
-					Date: this._formatDate(new Date())
+					Date: new Date()
 				}), "localBinding");
-				this._updateTableData();
+				this._updateData();
 				//TODO: Si l'usuari no és admin, s'hauria de començar a descarregar el famós pdf
 			},
 
@@ -49,43 +52,66 @@ sap.ui.define(
 				if (!bToday) {
 					oDate.setDate(oDate.getDate() - 1);
 				}
-				oModel.setProperty("/Date", this._formatDate(oDate));
-				this._updateTableData();
+				oModel.setProperty("/Date", oDate);
+				this._updateData();
 			},
 
 			/* =========================================================== */
 			/* formatters and other public methods                          */
 			/* =========================================================== */
+			formatDate: function(date) {
+				var oTranslator;
+
+				if (date) {
+					oTranslator = this.getView().getModel("i18n").getResourceBundle();
+					return oTranslator.getText("week.day." + date.getDay()) + " " + date.getDate() + " " + oTranslator.getText("month." + date.getMonth()) + " " + oTranslator.getText("year.prefix") + " " + date.getFullYear();
+				}
+				else {
+					return "";
+				}
+			},
 
 			/* =========================================================== */
 			/* private methods                                             */
 			/* =========================================================== */
-			_updateTableData: function() {
+			_updateData: function() {
+				var oModel = this.getOwnerComponent().getModel();
 				var aFilters = [];
 
-				if (this.getView().getModel("localBinding").getProperty("/today")) {
-					//Today
-debugger;
-				}
-				else {
-					//Yesterday
-debugger;
-				}
-				//Afegir filtre par data (ahir, avuir)
-				/* aFilters.push(
+				//Add filter by date (yesterday or today)
+				aFilters.push(
 					new Filter(
-						"ServiceGuid",
+						"Date",
 						FilterOperator.EQ,
-						this.getView().byId("piece").getBindingContext().getProperty("ServiceGuid")
+						CommonUtils.convertDateToUTC(this.getView().getModel("localBinding").getProperty("/Date"))
 					)
-				);*/
-				this.getView().byId("dataTable").getBinding("items").filter(aFilters);
-			},
-			_formatDate: function(date) {
-				var oTranslator = this.getView().getModel("i18n").getResourceBundle();
-
-				return oTranslator.getText("week.day." + date.getDay()) + " " + date.getDate() + " " + oTranslator.getText("month." + date.getMonth()) + " " + oTranslator.getText("year.prefix") + " " + date.getFullYear();
-				//return "Dimarts 21 de maig de 2019";
+				);
+				oModel.read("/PieceSet", {
+					filters: aFilters,
+	                success: (function(that) {
+	                	return function(oData, response) {
+	                		that.getView().getModel("localBinding").setProperty("/PieceSet", oData.results);
+/*		                	try {
+	                			that.getView().getModel("localBinding").setProperty("/PieceSet", oData.results);
+		                	}
+		                	catch (oError) {
+		                		that.getView().getModel("localBinding").setProperty("/PieceSet", {});
+		                	}*/
+		                };
+	                })(this),
+	                error: (function(that) {
+	                	return function(oError) {
+	                		that.getView().getModel("localBinding").setProperty("/PieceSet", {});
+/*							var sText = "";
+							try{
+								sText = JSON.parse(oData.responseText).error.message.value;
+							} catch(oError){
+								sText = oResourceBundle.getText("Calendar.message.calendarRequest.error");
+							}
+							that.showErrorMessageBox(sText);*/
+		                };
+	                })(this)
+				});
 			}
 		});
 	}

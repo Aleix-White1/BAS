@@ -77,7 +77,6 @@
 				"uri": "/sap/opu/odata/sap/ZPPS_DIGITAL_TICKET_SRV/",
 				"type": "sap.ui.model.odata.v2.ODataModel",
 				"settings": {
-					"useBatch": false,
 					"defaultCountMode": "Inline",
 					"defaultOperationMode": "Server"
 				}

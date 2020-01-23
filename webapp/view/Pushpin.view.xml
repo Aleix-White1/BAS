@@ -16,7 +16,12 @@
 		<content>
 			<ScrollContainer vertical="true" class="sapUiSmallMargin">
 				<HBox justifyContent="SpaceBetween">
-					<Text text="{localBinding>/Date}"/>
+					<Text text="{
+						parts: [
+							'localBinding>/Date'
+						],
+						formatter: '.formatDate'
+					}"/>
 					<Link text="&lt; {i18n>yesterday}" press="onChangeDay" textAlign="End" visible="{localBinding>/today}"/>
 					<Link text="{i18n>today} >" press="onChangeDay" textAlign="End" visible="{= !${localBinding>/today} }"/>
 				</HBox>
@@ -61,7 +66,7 @@
 						</Column>
 					</columns>
 				</Table>
-				<Table id="dataTable" items="{/PieceSet}">
+				<Table id="dataTable" items="{localBinding>/PieceSet}">
 					<columns>
 						<Column width="15%" hAlign="Center">
 							<Text text="{i18n>table.header.HI}"/>
@@ -88,13 +93,13 @@
 					<items>
 						<ColumnListItem>
 							<cells>
-								<Text text="{StartTime}"/>
-								<Text text="{StartStation}"/>
-								<Text text="{StartTrack}"/>
-								<Text text="{TrainStation}"/>
-								<Text text="{EndTime}"/>
-								<Text text="{EndStation}"/>
-								<Text text="{EndTrack}"/>
+								<Text text="{localBinding>StartTime}"/>
+								<Text text="{localBinding>StartStation}"/>
+								<Text text="{localBinding>StartTrack}"/>
+								<Text text="{localBinding>TrainStation}"/>
+								<Text text="{localBinding>EndTime}"/>
+								<Text text="{localBinding>EndStation}"/>
+								<Text text="{localBinding>EndTrack}"/>
 							</cells>
 						</ColumnListItem>
 					</items>
