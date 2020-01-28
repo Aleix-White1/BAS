@@ -60,7 +60,7 @@ sap.ui.define(
 
 			onDownloadTicket: function(oEvent) {
 debugger;
-				//TODO: Descarregar el famós pdf
+				//TODO: Descarregar el pdf
 			},
 
 			onStartStationClicked: function(oEvent) {
