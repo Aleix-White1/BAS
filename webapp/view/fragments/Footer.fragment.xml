@@ -2,20 +2,21 @@
 	xmlns:core="sap.ui.core"
 	xmlns="sap.m">
 	<Toolbar id="footerButtons" class="customFooter">
-		<Button icon="sap-icon://pushpin-off" press="onPressToolbarButton" class="tmbButton">
+		<Button icon="sap-icon://pushpin-off" press="onPressToolbarButton" class="tmbButton" visible="{= !${appView>/backButtonVisible} }">
 			<customData>
 				<core:CustomData key="buttonTarget" value="RoutePushpin1"/>
 			</customData>
 		</Button>
-		<Button icon="sap-icon://time-account" press="onPressToolbarButton" class="tmbButton">
+		<Button icon="sap-icon://time-account" press="onPressToolbarButton" class="tmbButton" visible="{= !${appView>/backButtonVisible} }">
 			<customData>
 				<core:CustomData key="buttonTarget" value="RouteClock"/>
 			</customData>
 		</Button>
-		<Button icon="sap-icon://unfavorite" press="onPressToolbarButton" class="tmbButton">
+		<Button icon="sap-icon://unfavorite" press="onPressToolbarButton" class="tmbButton" visible="{= !${appView>/backButtonVisible} }">
 			<customData>
 				<core:CustomData key="buttonTarget" value="RouteStar"/>
 			</customData>
 		</Button>
+		<Button icon="sap-icon://nav-back" press="onPressBackButton" class="tmbButton" visible="{appView>/backButtonVisible}"/>
 	</Toolbar>
 </core:FragmentDefinition>

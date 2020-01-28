@@ -19,6 +19,7 @@ sap.ui.define(
 
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
+					//TODO: Reconsidera l'ús d'una altra estructura per a l'id d'usuari
 					this.getRouter().getRoute("RoutePushpin1").attachPatternMatched(this.onPushpinMatched, this);
 					this.getRouter().getRoute("RoutePushpin2").attachPatternMatched(this.onPushpinMatched, this);
 				}
@@ -35,7 +36,7 @@ sap.ui.define(
 					today: true,
 					ServiceId: "AAM99999",
 					EmployeeId: "09999",
-					EmployeeName: "JOAN MANEL BORRELL", //ROBERTO ALFREDO FERNANDEZ-RODRIGUEZ DE ZARATE
+					EmployeeName: "ROBERTO ALFREDO FERNANDEZ-RODRIGUEZ DE ZARATE", //JOAN MANEL BORRELL
 					Line: "5",
 					Shift: "1",
 					Zone: "A",
@@ -58,21 +59,36 @@ sap.ui.define(
 			},
 
 			onDownloadTicket: function(oEvent) {
+debugger;
 				//TODO: Descarregar el famós pdf
 			},
 
-			onStartStationClicked: function() {
-debugger;
-				//TODO: ... alguna cosa...
+			onStartStationClicked: function(oEvent) {
+				var oParams = {
+					stationId: oEvent.getSource().getText()
+				};
+
+				this.getRouter().navTo(
+					"RouteStationInfo",
+					oParams,
+					false
+				);
 			},
 
 			onTrainStationClicked: function(oEvent) {
-debugger;
-				//TODO: ... alguna cosa...
+				var oParams = {
+					TEId: oEvent.getSource().getText()
+				};
+
+				this.getRouter().navTo(
+					"RouteTEInfo",
+					oParams,
+					false
+				);
 			},
 
 			/* =========================================================== */
-			/* formatters and other public methods                          */
+			/* formatters and other public methods                         */
 			/* =========================================================== */
 			formatDate: function(date) {
 				var oTranslator;

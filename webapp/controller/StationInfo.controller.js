@@ -6,7 +6,7 @@ sap.ui.define(
 	function (BaseController, Analytics) {
 		"use strict";
 	
-		return BaseController.extend("zdigitalticket.controller.Star", {
+		return BaseController.extend("zdigitalticket.controller.StationInfo", {
 			/* =========================================================== */
 			/* lifecycle methods                                           */
 			/* =========================================================== */

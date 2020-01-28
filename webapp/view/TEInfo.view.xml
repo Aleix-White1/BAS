@@ -1,0 +1,6 @@
+<mvc:View
+	controllerName="zdigitalticket.controller.TEInfo"
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc">
+	<Text text="Informació T/E"/>
+</mvc:View>

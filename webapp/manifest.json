@@ -135,6 +135,20 @@
 					]
 				},
 				{
+					"pattern": "StationInfo",
+					"name": "RouteStationInfo",
+					"target": [
+						"TargetStationInfo"
+					]
+				},
+				{
+					"pattern": "TEInfo",
+					"name": "RouteTEInfo",
+					"target": [
+						"TargetTEInfo"
+					]
+				},
+				{
 					"pattern": "{EmpId}",
 					"name": "RoutePushpin2",
 					"target": [
@@ -149,18 +163,23 @@
 				},
 				"TargetPushpin": {
 					"viewName": "Pushpin",
-					"viewId": "ViewPushpin",
-					"title": "{i18n>worklistViewTitle}"
+					"viewId": "ViewPushpin"
 				},
 				"TargetClock": {
 					"viewName": "Clock",
-					"viewId": "ViewClock",
-					"title": "{i18n>worklistViewTitle}"
+					"viewId": "ViewClock"
 				},
 				"TargetStar": {
 					"viewName": "Star",
-					"viewId": "ViewStar",
-					"title": "{i18n>worklistViewTitle}"
+					"viewId": "ViewStar"
+				},
+				"TargetStationInfo": {
+					"viewName": "StationInfo",
+					"viewId": "ViewStationInfo"
+				},
+				"TargetTEInfo": {
+					"viewName": "TEInfo",
+					"viewId": "ViewTEInfo"
 				}
 			}
 		}

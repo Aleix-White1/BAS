@@ -29,7 +29,8 @@ sap.ui.define(
 					oViewModel = new JSONModel({
 						busy: true,
 						delay: 0,
-						busyCounter: 0
+						busyCounter: 0,
+						backButtonVisible: false
 					});
 					this.getView().setModel(oViewModel, "appView");
 //					this.getOwnerComponent().getModel("localBinding").setProperty("/employeeNumber", "");
@@ -65,7 +66,7 @@ sap.ui.define(
 			/* =========================================================== */
 
 			/**
-			 * Event handler that is invoked when the user clicks any footer button
+			 * Event handler that is invoked when the user clicks any footer button (except back button)
 			 * @event
 			 * @param {sap.ui.base.Event} oEvent Information about the event
 			 */
@@ -98,6 +99,14 @@ sap.ui.define(
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
+			/**
+			 * Event handler that is invoked when the user clicks back button in footer
+			 * @event
+			 * @param {sap.ui.base.Event} oEvent Information about the event
+			 */
+			onPressBackButton: function(oEvent) {
+				this.onNavBack();
+			},
 
 			/**
 			 * Event handler that is invoked when the user navigates to some known url
@@ -106,6 +115,7 @@ sap.ui.define(
 			 */
 			onRouteMatched: function(oEvent) {
 				var sFunctionName = "onRouteMatched";
+				var backButtonVisible = true;
 				var sRouteName;
 
 				try {
@@ -117,8 +127,10 @@ sap.ui.define(
 						}
 						else {
 							oButton.setType("Emphasized");
+							backButtonVisible = false;
 						}
 					});
+					this.getView().getModel("appView").setProperty("/backButtonVisible", backButtonVisible);
 				}
 				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);

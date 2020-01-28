@@ -1,0 +1,6 @@
+<mvc:View
+	controllerName="zdigitalticket.controller.Star"
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc">
+	<Text text="Información de la estación"/>
+</mvc:View>
