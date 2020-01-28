@@ -115,7 +115,7 @@
 			"routes": [
 				{
 					"pattern": "",
-					"name": "RoutePushpin",
+					"name": "RoutePushpin1",
 					"target": [
 						"TargetPushpin"
 					]
@@ -132,6 +132,13 @@
 					"name": "RouteStar",
 					"target": [
 						"TargetStar"
+					]
+				},
+				{
+					"pattern": "{EmpId}",
+					"name": "RoutePushpin2",
+					"target": [
+						"TargetPushpin"
 					]
 				}
 			],

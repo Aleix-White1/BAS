@@ -66,6 +66,7 @@
 }
 .digitalticket .lineLogo .sapMText {
 	color: white;
+	font-size: 18px;
 }
 .digitalticket .lineLogo[data-line="1"] {
 	background-color: #cb2508;

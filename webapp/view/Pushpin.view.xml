@@ -55,20 +55,20 @@
 								}"/>
 							</VBox>
 						</HBox>
-							<core:Icon src="sap-icon://download" size="20px" press="onDownloadTicket" visible="{= ${localBinding>/today} }"/> <!-- TODO: L'admin no hauria de poder veure aquest botó -->
+						<core:Icon src="sap-icon://download" size="20px" press="onDownloadTicket" visible="{= ${localBinding>/today} }"/> <!-- TODO: L'admin no hauria de poder veure aquest botó -->
 					</HBox>
 					<Text text="{i18n>zone.activities.for.today}"/>
 				</VBox>
 				<Text text=" "/>  <!-- Spacer -->
 				<Table class="tableWithNoData">
 					<columns>
-						<Column hAlign="Center">
+						<Column hAlign="Center" width="25%">
 							<Text text="{localBinding>/ServiceId}"/>
 						</Column>
-						<Column hAlign="Center">
+						<Column hAlign="Center" width="20%">
 							<Text text="{localBinding>/EmployeeId}"/>
 						</Column>
-						<Column hAlign="Center">
+						<Column hAlign="Center" width="55%">
 							<Text text="{localBinding>/EmployeeName}"/>
 						</Column>
 					</columns>
@@ -101,9 +101,15 @@
 						<ColumnListItem>
 							<cells>
 								<Text text="{localBinding>StartTime}"/>
-								<Text text="{localBinding>StartStation}"/>
+								<HBox justifyContent="Center">
+									<Text text="{localBinding>StartStation}" visible="{= !${localBinding>/today} }"/>
+									<Link text="{localBinding>StartStation}" visible="{localBinding>/today}" press="onStartStationClicked"/>
+								</HBox>
 								<Text text="{localBinding>StartTrack}"/>
-								<Text text="{localBinding>TrainStation}"/>
+								<HBox justifyContent="Center">
+									<Text text="{localBinding>TrainStation}" visible="{= !${localBinding>/today} || isNaN(${localBinding>TrainStation}) }"/>
+									<Link text="{localBinding>TrainStation}" visible="{= ${localBinding>/today} &amp;&amp; !isNaN(${localBinding>TrainStation}) }" press="onTrainStationClicked"/>
+								</HBox>
 								<Text text="{localBinding>EndTime}"/>
 								<Text text="{localBinding>EndStation}"/>
 								<Text text="{localBinding>EndTrack}"/>

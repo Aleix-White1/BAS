@@ -4,7 +4,7 @@
 	<Toolbar id="footerButtons" class="customFooter">
 		<Button icon="sap-icon://pushpin-off" press="onPressToolbarButton" class="tmbButton">
 			<customData>
-				<core:CustomData key="buttonTarget" value="RoutePushpin"/>
+				<core:CustomData key="buttonTarget" value="RoutePushpin1"/>
 			</customData>
 		</Button>
 		<Button icon="sap-icon://time-account" press="onPressToolbarButton" class="tmbButton">

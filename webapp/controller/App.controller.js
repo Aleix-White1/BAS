@@ -77,7 +77,8 @@ sap.ui.define(
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					switch (sTarget = CommonUtils.getPropertyValueCustomData(oEvent.getSource(), "buttonTarget")) {
-						case "RoutePushpin":
+						case "RoutePushpin1":
+						case "RoutePushpin2":
 							//Let's add some specific params for tab named "pushpin"
 							break;
 						case "RouteClock":

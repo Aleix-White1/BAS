@@ -19,7 +19,8 @@ sap.ui.define(
 
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
-					this.getRouter().getRoute("RoutePushpin").attachPatternMatched(this.onPushpinMatched, this);
+					this.getRouter().getRoute("RoutePushpin1").attachPatternMatched(this.onPushpinMatched, this);
+					this.getRouter().getRoute("RoutePushpin2").attachPatternMatched(this.onPushpinMatched, this);
 				}
 				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
@@ -32,9 +33,9 @@ sap.ui.define(
 			onPushpinMatched: function(oEvent) {
 				this.getView().setModel(new JSONModel({
 					today: true,
-					ServiceId: "AAM15232",
-					EmployeeId: "07196",
-					EmployeeName: "RIVERA RIOS",
+					ServiceId: "AAM99999",
+					EmployeeId: "09999",
+					EmployeeName: "JOAN MANEL BORRELL", //ROBERTO ALFREDO FERNANDEZ-RODRIGUEZ DE ZARATE
 					Line: "5",
 					Shift: "1",
 					Zone: "A",
@@ -55,9 +56,19 @@ sap.ui.define(
 				oModel.setProperty("/Date", oDate);
 				this._updateData();
 			},
-			
+
 			onDownloadTicket: function(oEvent) {
 				//TODO: Descarregar el famós pdf
+			},
+
+			onStartStationClicked: function() {
+debugger;
+				//TODO: ... alguna cosa...
+			},
+
+			onTrainStationClicked: function(oEvent) {
+debugger;
+				//TODO: ... alguna cosa...
 			},
 
 			/* =========================================================== */
@@ -83,6 +94,16 @@ sap.ui.define(
 				var aFilters = [];
 
 				//Add filter by date (yesterday or today)
+var sTemp;
+sTemp = prompt("Fecha fake (yyyy/mm/dd)");
+if (sTemp) {
+	this.getView().getModel("localBinding").setProperty("/Date", new Date(sTemp));
+}
+sTemp = undefined
+sTemp = prompt("Usuario fake (código)");
+if (sTemp) {
+	this.getView().getModel("localBinding").setProperty("/EmployeeId", sTemp);
+}
 				aFilters.push(
 					new Filter(
 						"Date",
@@ -90,6 +111,16 @@ sap.ui.define(
 						CommonUtils.convertDateToUTC(this.getView().getModel("localBinding").getProperty("/Date"))
 					)
 				);
+				//If I'm an admin, I can ask for other users than me
+				if (true) { //TODO: Com miro si sóc admin?
+					aFilters.push(
+						new Filter(
+							"EmpId",
+							FilterOperator.EQ,
+							this.getView().getModel("localBinding").getProperty("/EmployeeId")
+						)
+					);
+				}
 				oModel.read("/PieceSet", {
 					filters: aFilters,
 	                success: (function(that) {
