@@ -131,7 +131,7 @@ if (sTemp) {
 				if (true) { //TODO: Com miro si sóc admin?
 					aFilters.push(
 						new Filter(
-							"EmpId",
+							"EmployeeId",
 							FilterOperator.EQ,
 							this.getView().getModel("localBinding").getProperty("/EmployeeId")
 						)
