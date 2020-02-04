@@ -79,6 +79,18 @@ sap.ui.define(
 				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}	
+			},
+			
+			formatDate: function(date) {
+				var oTranslator;
+
+				if (date) {
+					oTranslator = this.getView().getModel("i18n").getResourceBundle();
+					return oTranslator.getText("week.day." + date.getDay()) + " " + date.getDate() + " " + oTranslator.getText("month." + date.getMonth()) + " " + oTranslator.getText("year.prefix") + " " + date.getFullYear();
+				}
+				else {
+					return "";
+				}
 			}
 
 			/* =========================================================== */
