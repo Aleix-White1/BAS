@@ -25,6 +25,12 @@
 					<Link text="&lt; {i18n>yesterday}" press="onChangeDay" textAlign="End" visible="{localBinding>/today}"/>
 					<Link text="{i18n>today} >" press="onChangeDay" textAlign="End" visible="{= !${localBinding>/today} }"/>
 				</HBox>
+				
+				<HBox >
+					<Button text="navToStation" press="onStartStationClicked" />
+					<Button text="navToTrain" press="onTrainStationClicked" />
+				</HBox>
+				
 				<VBox class="formFilters">
 					<HBox justifyContent="SpaceBetween" alignItems="Center">
 						<HBox>

@@ -1,0 +1,262 @@
+{
+	"status": "success",
+	"data": {
+		"arrivals": {
+			"date": 1580716235000,
+			"adjustmentState": "CONNECTED",
+			"secAverage": 195,
+			"partialTrains": 29,
+			"totalTrains": 29,
+			"dayType": 5,
+			"regularityIndex": 84,
+			"reset": true,
+			"tracks": [{
+				"track": 1,
+				"trainsPositions": [{
+					"trainCode": "124",
+					"secPreviousTrain": 260,
+					"stopCode": 140,
+					"stopName": "Fondo",
+					"track": 1,
+					"arrivalTime": 1580716235000
+				},
+				{
+					"trainCode": "126",
+					"secPreviousTrain": 262,
+					"stopCode": 138,
+					"stopName": "Baró de Viver",
+					"track": 1,
+					"arrivalTime": 1580716757000
+				},
+				{
+					"trainCode": "128",
+					"secPreviousTrain": 224,
+					"stopCode": 133,
+					"stopName": "La Sagrera",
+					"track": 1,
+					"arrivalTime": 1580717243000
+				},
+				{
+					"trainCode": "130",
+					"secPreviousTrain": 164,
+					"stopCode": 130,
+					"stopName": "Glòries",
+					"track": 1,
+					"arrivalTime": 1580717631000
+				},
+				{
+					"trainCode": "101",
+					"secPreviousTrain": 199,
+					"stopCode": 126,
+					"stopName": "Catalunya",
+					"track": 1,
+					"arrivalTime": 1580717994000
+				},
+				{
+					"trainCode": "103",
+					"secPreviousTrain": 150,
+					"stopCode": 122,
+					"stopName": "Espanya",
+					"track": 1,
+					"arrivalTime": 1580718343000
+				},
+				{
+					"trainCode": "106",
+					"secPreviousTrain": 238,
+					"stopCode": 117,
+					"stopName": "Torrassa",
+					"track": 1,
+					"arrivalTime": 1580718731000
+				},
+				{
+					"trainCode": "109",
+					"secPreviousTrain": 175,
+					"stopCode": 113,
+					"stopName": "Av. Carrilet",
+					"track": 1,
+					"arrivalTime": 1580719144000
+				},
+				{
+					"trainCode": "111",
+					"secPreviousTrain": 168,
+					"stopCode": 111,
+					"stopName": "Hospital de Bellvitge",
+					"track": 2,
+					"arrivalTime": 1580719487000
+				},
+				{
+					"trainCode": "113",
+					"secPreviousTrain": 139,
+					"stopCode": 114,
+					"stopName": "Rambla Just Oliveras",
+					"track": 2,
+					"arrivalTime": 1580719794000
+				},
+				{
+					"trainCode": "115",
+					"secPreviousTrain": 236,
+					"stopCode": 119,
+					"stopName": "Mercat Nou",
+					"track": 2,
+					"arrivalTime": 1580720169000
+				},
+				{
+					"trainCode": "117",
+					"secPreviousTrain": 195,
+					"stopCode": 125,
+					"stopName": "Universitat",
+					"track": 2,
+					"arrivalTime": 1580720600000
+				},
+				{
+					"trainCode": "119",
+					"secPreviousTrain": 229,
+					"stopCode": 130,
+					"stopName": "Glòries",
+					"track": 2,
+					"arrivalTime": 1580721024000
+				},
+				{
+					"trainCode": "121",
+					"secPreviousTrain": 162,
+					"stopCode": 134,
+					"stopName": "Fabra i Puig",
+					"track": 2,
+					"arrivalTime": 1580721415000
+				},
+				{
+					"trainCode": "123",
+					"secPreviousTrain": 158,
+					"stopCode": 137,
+					"stopName": "Trinitat Vella",
+					"track": 2,
+					"arrivalTime": 1580721735000
+				}]
+			},
+			{
+				"track": 2,
+				"trainsPositions": [{
+					"trainCode": "125",
+					"secPreviousTrain": 236,
+					"stopCode": 140,
+					"stopName": "Fondo",
+					"track": 2,
+					"arrivalTime": 1580716389000
+				},
+				{
+					"trainCode": "127",
+					"secPreviousTrain": 242,
+					"stopCode": 135,
+					"stopName": "Sant Andreu",
+					"track": 1,
+					"arrivalTime": 1580716867000
+				},
+				{
+					"trainCode": "129",
+					"secPreviousTrain": 140,
+					"stopCode": 132,
+					"stopName": "Navas",
+					"track": 1,
+					"arrivalTime": 1580717249000
+				},
+				{
+					"trainCode": "131",
+					"secPreviousTrain": 159,
+					"stopCode": 128,
+					"stopName": "Arc de Triomf",
+					"track": 1,
+					"arrivalTime": 1580717548000
+				},
+				{
+					"trainCode": "102",
+					"secPreviousTrain": 143,
+					"stopCode": 124,
+					"stopName": "Urgell",
+					"track": 1,
+					"arrivalTime": 1580717850000
+				},
+				{
+					"trainCode": "105",
+					"secPreviousTrain": 210,
+					"stopCode": 119,
+					"stopName": "Mercat Nou",
+					"track": 1,
+					"arrivalTime": 1580718203000
+				},
+				{
+					"trainCode": "107",
+					"secPreviousTrain": 154,
+					"stopCode": 115,
+					"stopName": "Can Serra",
+					"track": 1,
+					"arrivalTime": 1580718567000
+				},
+				{
+					"trainCode": "110",
+					"secPreviousTrain": 161,
+					"stopCode": 111,
+					"stopName": "Hospital de Bellvitge",
+					"track": 1,
+					"arrivalTime": 1580718882000
+				},
+				{
+					"trainCode": "112",
+					"secPreviousTrain": 202,
+					"stopCode": 112,
+					"stopName": "Bellvitge",
+					"track": 2,
+					"arrivalTime": 1580719245000
+				},
+				{
+					"trainCode": "114",
+					"secPreviousTrain": 197,
+					"stopCode": 117,
+					"stopName": "Torrassa",
+					"track": 2,
+					"arrivalTime": 1580719644000
+				},
+				{
+					"trainCode": "116",
+					"secPreviousTrain": 235,
+					"stopCode": 122,
+					"stopName": "Espanya",
+					"track": 2,
+					"arrivalTime": 1580720076000
+				},
+				{
+					"trainCode": "118",
+					"secPreviousTrain": 265,
+					"stopCode": 128,
+					"stopName": "Arc de Triomf",
+					"track": 2,
+					"arrivalTime": 1580720576000
+				},
+				{
+					"trainCode": "120",
+					"secPreviousTrain": 170,
+					"stopCode": 132,
+					"stopName": "Navas",
+					"track": 2,
+					"arrivalTime": 1580721011000
+				},
+				{
+					"trainCode": "122",
+					"secPreviousTrain": 183,
+					"stopCode": 135,
+					"stopName": "Sant Andreu",
+					"track": 2,
+					"arrivalTime": 1580721364000
+				},
+				{
+					"trainCode": "124",
+					"secPreviousTrain": 260,
+					"stopCode": 140,
+					"stopName": "Fondo",
+					"track": 1,
+					"arrivalTime": 1580721624000
+				}]
+			}],
+			"stopped": false
+		}
+	}
+}

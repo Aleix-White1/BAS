@@ -2,6 +2,15 @@
 	"welcomeFile": "/webapp/index.html",
 	"routes": [
 		{
+			"path": "/miralin",
+			"target": {
+				"type": "destination",
+				"name": "GTD",
+				"entryPath": "/miralin"
+			},
+			"description": "Apuntar las peticiones contra el servicio SICF del miralin"
+		},
+		{
 			"path": "/resources/zui5controlstmb",
 			"target": {
 				"type": "application",

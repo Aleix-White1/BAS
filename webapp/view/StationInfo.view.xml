@@ -1,6 +1,113 @@
 <mvc:View
-	controllerName="zdigitalticket.controller.Star"
 	xmlns="sap.m"
-	xmlns:mvc="sap.ui.core.mvc">
-	<Text text="Información de la estación"/>
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
+	xmlns:f="sap.ui.layout.form"
+	displayBlock="true"
+	controllerName="zdigitalticket.controller.StationInfo"
+>
+	<Page showHeader="false" class="colorBackground" title="{i18n>stationInfo.title}" >
+		<content>
+			<ScrollContainer vertical="true" class="sapUiSmallMargin">
+				<HBox justifyContent="SpaceBetween">
+					<Text text="{
+						parts: [
+							'localBinding>/StationInfo/Date'
+						],
+						formatter: '.formatDate'
+					}"/>
+				</HBox>
+				
+				<VBox class="formFilters">
+					<HBox justifyContent="SpaceBetween" >
+						<HBox justifyContent="SpaceBetween">
+							<VBox width="40px" height="40px" class="lineLogo" justifyContent="Center" alignItems="Center">
+								<customData>
+									<core:CustomData
+										key="line"
+										value="{localBinding>/StationInfo/Line}"
+										writeToDom="true"
+									/>
+								</customData>
+								<Text text="L{localBinding>/StationInfo/Line}"/>
+							</VBox>
+							<VBox>
+								<Text text="{localBinding>/StationInfo/Name}"/>
+								<Text text="{localBinding>/StationInfo/CurrTime}"/>
+							</VBox>
+						</HBox>
+						<VBox>
+							<ComboBox 
+								id="selectTrackCombo"
+								items="{localBinding>/StationInfo/lines}" 
+								selectedKey="{localBinding>/StationInfo/selectedTrack}"
+								change="onChangeTrack"
+							>
+								<core:Item key="{localBinding>trackNum}" text="{localBinding>trackName}" />
+							</ComboBox>
+						</VBox>
+					</HBox>
+				</VBox>
+				
+				<Text text=" "/>  <!-- Spacer -->
+				<!--<Table items="{localBinding>/StationInfo/StationInfoTrainSet}">-->
+				<!--	<columns>-->
+				<!--		<Column hAlign="Center"><Text text="{i18n>stationInfo.train}"/></Column>-->
+				<!--		<Column hAlign="Center"><Text text="{i18n>stationInfo.leaveStation}"/></Column>-->
+				<!--		<Column hAlign="Center"><Text text="{i18n>stationInfo.dAnt}"/></Column>-->
+				<!--		<Column hAlign="Center"><Text text="{i18n>stationInfo.station}"/></Column>-->
+				<!--		<Column hAlign="Center"><Text text="{i18n>stationInfo.via}"/></Column>-->
+				<!--	</columns>-->
+				<!--	<items>-->
+				<!--		<ColumnListItem>-->
+				<!--			<cells>-->
+				<!--				<Text text="{localBinding>train}"/>-->
+				<!--				<Text text="{localBinding>departureTime}"/>-->
+				<!--				<Text text="{localBinding>dAnt}"/>-->
+				<!--				<Text text="{localBinding>TrainStation}"/>-->
+				<!--				<Text text="{localBinding>track}"/>-->
+				<!--			</cells>-->
+				<!--		</ColumnListItem>-->
+				<!--	</items>-->
+				<!--</Table>-->
+				
+				<Table items="{localBinding>/StationInfo/StationInfoTrainSet}">
+					<columns>
+						<Column hAlign="Center"><Text text="Tren"/></Column>
+						<Column hAlign="Center"><Text text="Salida"/></Column>
+						<Column hAlign="Center"><Text text="dAnt"/></Column>
+						<Column hAlign="Center"><Text text="Estación"/></Column>
+						<Column hAlign="Center"><Text text="Via"/></Column>
+					</columns>
+					<items>
+						<ColumnListItem>
+							<cells>
+								<Text text="{localBinding>trainCode}"/>
+								<Text text="{
+									parts: [
+										'localBinding>arrivalTime'
+									],
+									formatter: '.formatTime'
+								}"/>
+								<Text text="{
+									parts: [
+										'localBinding>secPreviousTrain'
+									],
+									formatter: '.formatDAntTime'
+								}"/>
+								<Text text="{localBinding>stopCode}"/>
+								<Text text="{localBinding>track}"/>
+							</cells>
+						</ColumnListItem>
+					</items>
+				</Table>
+				
+				<VBox>
+					<Text text=" "/>  <!-- Spacer -->
+					<Text text=" "/>  <!-- Spacer -->
+				</VBox>
+			</ScrollContainer>
+		</content>
+	</Page>
+	
 </mvc:View>

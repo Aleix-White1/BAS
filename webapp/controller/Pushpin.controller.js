@@ -65,9 +65,9 @@ debugger;
 
 			onStartStationClicked: function(oEvent) {
 				var oParams = {
-					stationId: oEvent.getSource().getText()
+					"Line":  "2",
+					"Station": "214"
 				};
-
 				this.getRouter().navTo(
 					"RouteStationInfo",
 					oParams,
@@ -77,9 +77,11 @@ debugger;
 
 			onTrainStationClicked: function(oEvent) {
 				var oParams = {
-					TEId: oEvent.getSource().getText()
+					"Line":  "1",
+					"Station": "140",
+					"Train": "124",
+					"Track": "1"
 				};
-
 				this.getRouter().navTo(
 					"RouteTEInfo",
 					oParams,
@@ -90,17 +92,17 @@ debugger;
 			/* =========================================================== */
 			/* formatters and other public methods                         */
 			/* =========================================================== */
-			formatDate: function(date) {
-				var oTranslator;
+			// formatDate: function(date) {
+			// 	var oTranslator;
 
-				if (date) {
-					oTranslator = this.getView().getModel("i18n").getResourceBundle();
-					return oTranslator.getText("week.day." + date.getDay()) + " " + date.getDate() + " " + oTranslator.getText("month." + date.getMonth()) + " " + oTranslator.getText("year.prefix") + " " + date.getFullYear();
-				}
-				else {
-					return "";
-				}
-			},
+			// 	if (date) {
+			// 		oTranslator = this.getView().getModel("i18n").getResourceBundle();
+			// 		return oTranslator.getText("week.day." + date.getDay()) + " " + date.getDate() + " " + oTranslator.getText("month." + date.getMonth()) + " " + oTranslator.getText("year.prefix") + " " + date.getFullYear();
+			// 	}
+			// 	else {
+			// 		return "";
+			// 	}
+			// },
 
 			/* =========================================================== */
 			/* private methods                                             */

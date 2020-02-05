@@ -80,6 +80,13 @@
 					"defaultCountMode": "Inline",
 					"defaultOperationMode": "Server"
 				}
+			},
+			"miralinModel": {
+				"type": "sap.ui.model.json.JSONModel"
+			},
+			"miralinModelDummy": {
+				"type": "sap.ui.model.json.JSONModel",
+				"uri": "model/miralin.json"
 			}
 		},
 		"resources": {
@@ -132,14 +139,14 @@
 					]
 				},
 				{
-					"pattern": "StationInfo",
+					"pattern": "StationInfo({Line},{Station})",
 					"name": "RouteStationInfo",
 					"target": [
 						"TargetStationInfo"
 					]
 				},
 				{
-					"pattern": "TEInfo",
+					"pattern": "TEInfo({Line},{Station},{Train},{Track})",
 					"name": "RouteTEInfo",
 					"target": [
 						"TargetTEInfo"

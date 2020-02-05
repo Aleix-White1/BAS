@@ -91,11 +91,102 @@ sap.ui.define(
 				else {
 					return "";
 				}
-			}
-
+			},
+			
+			
 			/* =========================================================== */
 			/* private methods                                             */
 			/* =========================================================== */
+			
+			getMiralinInfo: function(sLine, sStation, sTrain, oGetStopsCallbackFnc, oGetArrivalsCallbackFnc){
+				var sFunctionName = "onDailyActivityMatched";
+				var oView = this.getView();
+				// var oModelLocalBinding = oView.getModel("localBinding");
+				var oMiralinModel = oView.getModel("miralinModel");
+				try {
+					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
+					oView = this.getView();
+					// oModelLocalBinding = oView.getModel("localBinding");
+					// oModelLocalBinding.setProperty("/StationInfo", {});
+					
+					if(!oMiralinModel.getProperty("/stops")){
+						oMiralinModel.setProperty("/stops", {});
+					}
+					
+					this.loadStationData(sLine, sStation, sTrain, oGetStopsCallbackFnc, oGetArrivalsCallbackFnc);
+
+				} catch (oError) {
+					this._handleCatchException(oError, sFunctionName);
+				}
+			},
+			
+			loadStationData: function(sLine, sStation, sTrain, oGetStopsCallbackFnc, oGetArrivalsCallbackFnc){
+				var sFunctionName = "loadStationData";
+				try {
+					var that = this; 
+					var oView = this.getView();
+					var _sLine = sLine;
+					var _sStation = sStation;
+					var _oGetStopsCallbackFnc = oGetStopsCallbackFnc;
+					var _oGetArrivalsCallbackFnc = oGetArrivalsCallbackFnc;
+					var oMiralinModel = oView.getModel("miralinModel");
+					
+					var oLineData = oMiralinModel.getProperty("/stops/" + _sLine);
+					if(!oLineData){
+						//Si entramos en este punto es que no tenemos la información correspondiente a las paradas de la línea
+						$.ajax({
+							type: "GET",
+							async: true,
+							context: this,
+							url: "/miralin?line=" + _sLine + "&service=stops",
+							success: function(result) {
+			                    oMiralinModel.setProperty("/stops/" + _sLine, result.data.features);
+			                    _oGetStopsCallbackFnc.call(this, _sLine, _sStation);
+			                },
+			                error: function(result) {
+								oMiralinModel.setProperty("/stops", {});
+								var bCompact = oView.$().closest(".sapUiSizeCompact").length;
+								MessageBox.error(
+									"No se ha podido recuperar la información de las paradas",
+									{
+										styleClass: bCompact ? "sapUiSizeCompact" : ""
+									}
+								);
+								
+			                }
+						});
+					}else{
+						//En este caso, si que tenemos la información correspondiente a las paradas de la línea y solo hemos de actualizarla
+						that.updateStationDataInLocalBindingModel(_sLine, _sStation);
+					}
+					
+					
+					$.ajax({
+						type: "GET",
+						async: true,
+						url: "/miralin?line=" + sLine + "&station=" + sStation + "&service=arrivals",
+						context: this,
+						success: function(result) {
+		                    oMiralinModel.setProperty("/arrivals", result.data.arrivals);
+							_oGetArrivalsCallbackFnc.call(this);
+		                },
+		                error: function(result) {
+		                	oMiralinModel.setProperty("/arrivals", {});
+							var bCompact = oView.$().closest(".sapUiSizeCompact").length;
+							MessageBox.error(
+								"No se ha podido recuperar la informacion de las llegadas",
+								{
+									styleClass: bCompact ? "sapUiSizeCompact" : ""
+								}
+							);
+							
+		                }
+					});
+				} catch (oError) {
+					this._handleCatchException(oError, sFunctionName);
+				}
+			},
+			
 		});
 	}
 );
