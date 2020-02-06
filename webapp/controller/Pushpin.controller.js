@@ -92,17 +92,6 @@ debugger;
 			/* =========================================================== */
 			/* formatters and other public methods                         */
 			/* =========================================================== */
-			// formatDate: function(date) {
-			// 	var oTranslator;
-
-			// 	if (date) {
-			// 		oTranslator = this.getView().getModel("i18n").getResourceBundle();
-			// 		return oTranslator.getText("week.day." + date.getDay()) + " " + date.getDate() + " " + oTranslator.getText("month." + date.getMonth()) + " " + oTranslator.getText("year.prefix") + " " + date.getFullYear();
-			// 	}
-			// 	else {
-			// 		return "";
-			// 	}
-			// },
 
 			/* =========================================================== */
 			/* private methods                                             */
@@ -116,12 +105,12 @@ var sTemp;
 sTemp = prompt("Fecha fake (yyyy/mm/dd)");
 if (sTemp) {
 	this.getView().getModel("localBinding").setProperty("/Date", new Date(sTemp));
-}
+}/*
 sTemp = undefined
 sTemp = prompt("Usuario fake (código)");
 if (sTemp) {
 	this.getView().getModel("localBinding").setProperty("/EmployeeId", sTemp);
-}
+}*/
 // var sTemp;
 // sTemp = "2018/05/29";
 // if (sTemp) {
@@ -140,7 +129,7 @@ if (sTemp) {
 					)
 				);
 				//If I'm an admin, I can ask for other users than me
-				if (true) { //TODO: Com miro si sóc admin?
+				if (false) { //TODO: Com miro si sóc admin?
 					aFilters.push(
 						new Filter(
 							"EmployeeId",

@@ -3,6 +3,7 @@
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:core="sap.ui.core"
 	xmlns:f="sap.ui.layout.form"
+	xmlns:tmb="zui5controlstmb.controls"
 	displayBlock="true"
 	controllerName="zdigitalticket.controller.Pushpin">
 	<Page showHeader="false" class="colorBackground">
@@ -25,12 +26,12 @@
 					<Link text="&lt; {i18n>yesterday}" press="onChangeDay" textAlign="End" visible="{localBinding>/today}"/>
 					<Link text="{i18n>today} >" press="onChangeDay" textAlign="End" visible="{= !${localBinding>/today} }"/>
 				</HBox>
-				
+<!--
 				<HBox >
 					<Button text="navToStation" press="onStartStationClicked" />
 					<Button text="navToTrain" press="onTrainStationClicked" />
 				</HBox>
-				
+-->
 				<VBox class="formFilters">
 					<HBox justifyContent="SpaceBetween" alignItems="Center">
 						<HBox>
@@ -108,8 +109,10 @@
 							<cells>
 								<Text text="{localBinding>StartTime}"/>
 								<HBox justifyContent="Center">
+									<!-- TODO: Diseño o usabilidad? Quién ganará? -->
 									<Text text="{localBinding>StartStation}" visible="{= !${localBinding>/today} }"/>
 									<Link text="{localBinding>StartStation}" visible="{localBinding>/today}" press="onStartStationClicked"/>
+									<!-- tmb:ButtonText text="{localBinding>StartStation}" type="Transparent" toggle="{localBinding>/today}" press="onStartStationClicked" / -->
 								</HBox>
 								<Text text="{localBinding>StartTrack}"/>
 								<HBox justifyContent="Center">
