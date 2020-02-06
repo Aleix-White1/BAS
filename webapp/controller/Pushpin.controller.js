@@ -65,8 +65,8 @@ debugger;
 
 			onStartStationClicked: function(oEvent) {
 				var oParams = {
-					"Line":  "2",
-					"Station": "214"
+					"Line":  "1",
+					"Station": "140"
 				};
 				this.getRouter().navTo(
 					"RouteStationInfo",
@@ -79,7 +79,7 @@ debugger;
 				var oParams = {
 					"Line":  "1",
 					"Station": "140",
-					"Train": "124",
+					"Train": "109",
 					"Track": "1"
 				};
 				this.getRouter().navTo(
@@ -112,7 +112,7 @@ debugger;
 				var aFilters = [];
 
 				//Add filter by date (yesterday or today)
-var sTemp;
+/*var sTemp;
 sTemp = prompt("Fecha fake (yyyy/mm/dd)");
 if (sTemp) {
 	this.getView().getModel("localBinding").setProperty("/Date", new Date(sTemp));
@@ -121,7 +121,17 @@ sTemp = undefined
 sTemp = prompt("Usuario fake (código)");
 if (sTemp) {
 	this.getView().getModel("localBinding").setProperty("/EmployeeId", sTemp);
+}*/
+var sTemp;
+sTemp = "2018/05/29";
+if (sTemp) {
+	this.getView().getModel("localBinding").setProperty("/Date", new Date(sTemp));
 }
+sTemp = "02010351";
+if (sTemp) {
+	this.getView().getModel("localBinding").setProperty("/EmployeeId", sTemp);
+}
+
 				aFilters.push(
 					new Filter(
 						"Date",

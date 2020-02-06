@@ -24,36 +24,25 @@ sap.ui.define(
 			/* =========================================================== */
 			/* event handlers                       					   */
 			/* =========================================================== */
-			/*loadTrainsPositions: function(sTrackNumer){
-				var sFunctionName = "loadTrainsPositions";
-				try {
-					var oView = this.getView();
-					var oModelMiralin = oView.getModel("miralinModel");	
-					var oModelLocalBinding = oView.getModel("localBinding");
-					var sPath = "/data/arrivals/tracks/" + ( sTrackNumer - 1 ) + "/trainsPositions";
-					var aTrainPosition = oModelMiralin.getProperty(sPath);
-					oModelLocalBinding.setProperty("/StationInfo/StationInfoTrainSet", aTrainPosition);
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
-				}
-			},*/
 			
 			//Función que sirve para recuperar el nombre de la estación. Se llama tanto en el callback de la consulta de las estaciones de la linea
 			//como en el callback de recuperar los trenes de una parada.
-			onLoadLineStationData: function(){
+			onLoadLineStationData: function(sLine, sStation){
 				var sFunctionName = "onLoadLineStationData";
 				var oView = this.getView();
 				var oModelLocalBinding = oView.getModel("localBinding");
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
-					var sLine = oModelLocalBinding.getProperty("/TEInfo/Line");
+					var _sLine = oModelLocalBinding.getProperty("/TEInfo/Line");
 					
 					var sCurrStationCode = oModelLocalBinding.getProperty("/TEInfo/currStationCode");
-					var sCurrStationName = this.getStationName(sLine, sCurrStationCode);
+					var sCurrStationName = this.getStationName(_sLine, sCurrStationCode);
 					oModelLocalBinding.setProperty("/TEInfo/currStationName", sCurrStationName);
+					var sCurrTime = this.formatTime(new Date());
+					oModelLocalBinding.setProperty("/TEInfo/currTime", sCurrTime);
 					
 					var sDepartStationCode = oModelLocalBinding.getProperty("/TEInfo/departureStationCode");
-					var sDepartStationName = this.getStationName(sLine, sDepartStationCode);
+					var sDepartStationName = this.getStationName(_sLine, sDepartStationCode);
 					oModelLocalBinding.setProperty("/TEInfo/departureStationName", sDepartStationName);
 					
 				} catch (oError) {
@@ -86,32 +75,22 @@ sap.ui.define(
 			onLoadStationArrivals: function(){
 				var sFunctionName = "loadStationTracks";
 				try {
-					var aTracksTmp = [];
+					var that = this;
 					var oView = this.getView();
 					var	oResourceBundle = oView.getModel("i18n").getResourceBundle();
 					var oModelLocalBinding = oView.getModel("localBinding");
 					var oModelMiralin = oView.getModel("miralinModel");
 					
-					var sLine = oModelLocalBinding.getProperty("/TEInfo/Line");
-					var sStation = oModelLocalBinding.getProperty("/TEInfo/Station");
 					var sTrain = oModelLocalBinding.getProperty("/TEInfo/Train");
-					
 					var aTracks = oModelMiralin.getProperty("/arrivals/tracks");
 					aTracks.forEach(function(oItemTrack){
 						var aTrainsPosition = oItemTrack.trainsPositions;
 						aTrainsPosition.forEach(function(oItemTrain){
-							if(oItemTrack.trainCode == sTrain){
-								var sCurrStationCode = oModelLocalBinding.getProperty("/TEInfo/currStationCode");
-								oModelLocalBinding.setProperty("/TEInfo/currStationCode", oItemTrack.stopCode);
-								oModelLocalBinding.setProperty("/TEInfo/currTrack",  oResourceBundle.getText("stationInfo.trackNumber", [oItemTrack.track]));
-								/*
-								trainCode: "130"
-								secPreviousTrain: 236
-								stopCode: 139
-								stopName: "Santa Coloma"
-								track: 1
-								arrivalTime: 1580932279000
-								*/
+							if(oItemTrain.trainCode == sTrain){
+								oModelLocalBinding.setProperty("/TEInfo/currStationCode", oItemTrain.stopCode);
+								oModelLocalBinding.setProperty("/TEInfo/currTrack",  oResourceBundle.getText("stationInfo.trackNumber", [oItemTrain.track]));
+								var sDepartureTime = that.formatTime(oItemTrain.arrivalTime);
+								oModelLocalBinding.setProperty("/TEInfo/departureTime", sDepartureTime);
 							}
 						});
 					});
@@ -163,10 +142,9 @@ sap.ui.define(
 						oModelLocalBinding.setProperty("/TEInfo/Track", sTrack);
 					}
 					
-					
-					oModelLocalBinding.setProperty("/TEInfo/departureTime", "07:10");
+					oModelLocalBinding.setProperty("/TEInfo/departureTime", "");
 					oModelLocalBinding.setProperty("/TEInfo/departureStationCode", sStation);
-					oModelLocalBinding.setProperty("/TEInfo/departureStation", sStation + "departure");
+					oModelLocalBinding.setProperty("/TEInfo/departureStationName", "");
 					oModelLocalBinding.setProperty("/TEInfo/departureTrack", oResourceBundle.getText("stationInfo.trackNumber", [sTrack]) );
 					
 					oModelLocalBinding.setProperty("/TEInfo/currTime", "");

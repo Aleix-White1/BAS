@@ -18,55 +18,73 @@
 				</HBox>
 				
 				<VBox class="formFilters">
-					<HBox justifyContent="SpaceBetween" >
-						<HBox justifyContent="SpaceBetween">
-							<VBox width="40px" height="40px" class="lineLogo" justifyContent="Center" alignItems="Center">
-								<customData>
-									<core:CustomData
-										key="line"
-										value="{localBinding>/TEInfo/Line}"
-										writeToDom="true"
-									/>
-								</customData>
-								<Text text="L{localBinding>/TEInfo/Line}"/>
-							</VBox>
-						</HBox>
+					<HBox>
+						<VBox width="40px" height="40px" class="lineLogo" justifyContent="Center" alignItems="Center">
+							<customData>
+								<core:CustomData
+									key="line"
+									value="{localBinding>/TEInfo/Line}"
+									writeToDom="true"
+								/>
+							</customData>
+							<Text text="L{localBinding>/TEInfo/Line}"/>
+						</VBox>
+						<VBox justifyContent="Center" alignItems="Center">
+							<HBox>
+								<Label text="{i18n>TEInfo.train}:" class="sapUiSmallMarginEnd" />
+								<Text text="{localBinding>/TEInfo/Train}"/>
+							</HBox>
+						</VBox>
 					</HBox>
 				</VBox>
 				
 				<Text text=" "/>  <!-- Spacer -->
 
-				<VBox class="formFilters">
-					<HBox justifyContent="SpaceBetween" >
-						<Label text="Tren" /><Text text="{localBinding>/TEInfo/Train}"/>
-					</HBox>
+				<VBox>
+					<Panel width="auto" class="sapUiResponsiveMargin">
+						<headerToolbar>
+							<OverflowToolbar height="2rem">
+								<Title text="{i18n>TEInfo.departure.title}"/>
+							</OverflowToolbar>
+						</headerToolbar>
+						<content>
+							<HBox>
+								<Label text="{i18n>TEInfo.departure.departureTime}:" class="sapUiSmallMarginEnd" /><Text text="{localBinding>/TEInfo/departureTime}"/>
+							</HBox>
+							<HBox>
+								<Label text="{i18n>TEInfo.departure.departureStation}:" class="sapUiSmallMarginEnd" /><Text text="{localBinding>/TEInfo/departureStationCode} ( {localBinding>/TEInfo/departureStationName} )"/>
+							</HBox>
+							<HBox>
+								<Label text="{i18n>TEInfo.departure.departureTrack}:" class="sapUiSmallMarginEnd" /><Text text="{localBinding>/TEInfo/departureTrack}"/>
+							</HBox>
+						</content>
+					</Panel>
 					
-					<HBox justifyContent="SpaceBetween" >
-						<Label text="Hora de salida" /><Text text="{localBinding>/TEInfo/departureTime}"/>
-					</HBox>
-					<HBox justifyContent="SpaceBetween" >
-						<Label text="Lugar de salida" /><Text text="{/TEInfo/departureStationCode} ({localBinding>/TEInfo/departureStationName})"/>
-					</HBox>
-					<HBox justifyContent="SpaceBetween" >
-						<Label text="Vía" /><Text text="{localBinding>/TEInfo/departureTrack}"/>
-					</HBox>
-					
-					<HBox justifyContent="SpaceBetween" >
-						<Label text="Hora actual" /><Text text="{localBinding>/TEInfo/currTime}"/>
-					</HBox>
-					<HBox justifyContent="SpaceBetween" >
-						<Label text="Lugar actual" /><Text text="{/TEInfo/currStationCode} ({localBinding>/TEInfo/currStationName})"/>
-					</HBox>
-					<HBox justifyContent="SpaceBetween" >
-						<Label text="Vía" /><Text text="{localBinding>/TEInfo/currTrack}"/>
-					</HBox>
-					
+					<Panel width="auto" class="sapUiResponsiveMargin">
+						<headerToolbar>
+							<OverflowToolbar height="2rem">
+								<Title text="{i18n>TEInfo.current.title}"/>
+							</OverflowToolbar>
+						</headerToolbar>
+						<content>
+							<HBox>
+								<Label text="{i18n>TEInfo.current.currentTime}:" class="sapUiSmallMarginEnd" /><Text text="{localBinding>/TEInfo/currTime}"/>
+							</HBox>
+							<HBox>
+								<Label text="{i18n>TEInfo.current.currentStation}:" class="sapUiSmallMarginEnd" /><Text text="{localBinding>/TEInfo/currStationCode} ( {localBinding>/TEInfo/currStationName} )"/>
+							</HBox>
+							<HBox>
+								<Label text="{i18n>TEInfo.current.currentTrack}:" class="sapUiSmallMarginEnd" /><Text text="{localBinding>/TEInfo/currTrack}"/>
+							</HBox>
+						</content>
+					</Panel>
 				</VBox>	
 				
 				<VBox>
 					<Text text=" "/>  <!-- Spacer -->
 					<Text text=" "/>  <!-- Spacer -->
 				</VBox>
+				
 			</ScrollContainer>
 		</content>
 	</Page>

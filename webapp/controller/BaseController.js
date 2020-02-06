@@ -157,7 +157,8 @@ sap.ui.define(
 						});
 					}else{
 						//En este caso, si que tenemos la información correspondiente a las paradas de la línea y solo hemos de actualizarla
-						that.updateStationDataInLocalBindingModel(_sLine, _sStation);
+						// that.updateStationDataInLocalBindingModel(_sLine, _sStation);
+						_oGetStopsCallbackFnc.call(this, _sLine, _sStation);
 					}
 					
 					

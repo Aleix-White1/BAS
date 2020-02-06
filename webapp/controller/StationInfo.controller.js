@@ -27,6 +27,10 @@ sap.ui.define(
 			/* =========================================================== */
 			/* event handlers                       					   */
 			/* =========================================================== */
+			/*
+				Evento que se lanza cuando se modifica el valor del SelectCombo de la vía seleccionada, recogiendo el valor de este
+				y ejecutando la función para cargar los trenes para esa vía.
+			*/
 			onChangeTrack: function(oEvent){
 				var sFunctionName = "onChangeTrack";
 				try {
@@ -39,20 +43,32 @@ sap.ui.define(
 				}
 			},
 			
+			/*
+				Recibe por parámetro el indicador de la vía de la que se desean consultar los trenes y recarga la información en la tabla 
+				moviendo los datos del "miralinModel" al modelo contra el que está biendeada la tabla.
+			*/
 			loadTrainsPositions: function(sTrackNumer){
 				var sFunctionName = "loadTrainsPositions";
 				try {
 					var oView = this.getView();
 					var oModelMiralin = oView.getModel("miralinModel");	
 					var oModelLocalBinding = oView.getModel("localBinding");
-					var sPath = "/arrivals/tracks/" + ( sTrackNumer - 1 ) + "/trainsPositions"; //VMC: ESTO ES IMPORTANTE REVISARLO!!!!!
-					var aTrainPosition = oModelMiralin.getProperty(sPath);
-					oModelLocalBinding.setProperty("/StationInfo/StationInfoTrainSet", aTrainPosition);
+					var _sTrackNumber = sTrackNumer;
+					var aTracks = oModelMiralin.getProperty("/arrivals/tracks");
+					aTracks.forEach(function(oItemTrack){
+						if(oItemTrack.track == _sTrackNumber){
+							oModelLocalBinding.setProperty("/StationInfo/StationInfoTrainSet", oItemTrack.trainsPositions);
+						}
+					});
 				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
 			
+			/*
+				loadStationTracks: Se ejecuta una vez se recibe la información de los trenes para la estación. 
+				Con esta información recibida se carga el desplegable del vías y se fuerza el evento change del desplegable para que se recargue la información de los trenes para esa vía.
+			*/
 			loadStationTracks: function(){
 				var sFunctionName = "loadStationTracks";
 				try {
@@ -80,6 +96,10 @@ sap.ui.define(
 				}
 			},
 			
+			/*
+				Función que recoge la información referente a las estaciones de una línea y
+				recarga la información necesaria en el modelo "localBinding" contra el que están mapeados los campos de la pantalla.
+			*/
 			updateStationDataInLocalBindingModel: function(sLine, sStation){
 				var sFunctionName = "updateStationDataInLocalBindingModel";
 				try {
@@ -93,8 +113,8 @@ sap.ui.define(
 					if(aStops){
 						aStops.forEach(function(oItem){ 
 							var oProperties = oItem.properties;
-							if(oProperties["CODI_ESTACIO"] == _sStation){
-								oModelLocalBinding.setProperty("/StationInfo/Name", oProperties["NOM_ESTACIO"]);
+							if(oProperties.CODI_ESTACIO == _sStation){
+								oModelLocalBinding.setProperty("/StationInfo/Name", oProperties.NOM_ESTACIO);
 								return false;
 							}
 						});
@@ -108,70 +128,32 @@ sap.ui.define(
 				}
 			},
 			
-			// loadStationData: function(sLine, sStation){
-			// 	var sFunctionName = "loadStationData";
-			// 	try {
-			// 		var that = this; 
-			// 		var oView = this.getView();
-			// 		var _sLine = sLine;
-			// 		var _sStation = sStation;
-			// 		var oMiralinModel = oView.getModel("miralinModel");
-					
-			// 		var oLineData = oMiralinModel.getProperty("/stops/" + _sLine);
-			// 		if(!oLineData){
-			// 			//Si entramos en este punto es que no tenemos la información correspondiente a las paradas de la línea
-			// 			$.ajax({
-			// 				type: "GET",
-			// 				async: true,
-			// 				url: "/miralin?line=" + _sLine + "&service=stops",
-			// 				success: function(result) {
-			//                     oMiralinModel.setProperty("/stops/" + _sLine, result.data.features);
-			//                     that.updateStationDataInLocalBindingModel(_sLine, _sStation);
-			//                 },
-			//                 error: function(result) {
-			// 					oMiralinModel.setProperty("/stops", {});
-			// 					var bCompact = oView.$().closest(".sapUiSizeCompact").length;
-			// 					MessageBox.error(
-			// 						"No se ha podido recuperar la información de las paradas",
-			// 						{
-			// 							styleClass: bCompact ? "sapUiSizeCompact" : ""
-			// 						}
-			// 					);
-								
-			//                 }
-			// 			});
-			// 		}else{
-			// 			//En este caso, si que tenemos la información correspondiente a las paradas de la línea y solo hemos de actualizarla
-			// 			that.updateStationDataInLocalBindingModel(_sLine, _sStation);
-			// 		}
-					
-					
-			// 		$.ajax({
-			// 			type: "GET",
-			// 			async: true,
-			// 			url: "/miralin?line=" + sLine + "&station=" + sStation + "&service=arrivals",
-			// 			success: function(result) {
-		 //                   oMiralinModel.setProperty("/arrivals", result.data.arrivals);
-			// 				that.loadStationTracks();	
-		 //               },
-		 //               error: function(result) {
-		 //               	oMiralinModel.setProperty("/arrivals", {});
-			// 				var bCompact = oView.$().closest(".sapUiSizeCompact").length;
-			// 				MessageBox.error(
-			// 					"No se ha podido recuperar la informacion de las llegadas",
-			// 					{
-			// 						styleClass: bCompact ? "sapUiSizeCompact" : ""
-			// 					}
-			// 				);
-							
-		 //               }
-			// 		});
-			// 	} catch (oError) {
-			// 		this._handleCatchException(oError, sFunctionName);
-			// 	}
-			// },
+			onPressTrain: function(oEvent){
+				var sFunctionName = "onPressTrain";
+				try {
+					var oBtn = oEvent.getSource();
+					var oModelLocalBinding = this.getView().getModel("localBinding");
+					var sPath = oBtn.getParent().getBindingContextPath();
+					var oTrainInfo = oModelLocalBinding.getProperty(sPath);
+					var sStopCode = ""+oTrainInfo.stopCode;
+					var oParams = {
+						"Line":  sStopCode.substr(0,1),
+						"Station": sStopCode,
+						"Train": oTrainInfo.trainCode,
+						"Track": oTrainInfo.track
+					};
+					this.getRouter().navTo(
+						"RouteTEInfo",
+						oParams,
+						false
+					);
+				} catch (oError) {
+					this._handleCatchException(oError, sFunctionName);
+				}
+			},
 			
-			loadCurrDateAndTime: function(oEvent){
+			//Función para actualizar los campos que aparecen en la pantalla con la fechas y hora actual.
+			loadCurrDateAndTime: function(){
 				var sFunctionName = "loadCurrDateAndTime";
 				try {
 					var oView = this.getView();
@@ -192,21 +174,33 @@ sap.ui.define(
 				}
 			},
 			
+			/*
+				Función encargada de lanzar la llamada contra los servicios  de miralin.
+				Se realizan dos llamadas a los servicios de Miralín:
+				
+					1- Obtener la información de las paradas de la línea. Los resultados se almacenarán en el modelo de datos "miralinModel"
+					   en la propiedad "/stops/" + numLinia. Así se evita solicitar información duplicada al miralin dado que la información de la parada
+					   (nombre, ubicación, etc) es estática y no se actualiza en tiempo real.
+					   
+					2- Obtener la información de los trenes de la parada
+					
+				Nota: la función del BaseController "getMiralinInfo" se utiliza tanto en este controlador como en el TEInfo. Para poder realizar su 
+				reutilización se han pasado dos funciones callback para las peticiones al miralín:
+					1- loadStationTracks: Se ejecuta una vez se recibe la información de los trenes para la estación. Con esta información recibida se carga el desplegable del vías
+					y al modificar el valor de este, carga la información de los trenes para esa vía.
+					2- updateStationDataInLocalBindingModel: Actualiza la información estática referente a la estación.
+			*/
 			onStationInfoMatched: function(oEvent){
 				var sFunctionName = "onStationInfoMatched";
 				var oView = this.getView();
 				var oModelLocalBinding = oView.getModel("localBinding");
-				// var oMiralinModel = oView.getModel("miralinModel");
+				
 				var oArguments, sLine, sTation;
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					oView = this.getView();
 					oModelLocalBinding = oView.getModel("localBinding");
 					oModelLocalBinding.setProperty("/StationInfo", {});
-					
-					// if(!oMiralinModel.getProperty("/stops")){
-					// 	oMiralinModel.setProperty("/stops", {});
-					// }
 					
 					oArguments = oEvent.getParameter("arguments");
 					if (oArguments.Line) {
@@ -217,7 +211,6 @@ sap.ui.define(
 						sTation = oArguments.Station;
 						oModelLocalBinding.setProperty("/StationInfo/Station", sTation);
 					}
-					// this.loadStationData(sLine, sTation);
 					
 					this.getMiralinInfo(
 						sLine,
