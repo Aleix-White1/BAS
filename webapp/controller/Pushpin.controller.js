@@ -112,7 +112,7 @@ debugger;
 				var aFilters = [];
 
 				//Add filter by date (yesterday or today)
-/*var sTemp;
+var sTemp;
 sTemp = prompt("Fecha fake (yyyy/mm/dd)");
 if (sTemp) {
 	this.getView().getModel("localBinding").setProperty("/Date", new Date(sTemp));
@@ -121,16 +121,16 @@ sTemp = undefined
 sTemp = prompt("Usuario fake (código)");
 if (sTemp) {
 	this.getView().getModel("localBinding").setProperty("/EmployeeId", sTemp);
-}*/
-var sTemp;
-sTemp = "2018/05/29";
-if (sTemp) {
-	this.getView().getModel("localBinding").setProperty("/Date", new Date(sTemp));
 }
-sTemp = "02010351";
-if (sTemp) {
-	this.getView().getModel("localBinding").setProperty("/EmployeeId", sTemp);
-}
+// var sTemp;
+// sTemp = "2018/05/29";
+// if (sTemp) {
+// 	this.getView().getModel("localBinding").setProperty("/Date", new Date(sTemp));
+// }
+// sTemp = "02010351";
+// if (sTemp) {
+// 	this.getView().getModel("localBinding").setProperty("/EmployeeId", sTemp);
+// }
 
 				aFilters.push(
 					new Filter(
