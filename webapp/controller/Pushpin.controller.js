@@ -64,29 +64,54 @@ debugger;
 			},
 
 			onStartStationClicked: function(oEvent) {
-				var oParams = {
-					"Line":  "1",
-					"Station": "140"
-				};
-				this.getRouter().navTo(
-					"RouteStationInfo",
-					oParams,
-					false
-				);
+				var sFunctionName = "onStartStationClicked";
+				var oModelLocalBinding;
+				var oTrainInfo;
+
+				try {
+					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
+					oModelLocalBinding = this.getView().getModel("localBinding");
+					oTrainInfo = oModelLocalBinding.getProperty(oEvent.getSource().getParent().getParent().getBindingContextPath());
+					this.getRouter().navTo(
+						"RouteStationInfo",
+						{
+							"Line": oModelLocalBinding.getProperty("/Line"),
+							"Station": oTrainInfo.StartStation
+						},
+						false
+					);
+				}
+				catch (oError) {
+					this._handleCatchException(oError, sFunctionName);
+				}
 			},
 
 			onTrainStationClicked: function(oEvent) {
-				var oParams = {
-					"Line":  "1",
-					"Station": "140",
-					"Train": "109",
-					"Track": "1"
-				};
-				this.getRouter().navTo(
-					"RouteTEInfo",
-					oParams,
-					false
-				);
+				var sFunctionName = "onTrainStationClicked";
+				var oModelLocalBinding;
+				var oTrainInfo;
+
+debugger;
+				try {
+					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
+					oModelLocalBinding = this.getView().getModel("localBinding");
+					oTrainInfo = oModelLocalBinding.getProperty(oEvent.getSource().getParent().getBindingContextPath());
+					//sStopCode = "" + oTrainInfo.stopCode;
+					var oParams = {
+						"Line":  oTrainInfo.stopCode.substr(0, 1),
+						"Station": oTrainInfo.stopCode,
+						"Train": oTrainInfo.trainCode,
+						"Track": oTrainInfo.track
+					};
+					this.getRouter().navTo(
+						"RouteTEInfo",
+						oParams,
+						false
+					);
+				}
+				catch (oError) {
+					this._handleCatchException(oError, sFunctionName);
+				}
 			},
 
 			/* =========================================================== */
@@ -100,27 +125,11 @@ debugger;
 				var oModel = this.getOwnerComponent().getModel();
 				var aFilters = [];
 
-				//Add filter by date (yesterday or today)
-var sTemp;
-sTemp = prompt("Fecha fake (yyyy/mm/dd)");
-if (sTemp) {
-	this.getView().getModel("localBinding").setProperty("/Date", new Date(sTemp));
-}/*
-sTemp = undefined
-sTemp = prompt("Usuario fake (código)");
-if (sTemp) {
-	this.getView().getModel("localBinding").setProperty("/EmployeeId", sTemp);
-}*/
-// var sTemp;
-// sTemp = "2018/05/29";
-// if (sTemp) {
-// 	this.getView().getModel("localBinding").setProperty("/Date", new Date(sTemp));
-// }
-// sTemp = "02010351";
-// if (sTemp) {
-// 	this.getView().getModel("localBinding").setProperty("/EmployeeId", sTemp);
-// }
-
+//TODO: Suprimeix aquest hack de les dades
+//Codi d'empleat: 02010351    (GAMEZ BORREGO - (020)10351)
+//Data: 2018/05/29
+this.getView().getModel("localBinding").setProperty("/Date", new Date("2018/05/29"));
+				//Add filter by date
 				aFilters.push(
 					new Filter(
 						"Date",
@@ -138,29 +147,39 @@ if (sTemp) {
 						)
 					);
 				}
+				this.handleBusy(true);
 				oModel.read("/PieceSet", {
 					filters: aFilters,
 	                success: (function(that) {
+	                	var oView;
+
 	                	return function(oData, response) {
-	                		that.getView().getModel("localBinding").setProperty("/PieceSet", oData.results);
-/*		                	try {
-	                			that.getView().getModel("localBinding").setProperty("/PieceSet", oData.results);
+		                	try {
+		                		oView = that.getView();
+		                		oView.getModel("localBinding").setProperty("/PieceSet", oData.results);
 		                	}
 		                	catch (oError) {
-		                		that.getView().getModel("localBinding").setProperty("/PieceSet", {});
-		                	}*/
+		                		oView.getModel("localBinding").setProperty("/PieceSet", {});
+		                	}
+							that.handleBusy(false);
+							
 		                };
 	                })(this),
 	                error: (function(that) {
-	                	return function(oError) {
-	                		that.getView().getModel("localBinding").setProperty("/PieceSet", {});
-/*							var sText = "";
-							try{
+	                	return function(oData) {
+	                		var sText = "";
+	                		var oView;
+
+							try {
+								oView = that.getView();
+								oView.getModel("localBinding").setProperty("/PieceSet", {});
 								sText = JSON.parse(oData.responseText).error.message.value;
-							} catch(oError){
-								sText = oResourceBundle.getText("Calendar.message.calendarRequest.error");
 							}
-							that.showErrorMessageBox(sText);*/
+							catch (oError) {
+								sText = oView.getModel("i18n").getResourceBundle().getText("Calendar.message.calendarRequest.error");
+							}
+							that.showErrorMessageBox(sText);
+							that.handleBusy(false);
 		                };
 	                })(this)
 				});

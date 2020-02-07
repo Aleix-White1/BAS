@@ -52,7 +52,7 @@
 					<columns>
 						<Column hAlign="Center"><Text text="{i18n>stationInfo.train}"/></Column>
 						<Column hAlign="Center"><Text text="{i18n>stationInfo.leaveStation}"/></Column>
-						<Column hAlign="Center"><Text text="{i18n>stationInfo.dAnt}"/></Column>
+						<Column hAlign="Center"><Text text="{i18n>stationInfo.distance.from.previous.train}"/></Column>
 						<Column hAlign="Center"><Text text="{i18n>stationInfo.station}"/></Column>
 						<Column hAlign="Center"><Text text="{i18n>stationInfo.track}"/></Column>
 					</columns>

@@ -21,8 +21,7 @@ sap.ui.define(
 			/* ============================================================ */
 			handleBusy: function(bShowBusy) {
 				var oAppViewModel = this.getView().getModel("appView");
-				var sBusyCounter = oAppViewModel.getProperty("/busyCounter");
-				var iBusyCounter = parseInt(sBusyCounter, 10);
+				var iBusyCounter = parseInt(oAppViewModel.getProperty("/busyCounter"), 10);
 
 				if (bShowBusy) {
 					oAppViewModel.setProperty("/busyCounter", ++iBusyCounter);

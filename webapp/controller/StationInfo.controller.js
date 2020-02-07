@@ -127,7 +127,7 @@ sap.ui.define(
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
-			
+/*
 			onPressTrain: function(oEvent){
 				var sFunctionName = "onPressTrain";
 				try {
@@ -151,7 +151,7 @@ sap.ui.define(
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
-			
+*/
 			//Función para actualizar los campos que aparecen en la pantalla con la fechas y hora actual.
 			loadCurrDateAndTime: function(){
 				var sFunctionName = "loadCurrDateAndTime";

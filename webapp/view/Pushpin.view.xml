@@ -109,13 +109,14 @@
 							<cells>
 								<Text text="{localBinding>StartTime}"/>
 								<HBox justifyContent="Center">
-									<!-- TODO: Diseño o usabilidad? Quién ganará? -->
+<!-- TODO: Diseño o usabilidad? Quién ganará? -->
 									<Text text="{localBinding>StartStation}" visible="{= !${localBinding>/today} }"/>
 									<Link text="{localBinding>StartStation}" visible="{localBinding>/today}" press="onStartStationClicked"/>
 									<!-- tmb:ButtonText text="{localBinding>StartStation}" type="Transparent" toggle="{localBinding>/today}" press="onStartStationClicked" / -->
 								</HBox>
 								<Text text="{localBinding>StartTrack}"/>
 								<HBox justifyContent="Center">
+<!-- TODO: El visible de abajo está mal... lo de "si es numérico" era una forma de hablar... -->
 									<Text text="{localBinding>TrainStation}" visible="{= !${localBinding>/today} || isNaN(${localBinding>TrainStation}) }"/>
 									<Link text="{localBinding>TrainStation}" visible="{= ${localBinding>/today} &amp;&amp; !isNaN(${localBinding>TrainStation}) }" press="onTrainStationClicked"/>
 								</HBox>

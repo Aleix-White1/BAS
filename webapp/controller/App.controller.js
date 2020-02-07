@@ -52,7 +52,6 @@ sap.ui.define(
 							};
 						})(this)
 					);
-//this.getCalendarLegend();
 					this.getOwnerComponent().getRouter().attachRouteMatched(this.onRouteMatched, this);
 					this.getOwnerComponent().getRouter().attachBypassed(this.onRouteMatched, this);
 				}
