@@ -83,3 +83,8 @@
 .digitalticket .lineLogo[data-line="5"] {
 	background-color: #006b9d;
 }
+
+.sap-phone .digitalticket .clockPage .confirmActivityBtn>div,
+.sap-phone .digitalticket .clockPage .confirmActivityBtn button{
+    width: 100%;
+}

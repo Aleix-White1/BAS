@@ -4,10 +4,9 @@ sap.ui.define(
 		"zui5controlstmb/utils/Analytics",
 		"sap/ui/model/json/JSONModel",
 		"sap/ui/model/Filter",
-		"sap/ui/model/FilterOperator",
-		"zui5controlstmb/utils/CommonUtils"
+		"sap/ui/model/FilterOperator"
 	],
-	function (BaseController, Analytics, JSONModel, Filter, FilterOperator, CommonUtils) {
+	function (BaseController, Analytics, JSONModel, Filter, FilterOperator) {
 		"use strict";
 
 		return BaseController.extend("zdigitalticket.controller.Pushpin", {
@@ -32,7 +31,8 @@ sap.ui.define(
 			/* event handlers                       					   */
 			/* =========================================================== */
 			onPushpinMatched: function(oEvent) {
-				this.getView().setModel(new JSONModel({
+				var oModelLocalBinding = this.getView().getModel("localBinding");
+				oModelLocalBinding.setProperty("/",{
 					today: true,
 					ServiceId: "",
 					EmployeeId: "",
@@ -41,8 +41,8 @@ sap.ui.define(
 					Shift: "",
 					Zone: "",
 					Date: new Date()
-				}), "localBinding");
-				this._updateData();
+				});
+				this._getTicketDataData();
 			},
 
 			onChangeDay: function(oEvent) {
@@ -55,7 +55,7 @@ sap.ui.define(
 					oDate.setDate(oDate.getDate() - 1);
 				}
 				oModel.setProperty("/Date", oDate);
-				this._updateData();
+				this._getTicketDataData();
 			},
 
 			onDownloadTicket: function(oEvent) {
@@ -75,7 +75,7 @@ debugger;
 					this.getRouter().navTo(
 						"RouteStationInfo",
 						{
-							"Line": oModelLocalBinding.getProperty("/Line").replace("L", ""),
+							"Line": oTrainInfo.LineNumber, //oModelLocalBinding.getProperty("/Line").replace("L", ""),
 							"Station": oTrainInfo.StartStation
 						},
 						false
@@ -97,10 +97,10 @@ debugger;
 					oTrainInfo = oModelLocalBinding.getProperty(oEvent.getSource().getParent().getParent().getBindingContextPath());
 					//sStopCode = "" + oTrainInfo.stopCode;
 					var oParams = {
-						"Line":  oTrainInfo.stopCode.substr(0, 1),
-						"Station": oTrainInfo.stopCode,
-						"Train": oTrainInfo.trainCode,
-						"Track": oTrainInfo.track
+						"Line":  oTrainInfo.LineNumber,
+						"Station": oTrainInfo.StartStation,
+						"Train": oTrainInfo.TrainStation,
+						"Track": oTrainInfo.StartTrack
 					};
 					this.getRouter().navTo(
 						"RouteTEInfo",
@@ -117,64 +117,7 @@ debugger;
 			/* formatters and other public methods                         */
 			/* =========================================================== */
 
-			/* =========================================================== */
-			/* private methods                                             */
-			/* =========================================================== */
-			_updateData: function() {
-				var oModel = this.getView().getModel();
-				var aFilters = [];
-				var sDateTime;
-
-//TODO: Suprimeix aquest hack de les dades
-this.getView().getModel("localBinding").setProperty("/Date", new Date("2018/05/29"));
-//fTODO
-				sDateTime = CommonUtils.convertDateToUTC(this.getView().getModel("localBinding").getProperty("/Date")).toISOString();
-				sDateTime = sDateTime.replace("Z", "").replace(/\x3A/g, "%3A");
-				this.handleBusy(true);
-				oModel.read("/TicketSet(EmployeeId='02010351',Date=datetime'" + sDateTime + "')", {
-					urlParameters: {
-			        	"$expand": "ToPieces"
-			    	},
-	                success: (function(that) {
-	                	var oView;
-
-	                	return function(oData, response) {
-		                	try {
-		                		oView = that.getView();
-		                		oView.getModel("localBinding").setProperty("/ServiceId", oData.ServiceId);
-		                		oView.getModel("localBinding").setProperty("/EmployeeId", oData.EmployeeId);
-		                		oView.getModel("localBinding").setProperty("/EmployeeName", oData.EmployeeName);
-		                		oView.getModel("localBinding").setProperty("/Line", oData.Line.replace("L", ""));  //TODO: Caldria treure a SAP aquesta L
-								oView.getModel("localBinding").setProperty("/Shift", oData.ShiftNumber);
-								oView.getModel("localBinding").setProperty("/Zone", oData.ZoneId);
-		                		oView.getModel("localBinding").setProperty("/PieceSet", oData.ToPieces.results);
-		                	}
-		                	catch (oError) {
-		                		oView.getModel("localBinding").setProperty("/PieceSet", {});
-		                	}
-							that.handleBusy(false);
-							
-		                };
-	                })(this),
-	                error: (function(that) {
-	                	return function(oData) {
-	                		var sText = "";
-	                		var oView;
-
-							try {
-								oView = that.getView();
-								oView.getModel("localBinding").setProperty("/PieceSet", {});
-								sText = JSON.parse(oData.responseText).error.message.value;
-							}
-							catch (oError) {
-								sText = oView.getModel("i18n").getResourceBundle().getText("error.loading.data");
-							}
-							that.showErrorMessageBox(sText);
-							that.handleBusy(false);
-		                };
-	                })(this)
-				});
-			}
+			
 		});
 	}
 );

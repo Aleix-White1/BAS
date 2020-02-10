@@ -2,9 +2,10 @@ sap.ui.define(
 	[
 		"zui5controlstmb/controller/BaseController",
 		"zui5controlstmb/utils/Analytics",
-		"sap/m/MessageBox"
+		"sap/m/MessageBox",
+		"zui5controlstmb/utils/CommonUtils"
 	],
-	function (BaseController, Analytics, MessageBox) {
+	function (BaseController, Analytics, MessageBox, CommonUtils) {
 		"use strict";
 
 		return BaseController.extend("zdigitalticket.controller.BaseController", {
@@ -186,6 +187,65 @@ sap.ui.define(
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
+			
+			_getTicketDataData: function(oSuccessCallbackFnc) {
+				var oModel = this.getView().getModel();
+				var sDateTime;
+				var _oSuccessCallbackFnc = oSuccessCallbackFnc;
+//TODO: Suprimeix aquest hack de les dades
+this.getView().getModel("localBinding").setProperty("/Date", new Date("2018/05/29"));
+//fTODO
+				sDateTime = CommonUtils.convertDateToUTC(this.getView().getModel("localBinding").getProperty("/Date")).toISOString();
+				sDateTime = sDateTime.replace("Z", "").replace(/\x3A/g, "%3A");
+				this.handleBusy(true);
+//TODO: Quan NO sóc un usuari, aquí podria enviar un DE00052 (sap.ushell.Container.getService("UserInfo").getId())
+				oModel.read("/TicketSet(EmployeeId='02010351',Date=datetime'" + sDateTime + "')", {
+					urlParameters: {
+			        	"$expand": "ToPieces"
+			    	},
+	                success: (function(that) {
+	                	var oView;
+
+	                	return function(oData, response) {
+		                	try {
+		                		oView = that.getView();
+		                		oView.getModel("localBinding").setProperty("/ServiceId", oData.ServiceId);
+		                		oView.getModel("localBinding").setProperty("/EmployeeId", oData.EmployeeId);
+		                		oView.getModel("localBinding").setProperty("/EmployeeName", oData.EmployeeName);
+		                		oView.getModel("localBinding").setProperty("/Line", oData.Line.replace("L", ""));  //TODO: Caldria treure a SAP aquesta L
+								oView.getModel("localBinding").setProperty("/Shift", oData.ShiftNumber);
+								oView.getModel("localBinding").setProperty("/Zone", oData.ZoneId);
+		                		oView.getModel("localBinding").setProperty("/PieceSet", oData.ToPieces.results);
+		                	}
+		                	catch (oError) {
+		                		oView.getModel("localBinding").setProperty("/PieceSet", {});
+		                	}
+		                	if(_oSuccessCallbackFnc){
+		                		_oSuccessCallbackFnc.call(that);
+		                	}
+							that.handleBusy(false);
+		                };
+	                })(this),
+	                
+	                error: (function(that) {
+	                	return function(oData) {
+	                		var sText = "";
+	                		var oView;
+
+							try {
+								oView = that.getView();
+								oView.getModel("localBinding").setProperty("/PieceSet", {});
+								sText = JSON.parse(oData.responseText).error.message.value;
+							}
+							catch (oError) {
+								sText = oView.getModel("i18n").getResourceBundle().getText("error.loading.data");
+							}
+							that.showErrorMessageBox(sText);
+							that.handleBusy(false);
+		                };
+	                })(this)
+				});
+			}
 			
 		});
 	}
