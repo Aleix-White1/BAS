@@ -61,7 +61,7 @@ sap.ui.define(
 						oModelLocalBinding.setProperty("/errorMessage", sText);
 						var sTitle = pTitle;
 						if (sTitle === undefined){
-							sTitle = oResourceBundle.getText("commons.title.error");
+							sTitle = oResourceBundle.getText("error.title");
 						}
 						MessageBox.show(
 							sText, {

@@ -34,12 +34,12 @@ sap.ui.define(
 			onPushpinMatched: function(oEvent) {
 				this.getView().setModel(new JSONModel({
 					today: true,
-					ServiceId: "AAM99999",
-					EmployeeId: "09999",
-					EmployeeName: "ROBERTO ALFREDO FERNANDEZ-RODRIGUEZ DE ZARATE", //JOAN MANEL BORRELL
-					Line: "5",
-					Shift: "1",
-					Zone: "A",
+					ServiceId: "",
+					EmployeeId: "",
+					EmployeeName: "",
+					Line: "",
+					Shift: "",
+					Zone: "",
 					Date: new Date()
 				}), "localBinding");
 				this._updateData();
@@ -75,7 +75,7 @@ debugger;
 					this.getRouter().navTo(
 						"RouteStationInfo",
 						{
-							"Line": oModelLocalBinding.getProperty("/Line"),
+							"Line": oModelLocalBinding.getProperty("/Line").replace("L", ""),
 							"Station": oTrainInfo.StartStation
 						},
 						false
@@ -91,11 +91,10 @@ debugger;
 				var oModelLocalBinding;
 				var oTrainInfo;
 
-debugger;
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
 					oModelLocalBinding = this.getView().getModel("localBinding");
-					oTrainInfo = oModelLocalBinding.getProperty(oEvent.getSource().getParent().getBindingContextPath());
+					oTrainInfo = oModelLocalBinding.getProperty(oEvent.getSource().getParent().getParent().getBindingContextPath());
 					//sStopCode = "" + oTrainInfo.stopCode;
 					var oParams = {
 						"Line":  oTrainInfo.stopCode.substr(0, 1),
@@ -122,41 +121,33 @@ debugger;
 			/* private methods                                             */
 			/* =========================================================== */
 			_updateData: function() {
-				var oModel = this.getOwnerComponent().getModel();
+				var oModel = this.getView().getModel();
 				var aFilters = [];
+				var sDateTime;
 
 //TODO: Suprimeix aquest hack de les dades
-//Codi d'empleat: 02010351    (GAMEZ BORREGO - (020)10351)
-//Data: 2018/05/29
 this.getView().getModel("localBinding").setProperty("/Date", new Date("2018/05/29"));
-				//Add filter by date
-				aFilters.push(
-					new Filter(
-						"Date",
-						FilterOperator.EQ,
-						CommonUtils.convertDateToUTC(this.getView().getModel("localBinding").getProperty("/Date"))
-					)
-				);
-				//If I'm an admin, I can ask for other users than me
-				if (false) { //TODO: Com miro si sóc admin?
-					aFilters.push(
-						new Filter(
-							"EmployeeId",
-							FilterOperator.EQ,
-							this.getView().getModel("localBinding").getProperty("/EmployeeId")
-						)
-					);
-				}
+//fTODO
+				sDateTime = CommonUtils.convertDateToUTC(this.getView().getModel("localBinding").getProperty("/Date")).toISOString();
+				sDateTime = sDateTime.replace("Z", "").replace(/\x3A/g, "%3A");
 				this.handleBusy(true);
-				oModel.read("/PieceSet", {
-					filters: aFilters,
+				oModel.read("/TicketSet(EmployeeId='02010351',Date=datetime'" + sDateTime + "')", {
+					urlParameters: {
+			        	"$expand": "ToPieces"
+			    	},
 	                success: (function(that) {
 	                	var oView;
 
 	                	return function(oData, response) {
 		                	try {
 		                		oView = that.getView();
-		                		oView.getModel("localBinding").setProperty("/PieceSet", oData.results);
+		                		oView.getModel("localBinding").setProperty("/ServiceId", oData.ServiceId);
+		                		oView.getModel("localBinding").setProperty("/EmployeeId", oData.EmployeeId);
+		                		oView.getModel("localBinding").setProperty("/EmployeeName", oData.EmployeeName);
+		                		oView.getModel("localBinding").setProperty("/Line", oData.Line.replace("L", ""));  //TODO: Caldria treure a SAP aquesta L
+								oView.getModel("localBinding").setProperty("/Shift", oData.ShiftNumber);
+								oView.getModel("localBinding").setProperty("/Zone", oData.ZoneId);
+		                		oView.getModel("localBinding").setProperty("/PieceSet", oData.ToPieces.results);
 		                	}
 		                	catch (oError) {
 		                		oView.getModel("localBinding").setProperty("/PieceSet", {});
@@ -176,7 +167,7 @@ this.getView().getModel("localBinding").setProperty("/Date", new Date("2018/05/2
 								sText = JSON.parse(oData.responseText).error.message.value;
 							}
 							catch (oError) {
-								sText = oView.getModel("i18n").getResourceBundle().getText("Calendar.message.calendarRequest.error");
+								sText = oView.getModel("i18n").getResourceBundle().getText("error.loading.data");
 							}
 							that.showErrorMessageBox(sText);
 							that.handleBusy(false);
