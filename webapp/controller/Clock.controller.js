@@ -86,27 +86,25 @@ sap.ui.define(
 			/* =========================================================== */
 			formtterConfirmActivity: function(aActivity){
 				var oView = this.getView();
-				var sText = "";
-				var bActivitiesPendingToApprove = false;
+				var bActivitiesPendingToApprove;
 				var oConfirmBtn = oView.byId("confirmActivityBtn");
+				
+				oConfirmBtn.setType(sap.m.ButtonType.Negative);
+				var sText = oView.getModel("i18n").getResourceBundle().getText("Clock.button.confirmActivity");
+				oConfirmBtn.setEnabled(true);
+				
 				if(aActivity){
 					var iItemsApproved = 0;
 					aActivity.forEach(function(oActivity){ 
-						if(oActivity.Status === "10"){
+						if(oActivity.IsApproved === "X"){
 							iItemsApproved++;
 						}
 					});
 					if(iItemsApproved === aActivity.length){
-						bActivitiesPendingToApprove = true;
+						sText = oView.getModel("i18n").getResourceBundle().getText("Clock.button.activityConfirmed");
+						oConfirmBtn.setType(sap.m.ButtonType.Accept);
+						oConfirmBtn.setEnabled(false);
 					}
-				}
-				if(bActivitiesPendingToApprove){
-					oConfirmBtn.setType(sap.m.ButtonType.Negative);
-					oView.getModel("i18n").getResourceBundle().getText("Clock.button.confirmActivity");
-					oConfirmBtn.setEnabled(false);
-				}else{
-					sText = oView.getModel("i18n").getResourceBundle().getText("Clock.button.activityConfirmed");
-					oConfirmBtn.setType(sap.m.ButtonType.Accept);
 				}
 				return sText;
 			},
