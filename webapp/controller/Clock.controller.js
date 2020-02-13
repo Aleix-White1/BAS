@@ -27,7 +27,33 @@ sap.ui.define(
 			/* event handlers                       					   */
 			/* =========================================================== */
 			onPressConfirmActivity: function(oEvent){
-				
+				var that = this;
+				var sFunctionName = "onPressConfirmActivity";
+				try {
+					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
+					var sEmpId = this.getView().getModel("localBinding").getProperty("/EmployeeId");	
+					if(!sEmpId){
+						sEmpId = sap.ushell.Container.getService("UserInfo").getId();
+					}
+					that.getView().getModel().callFunction("/SetActivityConfirmation", {
+						method: "GET",
+						urlParameters: {
+							"EmployeeId": sEmpId
+						},
+						success: function (oResponse) {
+							if(oResponse.SetActivityConfirmation.is_confirmed){
+								that._changeBtnStatus(true);
+							}
+						},
+						error: function (oError) {
+							var oView = that.getView();;
+							var sText = oView.getModel("i18n").getResourceBundle().getText("Clock.button.errorConfirmingActivity");
+							that.showErrorMessageBox(sText);
+						}
+					});
+				} catch (oError) {
+					this._handleCatchException(oError, sFunctionName);
+				}
 			},
 			
 			onClockMatched: function(oEvent){
@@ -62,6 +88,7 @@ sap.ui.define(
 				var oView = this.getView();
 				var sText = "";
 				var bActivitiesPendingToApprove = false;
+				var oConfirmBtn = oView.byId("confirmActivityBtn");
 				if(aActivity){
 					var iItemsApproved = 0;
 					aActivity.forEach(function(oActivity){ 
@@ -74,11 +101,12 @@ sap.ui.define(
 					}
 				}
 				if(bActivitiesPendingToApprove){
-					oView.byId("confirmActivityBtn").setType(sap.m.ButtonType.Negative);
+					oConfirmBtn.setType(sap.m.ButtonType.Negative);
 					oView.getModel("i18n").getResourceBundle().getText("Clock.button.confirmActivity");
+					oConfirmBtn.setEnabled(false);
 				}else{
 					sText = oView.getModel("i18n").getResourceBundle().getText("Clock.button.activityConfirmed");
-					oView.byId("confirmActivityBtn").setType(sap.m.ButtonType.Accept);
+					oConfirmBtn.setType(sap.m.ButtonType.Accept);
 				}
 				return sText;
 			},
@@ -102,7 +130,7 @@ sap.ui.define(
 		                }),
 		                error: (function(oResponse) {
 	                		var oView;
-							oView.getModel("localBinding").setProperty("/ActivitySet", []);
+							oView.getModel("localBinding").setProperty("/Clock/ActivitySet", []);
 							var sText = oView.getModel("i18n").getResourceBundle().getText("error.loading.data");
 							that.showErrorMessageBox(sText);
 							that.handleBusy(false);
@@ -113,7 +141,27 @@ sap.ui.define(
 				}
 			},
 			
-			
+			_changeBtnStatus: function(bConfirm){
+				var sFunctionName = "_changeBtnStatus";
+				var oView = this.getView();
+				var sText, sType;
+				var oConfirmBtn = oView.byId("confirmActivityBtn");
+				try {
+					if(bConfirm){
+						sText = oView.getModel("i18n").getResourceBundle().getText("Clock.button.activityConfirmed");
+						sType = "Accept";
+						oConfirmBtn.setEnabled(false);
+					}else{
+						sText = oView.getModel("i18n").getResourceBundle().getText("Clock.button.confirmActivity");
+						sType = "Negative";
+					}
+					oConfirmBtn.setText(sText);
+					oConfirmBtn.setType(sType);
+				} catch (oError) {
+					this._handleCatchException(oError, sFunctionName);
+				}
+				return sText;
+			}
 		});
 	}
 );

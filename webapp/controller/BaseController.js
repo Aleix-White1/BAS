@@ -134,6 +134,7 @@ sap.ui.define(
 					var oLineData = oMiralinModel.getProperty("/stops/" + _sLine);
 					if(!oLineData){
 						//Si entramos en este punto es que no tenemos la información correspondiente a las paradas de la línea
+						this.handleBusy(true);
 						$.ajax({
 							type: "GET",
 							async: true,
@@ -142,6 +143,7 @@ sap.ui.define(
 							success: function(result) {
 			                    oMiralinModel.setProperty("/stops/" + _sLine, result.data.features);
 			                    _oGetStopsCallbackFnc.call(this, _sLine, _sStation);
+			                    that.handleBusy(false);
 			                },
 			                error: function(result) {
 								oMiralinModel.setProperty("/stops", {});
@@ -152,7 +154,7 @@ sap.ui.define(
 										styleClass: bCompact ? "sapUiSizeCompact" : ""
 									}
 								);
-								
+								that.handleBusy(false);
 			                }
 						});
 					}else{
@@ -161,7 +163,7 @@ sap.ui.define(
 						_oGetStopsCallbackFnc.call(this, _sLine, _sStation);
 					}
 					
-					
+					this.handleBusy(true);
 					$.ajax({
 						type: "GET",
 						async: true,
@@ -170,6 +172,7 @@ sap.ui.define(
 						success: function(result) {
 		                    oMiralinModel.setProperty("/arrivals", result.data.arrivals);
 							_oGetArrivalsCallbackFnc.call(this);
+							that.handleBusy(false);
 		                },
 		                error: function(result) {
 		                	oMiralinModel.setProperty("/arrivals", {});
@@ -180,7 +183,7 @@ sap.ui.define(
 									styleClass: bCompact ? "sapUiSizeCompact" : ""
 								}
 							);
-							
+							that.handleBusy(false);
 		                }
 					});
 				} catch (oError) {

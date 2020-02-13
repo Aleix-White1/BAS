@@ -127,31 +127,7 @@ sap.ui.define(
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
-/*
-			onPressTrain: function(oEvent){
-				var sFunctionName = "onPressTrain";
-				try {
-					var oBtn = oEvent.getSource();
-					var oModelLocalBinding = this.getView().getModel("localBinding");
-					var sPath = oBtn.getParent().getBindingContextPath();
-					var oTrainInfo = oModelLocalBinding.getProperty(sPath);
-					var sStopCode = ""+oTrainInfo.stopCode;
-					var oParams = {
-						"Line":  sStopCode.substr(0,1),
-						"Station": sStopCode,
-						"Train": oTrainInfo.trainCode,
-						"Track": oTrainInfo.track
-					};
-					this.getRouter().navTo(
-						"RouteTEInfo",
-						oParams,
-						false
-					);
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
-				}
-			},
-*/
+
 			//Función para actualizar los campos que aparecen en la pantalla con la fechas y hora actual.
 			loadCurrDateAndTime: function(){
 				var sFunctionName = "loadCurrDateAndTime";

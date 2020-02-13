@@ -75,7 +75,8 @@ debugger;
 					this.getRouter().navTo(
 						"RouteStationInfo",
 						{
-							"Line": oTrainInfo.LineNumber, //oModelLocalBinding.getProperty("/Line").replace("L", ""),
+							// "Line": oTrainInfo.LineNumber, 
+							"Line": oModelLocalBinding.getProperty("/Line").replace("L", ""),
 							"Station": oTrainInfo.StartStation
 						},
 						false
@@ -97,7 +98,8 @@ debugger;
 					oTrainInfo = oModelLocalBinding.getProperty(oEvent.getSource().getParent().getParent().getBindingContextPath());
 					//sStopCode = "" + oTrainInfo.stopCode;
 					var oParams = {
-						"Line":  oTrainInfo.LineNumber,
+						// "Line":  oTrainInfo.LineNumber,
+						"Line": oModelLocalBinding.getProperty("/Line").replace("L", ""),
 						"Station": oTrainInfo.StartStation,
 						"Train": oTrainInfo.TrainStation,
 						"Track": oTrainInfo.StartTrack

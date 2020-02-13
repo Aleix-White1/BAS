@@ -48,7 +48,11 @@
 				
 				<Text text=" "/>  <!-- Spacer -->
 
-				<Table items="{localBinding>/StationInfo/StationInfoTrainSet}">
+				<Table	items="{localBinding>/StationInfo/StationInfoTrainSet}"
+						growing="true"
+						growingThreshold="8"
+            			growingScrollToLoad="true"
+				>
 					<columns>
 						<Column hAlign="Center"><Text text="{i18n>stationInfo.train}"/></Column>
 						<Column hAlign="Center"><Text text="{i18n>stationInfo.leaveStation}"/></Column>
