@@ -18,9 +18,7 @@ sap.ui.define(
 
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
-					//TODO: Reconsidera l'ús d'una altra estructura per a l'id d'usuari
-					this.getRouter().getRoute("RoutePushpin1").attachPatternMatched(this.onPushpinMatched, this);
-					this.getRouter().getRoute("RoutePushpin2").attachPatternMatched(this.onPushpinMatched, this);
+					this.getRouter().getRoute("RoutePushpin").attachPatternMatched(this.onPushpinMatched, this);
 				}
 				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
@@ -31,18 +29,27 @@ sap.ui.define(
 			/* event handlers                       					   */
 			/* =========================================================== */
 			onPushpinMatched: function(oEvent) {
-				var oModelLocalBinding = this.getView().getModel("localBinding");
-				oModelLocalBinding.setProperty("/",{
-					today: true,
-					ServiceId: "",
-					EmployeeId: "",
-					EmployeeName: "",
-					Line: "",
-					Shift: "",
-					Zone: "",
-					Date: new Date()
-				});
-				this._getTicketDataData();
+				var sFunctionName = "onRouteMatched";
+				var oModelLocalBinding;
+
+				try {
+					oModelLocalBinding = this.getView().getModel("localBinding");
+					oModelLocalBinding.setProperty("/", {
+						today: true,
+						ServiceId: "",
+						EmployeeId: oModelLocalBinding.getProperty("/EmployeeId"), //This was set by App.controller
+						AssignationGroupId: oModelLocalBinding.getProperty("/AssignationGroupId"), //This was set by App.controller
+						EmployeeName: "",
+						Line: "",
+						Shift: "",
+						Zone: "",
+						Date: new Date()
+					});
+					this._getTicketData();
+				}
+				catch (oError) {
+					this._handleCatchException(oError, sFunctionName);
+				}
 			},
 
 			onChangeDay: function(oEvent) {
@@ -55,7 +62,7 @@ sap.ui.define(
 					oDate.setDate(oDate.getDate() - 1);
 				}
 				oModel.setProperty("/Date", oDate);
-				this._getTicketDataData();
+				this._getTicketData();
 			},
 
 			onDownloadTicket: function(oEvent) {
@@ -96,9 +103,7 @@ debugger;
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
 					oModelLocalBinding = this.getView().getModel("localBinding");
 					oTrainInfo = oModelLocalBinding.getProperty(oEvent.getSource().getParent().getParent().getBindingContextPath());
-					//sStopCode = "" + oTrainInfo.stopCode;
 					var oParams = {
-						// "Line":  oTrainInfo.LineNumber,
 						"Line": oModelLocalBinding.getProperty("/Line").replace("L", ""),
 						"Station": oTrainInfo.StartStation,
 						"Train": oTrainInfo.TrainStation,
@@ -118,8 +123,16 @@ debugger;
 			/* =========================================================== */
 			/* formatters and other public methods                         */
 			/* =========================================================== */
-
 			
+			formatEmployeeId: function(value) {
+debugger;
+				if (typeof value === "string" && value.length > 5) {
+					return value.substring(value.length - 5);
+				}
+				else {
+					return value;
+				}
+			}
 		});
 	}
 );

@@ -26,12 +26,6 @@
 					<Link text="&lt; {i18n>yesterday}" press="onChangeDay" textAlign="End" visible="{localBinding>/today}"/>
 					<Link text="{i18n>today} >" press="onChangeDay" textAlign="End" visible="{= !${localBinding>/today} }"/>
 				</HBox>
-<!--
-				<HBox >
-					<Button text="navToStation" press="onStartStationClicked" />
-					<Button text="navToTrain" press="onTrainStationClicked" />
-				</HBox>
--->
 				<VBox class="formFilters">
 					<HBox justifyContent="SpaceBetween" alignItems="Center">
 						<HBox>
@@ -62,7 +56,7 @@
 								}"/>
 							</VBox>
 						</HBox>
-						<core:Icon src="sap-icon://download" size="20px" press="onDownloadTicket" visible="{= ${localBinding>/today} }"/> <!-- TODO: L'admin no hauria de poder veure aquest botó -->
+						<core:Icon src="sap-icon://download" size="20px" press="onDownloadTicket" visible="{= ${localBinding>/today} &amp;&amp; !${appView>/isAdmin} }"/>
 					</HBox>
 					<Text text="{i18n>zone.activities.for.today}"/>
 				</VBox>
@@ -73,7 +67,10 @@
 							<Text text="{localBinding>/ServiceId}"/>
 						</Column>
 						<Column hAlign="Center" width="20%">
-							<Text text="{localBinding>/EmployeeId}"/>
+							<Text text="{
+								path: 'localBinding>/EmployeeId',
+								formatter: '.formatEmployeeId'
+							}"/>
 						</Column>
 						<Column hAlign="Center" width="55%">
 							<Text text="{localBinding>/EmployeeName}"/>
@@ -109,7 +106,7 @@
 							<cells>
 								<Text text="{localBinding>StartTime}"/>
 								<HBox justifyContent="Center">
-<!-- TODO: Diseño o usabilidad? Quién ganará? -->
+<!-- TODO: Diseño o usabilidad? Qué ganará? -->
 									<Text text="{localBinding>StartStation}" visible="{= !${localBinding>/today} }"/>
 									<Link text="{localBinding>StartStation}" visible="{localBinding>/today}" press="onStartStationClicked"/>
 									<!-- tmb:ButtonText text="{localBinding>StartStation}" type="Transparent" toggle="{localBinding>/today}" press="onStartStationClicked" / -->

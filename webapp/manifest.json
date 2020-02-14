@@ -119,7 +119,7 @@
 			"routes": [
 				{
 					"pattern": "",
-					"name": "RoutePushpin1",
+					"name": "RoutePushpin",
 					"target": [
 						"TargetPushpin"
 					]
@@ -150,13 +150,6 @@
 					"name": "RouteTEInfo",
 					"target": [
 						"TargetTEInfo"
-					]
-				},
-				{
-					"pattern": "{EmpId}",
-					"name": "RoutePushpin2",
-					"target": [
-						"TargetPushpin"
 					]
 				}
 			],

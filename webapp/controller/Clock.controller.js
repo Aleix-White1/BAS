@@ -68,7 +68,7 @@ sap.ui.define(
 					
 					if( oModelLocalBinding.getProperty("/Line") === undefined ){
 						//Se pasa por parámetros la función callback para recuperar la información de la actividad diaria.
-						this._getTicketDataData(this.getActivityData);
+						this._getTicketData(this.getActivityData);
 					}else{
 						//Si la propiedad Line está informada quiere decir que ya se ha recuperado la información del 
 						//empleado en otra llamada. Así que para obtener una carga más rapida, se llama directamente a

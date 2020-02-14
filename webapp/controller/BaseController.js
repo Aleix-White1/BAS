@@ -92,12 +92,11 @@ sap.ui.define(
 					return "";
 				}
 			},
-			
-			
+
 			/* =========================================================== */
 			/* private methods                                             */
 			/* =========================================================== */
-			
+
 			getMiralinInfo: function(sLine, sStation, sTrain, oGetStopsCallbackFnc, oGetArrivalsCallbackFnc){
 				var sFunctionName = "onDailyActivityMatched";
 				var oView = this.getView();
@@ -113,17 +112,17 @@ sap.ui.define(
 						oMiralinModel.setProperty("/stops", {});
 					}
 					
-					this.loadStationData(sLine, sStation, sTrain, oGetStopsCallbackFnc, oGetArrivalsCallbackFnc);
+					this._loadStationData(sLine, sStation, sTrain, oGetStopsCallbackFnc, oGetArrivalsCallbackFnc);
 
 				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
-			
-			loadStationData: function(sLine, sStation, sTrain, oGetStopsCallbackFnc, oGetArrivalsCallbackFnc){
-				var sFunctionName = "loadStationData";
+
+			_loadStationData: function(sLine, sStation, sTrain, oGetStopsCallbackFnc, oGetArrivalsCallbackFnc){
+				var sFunctionName = "_loadStationData";
+
 				try {
-					var that = this; 
 					var oView = this.getView();
 					var _sLine = sLine;
 					var _sStation = sStation;
@@ -140,22 +139,26 @@ sap.ui.define(
 							async: true,
 							context: this,
 							url: "/miralin?line=" + _sLine + "&service=stops",
-							success: function(result) {
-			                    oMiralinModel.setProperty("/stops/" + _sLine, result.data.features);
-			                    _oGetStopsCallbackFnc.call(this, _sLine, _sStation);
-			                    that.handleBusy(false);
-			                },
-			                error: function(result) {
-								oMiralinModel.setProperty("/stops", {});
-								var bCompact = oView.$().closest(".sapUiSizeCompact").length;
-								MessageBox.error(
-									"No se ha podido recuperar la información de las paradas",
-									{
-										styleClass: bCompact ? "sapUiSizeCompact" : ""
-									}
-								);
-								that.handleBusy(false);
-			                }
+							success: (function(that) {
+								return function(result) {
+				                    oMiralinModel.setProperty("/stops/" + _sLine, result.data.features);
+				                    _oGetStopsCallbackFnc.call(this, _sLine, _sStation);
+				                    that.handleBusy(false);
+				                };
+							})(this),
+			                error: (function(that) {
+								return function(result) {
+									oMiralinModel.setProperty("/stops", {});
+									var bCompact = oView.$().closest(".sapUiSizeCompact").length;
+									MessageBox.error(
+										"No se ha podido recuperar la información de las paradas",
+										{
+											styleClass: bCompact ? "sapUiSizeCompact" : ""
+										}
+									);
+									that.handleBusy(false);
+				                };
+			                })(this)
 						});
 					}else{
 						//En este caso, si que tenemos la información correspondiente a las paradas de la línea y solo hemos de actualizarla
@@ -190,19 +193,30 @@ sap.ui.define(
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
-			
-			_getTicketDataData: function(oSuccessCallbackFnc) {
+
+			_getTicketData: function(oSuccessCallbackFnc) {
 				var oModel = this.getView().getModel();
 				var sDateTime;
-				var _oSuccessCallbackFnc = oSuccessCallbackFnc;
+				var sEmployeeId;
+				var sAssignationGroupId;
+				var oModelLocalBinding;
+
 //TODO: Suprimeix aquest hack de les dades
 this.getView().getModel("localBinding").setProperty("/Date", new Date("2018/05/29"));
 //fTODO
 				sDateTime = CommonUtils.convertDateToUTC(this.getView().getModel("localBinding").getProperty("/Date")).toISOString();
 				sDateTime = sDateTime.replace("Z", "").replace(/\x3A/g, "%3A");
 				this.handleBusy(true);
-//TODO: Quan NO sóc un usuari, aquí podria enviar un DE00052 (sap.ushell.Container.getService("UserInfo").getId())
-				oModel.read("/TicketSet(EmployeeId='02010351',Date=datetime'" + sDateTime + "')", {
+				if (this.getView().getModel("appView").getProperty("/isAdmin")) {
+					oModelLocalBinding = this.getView().getModel("localBinding");
+					sEmployeeId = oModelLocalBinding.getProperty("/EmployeeId");
+					sAssignationGroupId = oModelLocalBinding.getProperty("/AssignationGroupId");
+				}
+				else {
+					sEmployeeId = sap.ushell.Container.getService("UserInfo").getId().substr(0, 10);
+					sAssignationGroupId = "%20";
+				}
+				oModel.read("/TicketSet(EmployeeId='" + sEmployeeId + "',Date=datetime'" + sDateTime + "',AssignationGroupId='" + sAssignationGroupId + "')", {
 					urlParameters: {
 			        	"$expand": "ToPieces"
 			    	},
@@ -223,13 +237,12 @@ this.getView().getModel("localBinding").setProperty("/Date", new Date("2018/05/2
 		                	catch (oError) {
 		                		oView.getModel("localBinding").setProperty("/PieceSet", {});
 		                	}
-		                	if(_oSuccessCallbackFnc){
-		                		_oSuccessCallbackFnc.call(that);
+		                	if (oSuccessCallbackFnc){
+		                		oSuccessCallbackFnc.call(that);
 		                	}
 							that.handleBusy(false);
 		                };
 	                })(this),
-	                
 	                error: (function(that) {
 	                	return function(oData) {
 	                		var sText = "";

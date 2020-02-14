@@ -18,26 +18,25 @@ sap.ui.define(
 			 * Can be used to modify the view before it is displayed, to bind event handlers and do other one-time initialization.
 			 * @override
 			 */
-			onInit: function () {
+			onInit: function() {
 				var sFunctionName = "onInit";
 				var oViewModel;
 				var fnSetAppNotBusy;
+				var oModelLocalBinding;
+				var oParameters;
+				var sEmployeeId;
+				var sAssignationGroupId;
 
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
 					BaseController.prototype.onInit.call(this);
 					oViewModel = new JSONModel({
 						busy: true,
-						delay: 0,
 						busyCounter: 0,
-						backButtonVisible: false
+						backButtonVisible: false,
+						isAdmin: true //TODO: D'on treiem això?
 					});
 					this.getView().setModel(oViewModel, "appView");
-//					this.getOwnerComponent().getModel("localBinding").setProperty("/employeeNumber", "");
-//					this.getOwnerComponent().getModel("localBinding").setProperty("/selectedDateCalendar", new Date());
-//this._checkParameters();
-//this.resetDailyActivityViewConfiguration();
-//this._getConfig();
 					//Disable busy indication when the metadata is loaded and in case of errors
 					this.getOwnerComponent().getModel().attachMetadataFailed(
 						fnSetAppNotBusy = function() {
@@ -52,6 +51,25 @@ sap.ui.define(
 							};
 						})(this)
 					);
+					//Let's check for initial parameters
+					oParameters = this.getOwnerComponent().getComponentData().startupParameters;
+					if (oParameters && Array.isArray(oParameters.EmpId) && Array.isArray(oParameters.AssGrId) && this.getView().getModel("appView").getProperty("/isAdmin")) {
+						sEmployeeId = oParameters.EmpId[0];
+						if (!sEmployeeId) {
+							sEmployeeId = "";
+						}
+						sAssignationGroupId = oParameters.AssGrId[0];
+						if (!sAssignationGroupId) {
+							sAssignationGroupId = "";
+						}
+					}
+					else {
+						sEmployeeId = "";
+						sAssignationGroupId = "";
+					}
+					oModelLocalBinding = this.getView().getModel("localBinding");
+					oModelLocalBinding.setProperty("/EmployeeId", sEmployeeId);
+					oModelLocalBinding.setProperty("/AssignationGroupId", sAssignationGroupId);
 					this.getOwnerComponent().getRouter().attachRouteMatched(this.onRouteMatched, this);
 					this.getOwnerComponent().getRouter().attachBypassed(this.onRouteMatched, this);
 				}
@@ -70,27 +88,15 @@ sap.ui.define(
 			 * @param {sap.ui.base.Event} oEvent Information about the event
 			 */
 			onPressToolbarButton: function(oEvent) {
-				var sFunctionName = "onPressPushpinButton";
-				var oParams = {};
+				var sFunctionName = "onPressToolbarButton";
 				var sTarget;
 
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
-					switch (sTarget = CommonUtils.getPropertyValueCustomData(oEvent.getSource(), "buttonTarget")) {
-						case "RoutePushpin1":
-						case "RoutePushpin2":
-							//Let's add some specific params for tab named "pushpin"
-							break;
-						case "RouteClock":
-							//Let's add some specific params for tab named "clock"
-							break;
-						case "RouteStar":
-							//Let's add some specific params for tab named "star"
-							break;
-					}
+					sTarget = CommonUtils.getPropertyValueCustomData(oEvent.getSource(), "buttonTarget");
 					this.getRouter().navTo(
 						sTarget,
-						oParams,
+						{},
 						false
 					);
 				}
@@ -104,9 +110,16 @@ sap.ui.define(
 			 * @param {sap.ui.base.Event} oEvent Information about the event
 			 */
 			onPressBackButton: function(oEvent) {
-				this.onNavBack();
-			},
+				var sFunctionName = "onPressBackButton";
 
+				try {
+					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
+					this.onNavBack();
+				}
+				catch (oError) {
+					this._handleCatchException(oError, sFunctionName);
+				}
+			},
 			/**
 			 * Event handler that is invoked when the user navigates to some known url
 			 * @event
@@ -118,7 +131,7 @@ sap.ui.define(
 				var sRouteName;
 
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.OTHER);
+					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 		            sRouteName = oEvent.getParameters().name;
 					this.getView().byId("footerButtons").getContent().forEach(function(oButton) {
 						if (CommonUtils.getPropertyValueCustomData(oButton, "buttonTarget") !== sRouteName) {
@@ -134,24 +147,7 @@ sap.ui.define(
 				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
-			}//,
-
-			/* =========================================================== */
-			/* private methods                                             */
-			/* =========================================================== */
-/*			resetDailyActivityViewConfiguration: function(){
-				var sFunctionName = "resetDailyActivityViewConfiguration";
-
-				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.OTHER);
-					this.getView().getModel("localBinding").setProperty("/config", {
-						"is_admin": false
-					});
-				}
-				catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
-				}
-			} */
+			}
 		});
 	}
 );
