@@ -122,7 +122,7 @@ sap.ui.define(
 						"RouteStationInfo",
 						{
 							// "Line": oTrainInfo.LineNumber, 
-							"Line": oModelLocalBinding.getProperty("/Line").replace("L", ""),
+							"Line": oModelLocalBinding.getProperty("/Line"),
 							"Station": oTrainInfo.StartStation
 						},
 						false
@@ -143,7 +143,7 @@ sap.ui.define(
 					oModelLocalBinding = this.getView().getModel("localBinding");
 					oTrainInfo = oModelLocalBinding.getProperty(oEvent.getSource().getParent().getParent().getBindingContextPath());
 					var oParams = {
-						"Line": oModelLocalBinding.getProperty("/Line").replace("L", ""),
+						"Line": oModelLocalBinding.getProperty("/Line"),
 						"Station": oTrainInfo.StartStation,
 						"Train": oTrainInfo.TrainStation,
 						"Track": oTrainInfo.StartTrack
