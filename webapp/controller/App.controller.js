@@ -30,11 +30,18 @@ sap.ui.define(
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
 					BaseController.prototype.onInit.call(this);
+					oViewModel = new JSONModel();
+					oViewModel.loadData(
+						this.getOwnerComponent().getModel().sServiceUrl + "/GetUserInformation",
+						undefined,
+					    false, //Synchronous call
+					    "GET"
+					);
 					oViewModel = new JSONModel({
 						busy: true,
 						busyCounter: 0,
 						backButtonVisible: false,
-						isAdmin: true //TODO: D'on treiem això?
+						isAdmin: oViewModel.getProperty("/d/GetUserInformation/isAdmin")
 					});
 					this.getView().setModel(oViewModel, "appView");
 					//Disable busy indication when the metadata is loaded and in case of errors

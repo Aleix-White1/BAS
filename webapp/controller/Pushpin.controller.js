@@ -4,9 +4,10 @@ sap.ui.define(
 		"zui5controlstmb/utils/Analytics",
 		"sap/ui/model/json/JSONModel",
 		"sap/ui/model/Filter",
+		"zui5controlstmb/utils/CommonUtils",
 		"sap/ui/model/FilterOperator"
 	],
-	function (BaseController, Analytics, JSONModel, Filter, FilterOperator) {
+	function (BaseController, Analytics, JSONModel, Filter, CommonUtils, FilterOperator) {
 		"use strict";
 
 		return BaseController.extend("zdigitalticket.controller.Pushpin", {
@@ -29,10 +30,11 @@ sap.ui.define(
 			/* event handlers                       					   */
 			/* =========================================================== */
 			onPushpinMatched: function(oEvent) {
-				var sFunctionName = "onRouteMatched";
+				var sFunctionName = "onPushpinMatched";
 				var oModelLocalBinding;
 
 				try {
+					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					oModelLocalBinding = this.getView().getModel("localBinding");
 					oModelLocalBinding.setProperty("/", {
 						today: true,
@@ -53,21 +55,58 @@ sap.ui.define(
 			},
 
 			onChangeDay: function(oEvent) {
-				var oModel = this.getView().getModel("localBinding");
-				var bToday = !this.getView().getModel("localBinding").getProperty("/today");
-				var oDate = new Date();
+				var sFunctionName = "onChangeDay";
+				var oModel;
+				var bToday;
+				var oDate;
 
-				oModel.setProperty("/today", bToday);
-				if (!bToday) {
-					oDate.setDate(oDate.getDate() - 1);
+				try {
+					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
+					oModel = this.getView().getModel("localBinding");
+					bToday = !this.getView().getModel("localBinding").getProperty("/today");
+					oDate = new Date();
+					oModel.setProperty("/today", bToday);
+					if (!bToday) {
+						oDate.setDate(oDate.getDate() - 1);
+					}
+					oModel.setProperty("/Date", oDate);
+					this._getTicketData();
 				}
-				oModel.setProperty("/Date", oDate);
-				this._getTicketData();
+				catch (oError) {
+					this._handleCatchException(oError, sFunctionName);
+				}
 			},
 
 			onDownloadTicket: function(oEvent) {
-debugger;
-				//TODO: Descarregar el pdf
+				var sFunctionName = "onDownloadTicket";
+				var oModelLocalBinding;
+				var sDateTime;
+				var sEmployeeId;
+				var sAssignationGroupId;
+				var sURL;
+
+				try {
+					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
+					oModelLocalBinding = this.getView().getModel("localBinding");
+					sDateTime = CommonUtils.convertDateToUTC(oModelLocalBinding.getProperty("/Date")).toISOString();
+					sDateTime = sDateTime.replace("Z", "").replace(/\x3A/g, "%3A");
+					if (this.getView().getModel("appView").getProperty("/isAdmin")) {
+						sEmployeeId = oModelLocalBinding.getProperty("/EmployeeId");
+						sAssignationGroupId = oModelLocalBinding.getProperty("/AssignationGroupId");
+					}
+					else {
+						sEmployeeId = sap.ushell.Container.getService("UserInfo").getId().substr(0, 10);
+						sAssignationGroupId = "%20";
+					}
+					sURL = this.getOwnerComponent().getModel().sServiceUrl;
+					sap.m.URLHelper.redirect(
+						sURL + "/TicketSet(EmployeeId='" + sEmployeeId + "',AssignationGroupId='" + sAssignationGroupId + "',Date=datetime'" + sDateTime + "')/$value",
+						true
+					);
+				}
+				catch (oError) {
+					this._handleCatchException(oError, sFunctionName);
+				}
 			},
 
 			onStartStationClicked: function(oEvent) {
@@ -76,7 +115,7 @@ debugger;
 				var oTrainInfo;
 
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
+					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					oModelLocalBinding = this.getView().getModel("localBinding");
 					oTrainInfo = oModelLocalBinding.getProperty(oEvent.getSource().getParent().getParent().getBindingContextPath());
 					this.getRouter().navTo(
@@ -100,7 +139,7 @@ debugger;
 				var oTrainInfo;
 
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
+					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					oModelLocalBinding = this.getView().getModel("localBinding");
 					oTrainInfo = oModelLocalBinding.getProperty(oEvent.getSource().getParent().getParent().getBindingContextPath());
 					var oParams = {
@@ -125,12 +164,19 @@ debugger;
 			/* =========================================================== */
 			
 			formatEmployeeId: function(value) {
-debugger;
-				if (typeof value === "string" && value.length > 5) {
-					return value.substring(value.length - 5);
+				var sFunctionName = "formatEmployeeId";
+
+				try {
+					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.FORMATTER);
+					if (typeof value === "string" && value.length > 5) {
+						return value.substring(value.length - 5);
+					}
+					else {
+						return value;
+					}
 				}
-				else {
-					return value;
+				catch (oError) {
+					this._handleCatchException(oError, sFunctionName);
 				}
 			}
 		});

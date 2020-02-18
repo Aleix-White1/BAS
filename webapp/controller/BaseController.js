@@ -202,7 +202,10 @@ sap.ui.define(
 				var oModelLocalBinding;
 
 //TODO: Suprimeix aquest hack de les dades
-this.getView().getModel("localBinding").setProperty("/Date", new Date("2018/05/29"));
+var sFakeDate = prompt("Current date is " + this.getView().getModel("localBinding").getProperty("/Date") + "\nIf a fake date is needed, type it here (yyyy/mm/dd)");
+if (sFakeDate) {
+	this.getView().getModel("localBinding").setProperty("/Date", new Date(sFakeDate));
+}
 //fTODO
 				sDateTime = CommonUtils.convertDateToUTC(this.getView().getModel("localBinding").getProperty("/Date")).toISOString();
 				sDateTime = sDateTime.replace("Z", "").replace(/\x3A/g, "%3A");
