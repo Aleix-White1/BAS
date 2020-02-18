@@ -172,22 +172,26 @@ sap.ui.define(
 						async: true,
 						url: "/miralin?line=" + sLine + "&station=" + sStation + "&service=arrivals",
 						context: this,
-						success: function(result) {
-		                    oMiralinModel.setProperty("/arrivals", result.data.arrivals);
-							_oGetArrivalsCallbackFnc.call(this);
-							that.handleBusy(false);
-		                },
-		                error: function(result) {
-		                	oMiralinModel.setProperty("/arrivals", {});
-							var bCompact = oView.$().closest(".sapUiSizeCompact").length;
-							MessageBox.error(
-								"No se ha podido recuperar la informacion de las llegadas",
-								{
-									styleClass: bCompact ? "sapUiSizeCompact" : ""
-								}
-							);
-							that.handleBusy(false);
-		                }
+						success: (function(that) {
+							return function(result) {
+			                    oMiralinModel.setProperty("/arrivals", result.data.arrivals);
+								_oGetArrivalsCallbackFnc.call(this);
+								that.handleBusy(false);
+			                };
+						})(this),
+		                error: (function(that) {
+		                	return function(result) {
+			                	oMiralinModel.setProperty("/arrivals", {});
+								var bCompact = oView.$().closest(".sapUiSizeCompact").length;
+								MessageBox.error(
+									"No se ha podido recuperar la informacion de las llegadas",
+									{
+										styleClass: bCompact ? "sapUiSizeCompact" : ""
+									}
+								);
+								that.handleBusy(false);
+			                };
+		                })(this)
 					});
 				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
