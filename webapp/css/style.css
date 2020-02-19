@@ -88,3 +88,15 @@
 .sap-phone .digitalticket .clockPage .confirmActivityBtn button{
     width: 100%;
 }
+
+.digitalticket button.ButtonTextTMB {
+	height: 32px;
+	padding: 0;
+}
+.digitalticket button.ButtonTextTMB > span {
+	height: 32px;
+	border: 0;
+}
+.digitalticket button.ButtonTextTMB > span > span {
+	line-height: 32px;
+}

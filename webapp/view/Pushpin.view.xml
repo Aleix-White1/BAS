@@ -106,15 +106,11 @@
 							<cells>
 								<Text text="{localBinding>StartTime}"/>
 								<HBox justifyContent="Center">
-<!-- TODO: Diseño o usabilidad? Qué ganará? -->
-									<Text text="{localBinding>StartStation}" visible="{= !${localBinding>/today} }"/>
-									<Link text="{localBinding>StartStation}" visible="{localBinding>/today}" press="onStartStationClicked"/>
-									<!-- tmb:ButtonText text="{localBinding>StartStation}" type="Transparent" toggle="{localBinding>/today}" press="onStartStationClicked" / -->
+									<tmb:ButtonText text="{localBinding>StartStation}" type="Transparent" toggle="{= ${localBinding>/today} ? 'true': '' }" press="onStartStationClicked" />
 								</HBox>
 								<Text text="{localBinding>StartTrack}"/>
 								<HBox justifyContent="Center">
-									<Text text="{localBinding>TrainStation}" visible="{= !${localBinding>/today} || !${localBinding>IsTrainStationClickable} }"/>
-									<Link text="{localBinding>TrainStation}" visible="{= ${localBinding>/today} &amp;&amp; ${localBinding>IsTrainStationClickable} }" press="onTrainStationClicked"/>
+									<tmb:ButtonText text="{localBinding>TrainStation}" type="Transparent" toggle="{= ${localBinding>/today} &amp;&amp; ${localBinding>IsTrainStationClickable} ? 'true' : '' }" press="onTrainStationClicked" />
 								</HBox>
 								<Text text="{localBinding>EndTime}"/>
 								<Text text="{localBinding>EndStation}"/>
