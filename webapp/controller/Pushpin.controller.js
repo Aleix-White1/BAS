@@ -80,7 +80,6 @@ sap.ui.define(
 			onDownloadTicket: function(oEvent) {
 				var sFunctionName = "onDownloadTicket";
 				var oModelLocalBinding;
-				var sDateTime;
 				var sEmployeeId;
 				var sAssignationGroupId;
 				var sURL;
@@ -88,8 +87,6 @@ sap.ui.define(
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					oModelLocalBinding = this.getView().getModel("localBinding");
-					sDateTime = CommonUtils.convertDateToUTC(oModelLocalBinding.getProperty("/Date")).toISOString();
-					sDateTime = sDateTime.replace("Z", "").replace(/\x3A/g, "%3A");
 					if (this.getView().getModel("appView").getProperty("/isAdmin")) {
 						sEmployeeId = oModelLocalBinding.getProperty("/EmployeeId");
 						sAssignationGroupId = oModelLocalBinding.getProperty("/AssignationGroupId");
@@ -100,7 +97,7 @@ sap.ui.define(
 					}
 					sURL = this.getOwnerComponent().getModel().sServiceUrl;
 					sap.m.URLHelper.redirect(
-						sURL + "/TicketSet(EmployeeId='" + sEmployeeId + "',AssignationGroupId='" + sAssignationGroupId + "',Date=datetime'" + sDateTime + "')/$value",
+						sURL + "/TicketSet(EmployeeId='" + sEmployeeId + "',AssignationGroupId='" + sAssignationGroupId + "')/$value",
 						true
 					);
 				}
