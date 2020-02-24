@@ -1,9 +1,12 @@
 sap.ui.define(
 	[
 		"zdigitalticket/controller/BaseController",
-		"zui5controlstmb/utils/Analytics"
+		"zui5controlstmb/utils/Analytics",
+		"zui5controlstmb/utils/CommonUtils",
+		"sap/ui/model/Filter",
+		"sap/ui/model/FilterOperator"
 	],
-	function (BaseController, Analytics) {
+	function (BaseController, Analytics, CommonUtils, Filter, FilterOperator) {
 		"use strict";
 
 		return BaseController.extend("zdigitalticket.controller.Clock", {
@@ -46,7 +49,7 @@ sap.ui.define(
 							}
 						},
 						error: function (oError) {
-							var oView = that.getView();;
+							var oView = that.getView();
 							var sText = oView.getModel("i18n").getResourceBundle().getText("Clock.button.errorConfirmingActivity");
 							that.showErrorMessageBox(sText);
 						}
@@ -86,14 +89,13 @@ sap.ui.define(
 			/* =========================================================== */
 			formtterConfirmActivity: function(aActivity){
 				var oView = this.getView();
-				var bActivitiesPendingToApprove;
 				var oConfirmBtn = oView.byId("confirmActivityBtn");
 				
 				oConfirmBtn.setType(sap.m.ButtonType.Negative);
 				var sText = oView.getModel("i18n").getResourceBundle().getText("Clock.button.confirmActivity");
 				oConfirmBtn.setEnabled(true);
 				
-				if(aActivity){
+				if(aActivity && aActivity.length>0){
 					var iItemsApproved = 0;
 					aActivity.forEach(function(oActivity){ 
 						if(oActivity.IsApproved === "X"){
@@ -105,6 +107,9 @@ sap.ui.define(
 						oConfirmBtn.setType(sap.m.ButtonType.Accept);
 						oConfirmBtn.setEnabled(false);
 					}
+				}else{
+					sText = oView.getModel("i18n").getResourceBundle().getText("Clock.button.activityNoData");	
+					oConfirmBtn.setEnabled(false);
 				}
 				return sText;
 			},
@@ -116,18 +121,56 @@ sap.ui.define(
 			getActivityData: function(){
 				var sFunctionName = "getActivityData";
 				var oModel = this.getView().getModel();
+				var oModelLocalBinding = this.getView().getModel("localBinding");
 				var that = this;
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
+					
+					var aFilters = [];
+					var oDate = oModelLocalBinding.getProperty("/Date");
+					var oDateUTC = CommonUtils.convertDateToUTC( oDate );
+					aFilters.push(
+						new Filter({
+							path: "Date",
+							operator: FilterOperator.EQ,
+							value1: oDateUTC
+						})
+					);
+	
+					var sEmpId = oModelLocalBinding.getProperty("/EmployeeId");	
+					if(!sEmpId){
+						sEmpId = sap.ushell.Container.getService("UserInfo").getId().substr(0, 10);
+					}
+					if(sEmpId){
+						aFilters.push(
+							new Filter({
+								path: "Employeenumber",
+								operator: FilterOperator.EQ,
+								value1: sEmpId
+							})
+						);
+					}
+					var sAssignationGroupId = oModelLocalBinding.getProperty("/AssignationGroupId");
+					if(sAssignationGroupId){
+						aFilters.push(
+							new Filter({
+								path: "AssignationGroupId",
+								operator: FilterOperator.EQ,
+								value1: sAssignationGroupId
+							})
+						);
+					}
+				
 					this.handleBusy(true);
 					oModel.read("/ActivitySet", {
+	                	filters: aFilters,
 		                success: (function(oResponse) {
 	                		var oView = that.getView();
 	                		oView.getModel("localBinding").setProperty("/Clock/ActivitySet", oResponse.results);
 							that.handleBusy(false);
 		                }),
 		                error: (function(oResponse) {
-	                		var oView;
+	                		var oView = that.getView();
 							oView.getModel("localBinding").setProperty("/Clock/ActivitySet", []);
 							var sText = oView.getModel("i18n").getResourceBundle().getText("error.loading.data");
 							that.showErrorMessageBox(sText);
