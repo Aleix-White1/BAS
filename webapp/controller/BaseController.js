@@ -200,19 +200,10 @@ sap.ui.define(
 
 			_getTicketData: function(oSuccessCallbackFnc) {
 				var oModel = this.getView().getModel();
-				var sDateTime;
 				var sEmployeeId;
 				var sAssignationGroupId;
 				var oModelLocalBinding;
 
-//TODO: Suprimeix aquest hack de les dades
-var sFakeDate = prompt("Current date is " + this.getView().getModel("localBinding").getProperty("/Date") + "\nIf a fake date is needed, type it here (yyyy/mm/dd)");
-if (sFakeDate) {
-	this.getView().getModel("localBinding").setProperty("/Date", new Date(sFakeDate));
-}
-//fTODO
-				sDateTime = CommonUtils.convertDateToUTC(this.getView().getModel("localBinding").getProperty("/Date")).toISOString();
-				sDateTime = sDateTime.replace("Z", "").replace(/\x3A/g, "%3A");
 				this.handleBusy(true);
 				if (this.getView().getModel("appView").getProperty("/isAdmin")) {
 					oModelLocalBinding = this.getView().getModel("localBinding");
@@ -220,10 +211,10 @@ if (sFakeDate) {
 					sAssignationGroupId = oModelLocalBinding.getProperty("/AssignationGroupId");
 				}
 				else {
-					sEmployeeId = sap.ushell.Container.getService("UserInfo").getId().substr(0, 10);
-					sAssignationGroupId = "%20";
+					sEmployeeId = "";
+					sAssignationGroupId = "";
 				}
-				oModel.read("/TicketSet(EmployeeId='" + sEmployeeId + "',Date=datetime'" + sDateTime + "',AssignationGroupId='" + sAssignationGroupId + "')", {
+				oModel.read("/TicketSet(EmployeeId='" + sEmployeeId + "',AssignationGroupId='" + sAssignationGroupId + "')", {
 					urlParameters: {
 			        	"$expand": "ToPieces"
 			    	},

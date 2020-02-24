@@ -118,7 +118,6 @@ sap.ui.define(
 					this.getRouter().navTo(
 						"RouteStationInfo",
 						{
-							// "Line": oTrainInfo.LineNumber, 
 							"Line": oModelLocalBinding.getProperty("/Line"),
 							"Station": oTrainInfo.StartStation
 						},
