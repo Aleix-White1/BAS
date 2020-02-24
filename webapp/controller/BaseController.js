@@ -227,7 +227,7 @@ sap.ui.define(
 		                		oView.getModel("localBinding").setProperty("/ServiceId", oData.ServiceId);
 		                		oView.getModel("localBinding").setProperty("/EmployeeId", oData.EmployeeId);
 		                		oView.getModel("localBinding").setProperty("/EmployeeName", oData.EmployeeName);
-		                		oView.getModel("localBinding").setProperty("/Line", oData.Line.replace("L", ""));  //TODO: Caldria treure a SAP aquesta L
+		                		oView.getModel("localBinding").setProperty("/Line", oData.Line);
 								oView.getModel("localBinding").setProperty("/Shift", oData.ShiftNumber);
 								oView.getModel("localBinding").setProperty("/Zone", oData.ZoneId);
 		                		oView.getModel("localBinding").setProperty("/PieceSet", oData.ToPieces.results);
