@@ -79,27 +79,17 @@ sap.ui.define(
 
 			onDownloadTicket: function(oEvent) {
 				var sFunctionName = "onDownloadTicket";
-				var oModelLocalBinding;
-				var sEmployeeId;
-				var sAssignationGroupId;
 				var sURL;
 
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
-					oModelLocalBinding = this.getView().getModel("localBinding");
-					if (this.getView().getModel("appView").getProperty("/isAdmin")) {
-						sEmployeeId = oModelLocalBinding.getProperty("/EmployeeId");
-						sAssignationGroupId = oModelLocalBinding.getProperty("/AssignationGroupId");
+					if (!this.getView().getModel("appView").getProperty("/isAdmin")) {
+						sURL = this.getOwnerComponent().getModel().sServiceUrl;
+						sap.m.URLHelper.redirect(
+							sURL + "/TicketSet(EmployeeId='" + sap.ushell.Container.getService("UserInfo").getId().substr(0, 10) + "',AssignationGroupId='%20',Today=true)/$value",
+							true
+						);
 					}
-					else {
-						sEmployeeId = sap.ushell.Container.getService("UserInfo").getId().substr(0, 10);
-						sAssignationGroupId = "%20";
-					}
-					sURL = this.getOwnerComponent().getModel().sServiceUrl;
-					sap.m.URLHelper.redirect(
-						sURL + "/TicketSet(EmployeeId='" + sEmployeeId + "',AssignationGroupId='" + sAssignationGroupId + "')/$value",
-						true
-					);
 				}
 				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);

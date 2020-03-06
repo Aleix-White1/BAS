@@ -202,19 +202,22 @@ sap.ui.define(
 				var oModel = this.getView().getModel();
 				var sEmployeeId;
 				var sAssignationGroupId;
+				var bToday;
 				var oModelLocalBinding;
 
 				this.handleBusy(true);
+				oModelLocalBinding = this.getView().getModel("localBinding");
 				if (this.getView().getModel("appView").getProperty("/isAdmin")) {
-					oModelLocalBinding = this.getView().getModel("localBinding");
 					sEmployeeId = oModelLocalBinding.getProperty("/EmployeeId");
 					sAssignationGroupId = oModelLocalBinding.getProperty("/AssignationGroupId");
+					bToday = true;
 				}
 				else {
-					sEmployeeId = "";
-					sAssignationGroupId = "";
+					sEmployeeId = sap.ushell.Container.getService("UserInfo").getId().substr(0, 10);
+					sAssignationGroupId = "%20";
+					bToday = oModelLocalBinding.getProperty("/today");
 				}
-				oModel.read("/TicketSet(EmployeeId='" + sEmployeeId + "',AssignationGroupId='" + sAssignationGroupId + "')", {
+				oModel.read("/TicketSet(EmployeeId='" + sEmployeeId + "',AssignationGroupId='" + sAssignationGroupId + "',Today=" + bToday + ")", {
 					urlParameters: {
 			        	"$expand": "ToPieces"
 			    	},
