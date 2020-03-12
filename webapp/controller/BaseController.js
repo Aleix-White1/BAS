@@ -198,7 +198,7 @@ sap.ui.define(
 				}
 			},
 
-			_getTicketData: function(oSuccessCallbackFnc) {
+			_getTicketData: function(fSuccessCallbackFnc, fErrorCallbackFnc) {
 				var oModel = this.getView().getModel();
 				var sEmployeeId;
 				var sAssignationGroupId;
@@ -222,9 +222,9 @@ sap.ui.define(
 			        	"$expand": "ToPieces"
 			    	},
 	                success: (function(that) {
-	                	var oView;
-
 	                	return function(oData, response) {
+	                		var oView;
+
 		                	try {
 		                		oView = that.getView();
 		                		oView.getModel("localBinding").setProperty("/ServiceId", oData.ServiceId);
@@ -238,8 +238,8 @@ sap.ui.define(
 		                	catch (oError) {
 		                		oView.getModel("localBinding").setProperty("/PieceSet", {});
 		                	}
-		                	if (oSuccessCallbackFnc){
-		                		oSuccessCallbackFnc.call(that);
+		                	if (fSuccessCallbackFnc){
+		                		fSuccessCallbackFnc.call(that);
 		                	}
 							that.handleBusy(false);
 		                };
@@ -258,6 +258,9 @@ sap.ui.define(
 								sText = oView.getModel("i18n").getResourceBundle().getText("error.loading.data");
 							}
 							that.showErrorMessageBox(sText);
+		                	if (fErrorCallbackFnc){
+		                		fErrorCallbackFnc.call(that);
+		                	}
 							that.handleBusy(false);
 		                };
 	                })(this)

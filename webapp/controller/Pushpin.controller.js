@@ -31,11 +31,14 @@ sap.ui.define(
 			/* =========================================================== */
 			onPushpinMatched: function(oEvent) {
 				var sFunctionName = "onPushpinMatched";
+				var fRemoveFunction;
+				var oView;
 				var oModelLocalBinding;
 
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
-					oModelLocalBinding = this.getView().getModel("localBinding");
+					oView = this.getView();
+					oModelLocalBinding = oView.getModel("localBinding");
 					oModelLocalBinding.setProperty("/", {
 						today: true,
 						ServiceId: "",
@@ -47,7 +50,11 @@ sap.ui.define(
 						Zone: "",
 						Date: new Date()
 					});
-					this._getTicketData();
+					oView.byId("dataTable").addStyleClass("tableWithNoData");
+					fRemoveFunction = function() {
+						oView.byId("dataTable").removeStyleClass("tableWithNoData");
+					};
+					this._getTicketData(fRemoveFunction, fRemoveFunction);
 				}
 				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
@@ -56,21 +63,25 @@ sap.ui.define(
 
 			onChangeDay: function(oEvent) {
 				var sFunctionName = "onChangeDay";
+				var oView;
 				var oModel;
 				var bToday;
 				var oDate;
 
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
-					oModel = this.getView().getModel("localBinding");
-					bToday = !this.getView().getModel("localBinding").getProperty("/today");
+					oView = this.getView();
+					oModel = oView.getModel("localBinding");
 					oDate = new Date();
-					oModel.setProperty("/today", bToday);
+					oModel.setProperty("/today", bToday = !oModel.getProperty("/today"));
 					if (!bToday) {
 						oDate.setDate(oDate.getDate() - 1);
 					}
 					oModel.setProperty("/Date", oDate);
-					this._getTicketData();
+					oView.byId("dataTable").addStyleClass("tableWithNoData");
+					this._getTicketData(function() {
+						oView.byId("dataTable").removeStyleClass("tableWithNoData");
+					});
 				}
 				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
@@ -143,28 +154,11 @@ sap.ui.define(
 				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
-			},
+			}
 
 			/* =========================================================== */
 			/* formatters and other public methods                         */
 			/* =========================================================== */
-			
-			formatEmployeeId: function(value) {
-				var sFunctionName = "formatEmployeeId";
-
-				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.FORMATTER);
-					if (typeof value === "string" && value.length > 5) {
-						return value.substring(value.length - 5);
-					}
-					else {
-						return value;
-					}
-				}
-				catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
-				}
-			}
 		});
 	}
 );
