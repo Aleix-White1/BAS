@@ -54,7 +54,18 @@ sap.ui.define(
 					fRemoveFunction = function() {
 						oView.byId("dataTable").removeStyleClass("tableWithNoData");
 					};
-					this._getTicketData(fRemoveFunction, fRemoveFunction);
+					this._getTicketData(
+						function() {
+							oView.getModel().callFunction("/SetTicketAsRead", {
+								method: "GET",
+								urlParameters: {
+								},
+								success: fRemoveFunction,
+								error: fRemoveFunction
+							});
+						},
+						fRemoveFunction
+					);
 				}
 				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
