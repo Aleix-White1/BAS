@@ -31,7 +31,6 @@ sap.ui.define(
 			/* =========================================================== */
 			onPushpinMatched: function(oEvent) {
 				var sFunctionName = "onPushpinMatched";
-				var fRemoveFunction;
 				var oView;
 				var oModelLocalBinding;
 
@@ -51,20 +50,29 @@ sap.ui.define(
 						Date: new Date()
 					});
 					oView.byId("dataTable").addStyleClass("tableWithNoData");
-					fRemoveFunction = function() {
-						oView.byId("dataTable").removeStyleClass("tableWithNoData");
-					};
 					this._getTicketData(
 						function() {
 							oView.getModel().callFunction("/SetTicketAsRead", {
 								method: "GET",
 								urlParameters: {
 								},
-								success: fRemoveFunction,
-								error: fRemoveFunction
+								success: (function(that) {
+									return function() {
+										that._fShowTable.call(that);
+									};
+								})(this),
+								error: (function(that) {
+									return function() {
+										that._fShowTable.call(that);
+									};
+								})(this)
 							});
 						},
-						fRemoveFunction
+						(function(that) {
+							return function() {
+								that._fShowTable.call(that);
+							};
+						})(this)
 					);
 				}
 				catch (oError) {
@@ -84,15 +92,20 @@ sap.ui.define(
 					oView = this.getView();
 					oModel = oView.getModel("localBinding");
 					oDate = new Date();
-					oModel.setProperty("/today", bToday = !oModel.getProperty("/today"));
+					bToday = !oModel.getProperty("/today");
 					if (!bToday) {
 						oDate.setDate(oDate.getDate() - 1);
 					}
-					oModel.setProperty("/Date", oDate);
-					oView.byId("dataTable").addStyleClass("tableWithNoData");
-					this._getTicketData(function() {
-						oView.byId("dataTable").removeStyleClass("tableWithNoData");
-					});
+					this._getTicketData(
+						function() {
+							oModel.setProperty("/today", bToday);
+							oModel.setProperty("/Date", oDate);
+						},
+						function() {
+							oModel.setProperty("/today", bToday);
+							oModel.setProperty("/Date", oDate);
+						}
+					);
 				}
 				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
@@ -165,11 +178,19 @@ sap.ui.define(
 				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
-			}
+			},
 
 			/* =========================================================== */
 			/* formatters and other public methods                         */
 			/* =========================================================== */
+
+			/* =========================================================== */
+			/* private methods                                             */
+			/* =========================================================== */
+			_fShowTable: function() {
+				this.getView().getParent().setVisible(true);
+				this.getView().byId("dataTable").removeStyleClass("tableWithNoData");
+			}
 		});
 	}
 );

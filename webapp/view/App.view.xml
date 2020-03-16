@@ -6,7 +6,7 @@
 	displayBlock="true">
 	<Page id="basePage" class="digitalticket pageWithFooterHeight" showHeader="false" showFooter="true" busy="{appView>/busy}" busyIndicatorDelay="{appView>/delay}">
 		<content>
-			<App id="app"/>
+			<App id="app" visible="false"/>
 		</content>
 		<footer>
 			<core:Fragment fragmentName="zdigitalticket.view.fragments.Footer" type="XML"/>
