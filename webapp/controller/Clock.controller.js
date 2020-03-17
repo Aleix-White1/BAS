@@ -44,9 +44,12 @@ sap.ui.define(
 							"EmployeeId": sEmpId
 						},
 						success: function (oResponse) {
+							var sResponseMsg = oResponse.SetActivityConfirmation.res_message;
 							if(oResponse.SetActivityConfirmation.is_confirmed){
 								that._changeBtnStatus(true);
-							}
+							}else if(sResponseMsg!=undefined && sResponseMsg.length>0){
+								that.showErrorMessageBox(sResponseMsg);
+							} 
 						},
 						error: function (oError) {
 							var oView = that.getView();
