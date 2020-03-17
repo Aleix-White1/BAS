@@ -23,8 +23,8 @@
 						],
 						formatter: '.formatDate'
 					}"/>
-					<Link text="&lt; {i18n>yesterday}" press="onChangeDay" textAlign="End" visible="{localBinding>/today}"/>
-					<Link text="{i18n>today} >" press="onChangeDay" textAlign="End" visible="{= !${localBinding>/today} }"/>
+					<Button icon="sap-icon://navigation-left-arrow" press="onChangeDay" visible="{localBinding>/today}"/>
+					<Button icon="sap-icon://navigation-right-arrow" press="onChangeDay" visible="{= !${localBinding>/today} }"/>
 				</HBox>
 				<VBox class="formFilters">
 					<HBox justifyContent="SpaceBetween" alignItems="Center">
