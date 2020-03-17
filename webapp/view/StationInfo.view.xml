@@ -48,11 +48,8 @@
 				
 				<Text text=" "/>  <!-- Spacer -->
 
-				<Table	items="{localBinding>/StationInfo/StationInfoTrainSet}"
-						growing="true"
-						growingThreshold="8"
-            			growingScrollToLoad="true"
-				>
+				<Table	items="{localBinding>/StationInfo/StationInfoTrainSet}" growing="false" >
+					<!-- Hay una constante (NUM_TRAINS_IN_LIST) en el controller de la vista que limita los registros visualizados -->
 					<columns>
 						<Column hAlign="Center"><Text text="{i18n>stationInfo.train}"/></Column>
 						<Column hAlign="Center"><Text text="{i18n>stationInfo.leaveStation}"/></Column>

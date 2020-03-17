@@ -10,6 +10,8 @@ sap.ui.define(
 	
 		return BaseController.extend("zdigitalticket.controller.StationInfo", {
 			
+			NUM_TRAINS_IN_LIST : 5,
+			
 			/* =========================================================== */
 			/* lifecycle methods                                           */
 			/* =========================================================== */
@@ -50,6 +52,7 @@ sap.ui.define(
 			loadTrainsPositions: function(sTrackNumer){
 				var sFunctionName = "loadTrainsPositions";
 				try {
+					var that = this;
 					var oView = this.getView();
 					var oModelMiralin = oView.getModel("miralinModel");	
 					var oModelLocalBinding = oView.getModel("localBinding");
@@ -57,7 +60,8 @@ sap.ui.define(
 					var aTracks = oModelMiralin.getProperty("/arrivals/tracks");
 					aTracks.forEach(function(oItemTrack){
 						if(oItemTrack.track == _sTrackNumber){
-							oModelLocalBinding.setProperty("/StationInfo/StationInfoTrainSet", oItemTrack.trainsPositions);
+							var aTrainsPositions = oItemTrack.trainsPositions.slice(0, that.NUM_TRAINS_IN_LIST);
+							oModelLocalBinding.setProperty("/StationInfo/StationInfoTrainSet", aTrainsPositions);
 						}
 					});
 				} catch (oError) {
