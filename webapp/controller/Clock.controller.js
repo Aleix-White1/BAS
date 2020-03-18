@@ -53,7 +53,13 @@ sap.ui.define(
 						},
 						error: function (oError) {
 							var oView = that.getView();
-							var sText = oView.getModel("i18n").getResourceBundle().getText("Clock.button.errorConfirmingActivity");
+							var sText = "";
+							try{
+								var objResponse = JSON.parse(oError.responseText);
+								sText = objResponse.error.message.value;
+							} catch(oErrInner){
+								sText = oView.getModel("i18n").getResourceBundle().getText("Clock.button.errorConfirmingActivity");
+							}
 							that.showErrorMessageBox(sText);
 						}
 					});
@@ -114,6 +120,12 @@ sap.ui.define(
 					sText = oView.getModel("i18n").getResourceBundle().getText("Clock.button.activityNoData");	
 					oConfirmBtn.setEnabled(false);
 				}
+				
+				var isAdmin = oView.getModel("appView").getProperty("/isAdmin");
+				if(isAdmin){
+					oConfirmBtn.setEnabled(false);
+				}
+				
 				return sText;
 			},
 			
