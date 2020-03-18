@@ -142,7 +142,9 @@ sap.ui.define(
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					
 					var aFilters = [];
-					var oDate = oModelLocalBinding.getProperty("/Date");
+					// var oDate = oModelLocalBinding.getProperty("/Date");
+					
+					var oDate = new Date();
 					var oDateUTC = CommonUtils.convertDateToUTC( oDate );
 					aFilters.push(
 						new Filter({
