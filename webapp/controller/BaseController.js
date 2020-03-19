@@ -216,6 +216,9 @@ sap.ui.define(
 					sEmployeeId = sap.ushell.Container.getService("UserInfo").getId().substr(0, 10);
 					sAssignationGroupId = "%20";
 					bToday = oModelLocalBinding.getProperty("/today");
+					if(bToday == undefined){
+						bToday = true;
+					} 
 				}
 				oModel.read("/TicketSet(EmployeeId='" + sEmployeeId + "',AssignationGroupId='" + sAssignationGroupId + "',Today=" + bToday + ")", {
 					urlParameters: {
