@@ -254,7 +254,7 @@ sap.ui.define(
 							try {
 								oView = this.getView();
 								oView.getModel("localBinding").setProperty("/PieceSet", {});
-								sText = JSON.parse(oData.responseText).error.innererror.errordetails[0].message;
+								sText = JSON.parse(oData.responseText).error.message.value;
 							}
 							catch (oError) {
 								sText = oView.getModel("i18n").getResourceBundle().getText("error.loading.data");
