@@ -56,23 +56,11 @@ sap.ui.define(
 								method: "GET",
 								urlParameters: {
 								},
-								success: (function(that) {
-									return function() {
-										that._fShowTable.call(that);
-									};
-								})(this),
-								error: (function(that) {
-									return function() {
-										that._fShowTable.call(that);
-									};
-								})(this)
+								success: this._showTable.bind(this),
+								error: this._showTable.bind(this)
 							});
 						},
-						(function(that) {
-							return function() {
-								that._fShowTable.call(that);
-							};
-						})(this)
+						this._showTable
 					);
 				}
 				catch (oError) {
@@ -92,20 +80,12 @@ sap.ui.define(
 					oView = this.getView();
 					oModel = oView.getModel("localBinding");
 					oDate = new Date();
-					bToday = !oModel.getProperty("/today");
+					oModel.setProperty("/today", bToday = !oModel.getProperty("/today"));
 					if (!bToday) {
 						oDate.setDate(oDate.getDate() - 1);
 					}
-					this._getTicketData(
-						function() {
-							oModel.setProperty("/today", bToday);
-							oModel.setProperty("/Date", oDate);
-						},
-						function() {
-							oModel.setProperty("/today", bToday);
-							oModel.setProperty("/Date", oDate);
-						}
-					);
+					this._hideTable();
+					this._getTicketData(this._showTable, this._showTable);
 				}
 				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
@@ -114,14 +94,14 @@ sap.ui.define(
 
 			onDownloadTicket: function(oEvent) {
 				var sFunctionName = "onDownloadTicket";
-				var sURL;
+				var sUrl;
 
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					if (!this.getView().getModel("appView").getProperty("/isAdmin")) {
-						sURL = this.getOwnerComponent().getModel().sServiceUrl;
+						sUrl = this.getOwnerComponent().getModel().sServiceUrl + "/TicketSet(EmployeeId='" + sap.ushell.Container.getService("UserInfo").getId().substr(0, 10) + "',AssignationGroupId='%20',Today=true)/$value";
 						sap.m.URLHelper.redirect(
-							sURL + "/TicketSet(EmployeeId='" + sap.ushell.Container.getService("UserInfo").getId().substr(0, 10) + "',AssignationGroupId='%20',Today=true)/$value",
+							sUrl,
 							true
 						);
 					}
@@ -187,9 +167,29 @@ sap.ui.define(
 			/* =========================================================== */
 			/* private methods                                             */
 			/* =========================================================== */
-			_fShowTable: function() {
-				this.getView().getParent().setVisible(true);
-				this.getView().byId("dataTable").removeStyleClass("tableWithNoData");
+			_hideTable: function() {
+				var sFunctionName = "_hideTable";
+
+				try {
+					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.OTHER);
+					this.getView().byId("dataTable").addStyleClass("tableWithNoData");
+				}
+				catch (oError) {
+					this._handleCatchException(oError, sFunctionName);
+				}
+			},
+
+			_showTable: function() {
+				var sFunctionName = "_showTable";
+
+				try {
+					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.OTHER);
+					this.getView().getParent().setVisible(true);
+					this.getView().byId("dataTable").removeStyleClass("tableWithNoData");
+				}
+				catch (oError) {
+					this._handleCatchException(oError, sFunctionName);
+				}
 			}
 		});
 	}

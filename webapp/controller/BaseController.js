@@ -210,66 +210,63 @@ sap.ui.define(
 				if (this.getView().getModel("appView").getProperty("/isAdmin")) {
 					sEmployeeId = oModelLocalBinding.getProperty("/EmployeeId");
 					sAssignationGroupId = oModelLocalBinding.getProperty("/AssignationGroupId");
-					bToday = true;
 				}
 				else {
 					sEmployeeId = sap.ushell.Container.getService("UserInfo").getId().substr(0, 10);
 					sAssignationGroupId = "%20";
-					bToday = oModelLocalBinding.getProperty("/today");
-					if(bToday == undefined){
-						bToday = true;
-					} 
+				}
+				bToday = oModelLocalBinding.getProperty("/today");
+				if (bToday === undefined){
+					bToday = true;
 				}
 				oModel.read("/TicketSet(EmployeeId='" + sEmployeeId + "',AssignationGroupId='" + sAssignationGroupId + "',Today=" + bToday + ")", {
 					urlParameters: {
 			        	"$expand": "ToPieces"
 			    	},
-	                success: (function(that) {
-	                	return function(oData, response) {
+	                success: (
+	                	function(oData, response) {
 	                		var oView;
-
+	
 		                	try {
-		                		oView = that.getView();
+		                		oView = this.getView();
 		                		oView.getModel("localBinding").setProperty("/ServiceId", oData.ServiceId);
 		                		oView.getModel("localBinding").setProperty("/EmployeeId", oData.EmployeeId);
 		                		oView.getModel("localBinding").setProperty("/EmployeeName", oData.EmployeeName);
 		                		oView.getModel("localBinding").setProperty("/Line", oData.Line);
 								oView.getModel("localBinding").setProperty("/Shift", oData.ShiftNumber);
 								oView.getModel("localBinding").setProperty("/Zone", oData.ZoneId);
+								oView.getModel("localBinding").setProperty("/Date", oData.Date);
 		                		oView.getModel("localBinding").setProperty("/PieceSet", oData.ToPieces.results);
 		                	}
 		                	catch (oError) {
 		                		oView.getModel("localBinding").setProperty("/PieceSet", {});
 		                	}
 		                	if (fSuccessCallbackFnc){
-		                		fSuccessCallbackFnc.call(that);
+		                		fSuccessCallbackFnc.call(this);
 		                	}
-							that.handleBusy(false);
-		                };
-	                })(this),
-	                error: (function(that) {
-	                	return function(oData) {
+							this.handleBusy(false);
+		                }).bind(this),
+	                error: (
+	                	function(oData) {
 	                		var sText = "";
 	                		var oView;
-
+	
 							try {
-								oView = that.getView();
+								oView = this.getView();
 								oView.getModel("localBinding").setProperty("/PieceSet", {});
-								sText = JSON.parse(oData.responseText).error.message.value;
+								sText = JSON.parse(oData.responseText).error.innererror.errordetails[0].message;
 							}
 							catch (oError) {
 								sText = oView.getModel("i18n").getResourceBundle().getText("error.loading.data");
 							}
-							that.showErrorMessageBox(sText);
+							this.showErrorMessageBox(sText);
 		                	if (fErrorCallbackFnc){
-		                		fErrorCallbackFnc.call(that);
+		                		fErrorCallbackFnc.call(this);
 		                	}
-							that.handleBusy(false);
-		                };
-	                })(this)
+							this.handleBusy(false);
+		                }).bind(this)
 				});
 			}
-			
 		});
 	}
 );
