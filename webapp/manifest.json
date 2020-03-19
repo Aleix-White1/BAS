@@ -156,7 +156,7 @@
 			"targets": {
 				"TargetObjectNotFound": {
 					"viewName": "ObjectNotFound",
-					"viewId": "objectNotFound"
+					"viewId": "ViewObjectNotFound"
 				},
 				"TargetPushpin": {
 					"viewName": "Pushpin",

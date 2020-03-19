@@ -5,7 +5,7 @@ sap.ui.define(
 	],
 	function (BaseController, Analytics) {
 		"use strict";
-	
+
 		return BaseController.extend("zdigitalticket.controller.Star", {
 			/* =========================================================== */
 			/* lifecycle methods                                           */
@@ -16,15 +16,19 @@ sap.ui.define(
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
 					BaseController.prototype.onInit.call(this);
+					this.getRouter().getRoute("RouteStar").attachPatternMatched(this.onRouteMatched, this);
 				}
 				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
-			}
+			},
 
 			/* =========================================================== */
 			/* event handlers                       					   */
 			/* =========================================================== */
+			onRouteMatched: function(oEvent) {
+				this.getView().getParent().setVisible(true);
+			}
 
 			/* =========================================================== */
 			/* formatters and other public methods                         */

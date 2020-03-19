@@ -69,7 +69,7 @@ sap.ui.define(
 			},
 			
 			onClockMatched: function(oEvent){
-				var sFunctionName = "onTEInfoMatched";
+				var sFunctionName = "onClockMatched";
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					var oView = this.getView();
@@ -80,7 +80,12 @@ sap.ui.define(
 					
 					if( oModelLocalBinding.getProperty("/Line") === undefined ){
 						//Se pasa por parámetros la función callback para recuperar la información de la actividad diaria.
-						this._getTicketData(this.getActivityData);
+						this._getTicketData(
+							this.getActivityData,
+							function() {
+								this.getView().getParent().setVisible(true);
+							}
+						);
 					}else{
 						//Si la propiedad Line está informada quiere decir que ya se ha recuperado la información del 
 						//empleado en otra llamada. Así que para obtener una carga más rapida, se llama directamente a
@@ -184,6 +189,7 @@ sap.ui.define(
 		                success: (function(oResponse) {
 	                		var oView = that.getView();
 	                		oView.getModel("localBinding").setProperty("/Clock/ActivitySet", oResponse.results);
+	                		that.getView().getParent().setVisible(true);
 							that.handleBusy(false);
 		                }),
 		                error: (function(oResponse) {
@@ -191,6 +197,7 @@ sap.ui.define(
 							oView.getModel("localBinding").setProperty("/Clock/ActivitySet", []);
 							var sText = oView.getModel("i18n").getResourceBundle().getText("error.loading.data");
 							that.showErrorMessageBox(sText);
+							that.getView().getParent().setVisible(true);
 							that.handleBusy(false);
 		                })
 		            });
