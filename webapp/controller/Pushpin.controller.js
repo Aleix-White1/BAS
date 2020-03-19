@@ -39,7 +39,7 @@ sap.ui.define(
 					oView = this.getView();
 					oModelLocalBinding = oView.getModel("localBinding");
 					oModelLocalBinding.setProperty("/", {
-						today: true,
+						today: oModelLocalBinding.getProperty("/today"), //This was set by App.controller
 						ServiceId: "",
 						EmployeeId: oModelLocalBinding.getProperty("/EmployeeId"), //This was set by App.controller
 						AssignationGroupId: oModelLocalBinding.getProperty("/AssignationGroupId"), //This was set by App.controller

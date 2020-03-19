@@ -77,6 +77,7 @@ sap.ui.define(
 					oModelLocalBinding = this.getView().getModel("localBinding");
 					oModelLocalBinding.setProperty("/EmployeeId", sEmployeeId);
 					oModelLocalBinding.setProperty("/AssignationGroupId", sAssignationGroupId);
+					oModelLocalBinding.setProperty("/today", true);
 					this.getOwnerComponent().getRouter().attachRouteMatched(this.onRouteMatched, this);
 					this.getOwnerComponent().getRouter().attachBypassed(this.onRouteMatched, this);
 				}

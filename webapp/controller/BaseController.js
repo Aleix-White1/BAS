@@ -202,7 +202,6 @@ sap.ui.define(
 				var oModel = this.getView().getModel();
 				var sEmployeeId;
 				var sAssignationGroupId;
-				var bToday;
 				var oModelLocalBinding;
 
 				this.handleBusy(true);
@@ -215,11 +214,7 @@ sap.ui.define(
 					sEmployeeId = sap.ushell.Container.getService("UserInfo").getId().substr(0, 10);
 					sAssignationGroupId = "%20";
 				}
-				bToday = oModelLocalBinding.getProperty("/today");
-				if (bToday === undefined){
-					bToday = true;
-				}
-				oModel.read("/TicketSet(EmployeeId='" + sEmployeeId + "',AssignationGroupId='" + sAssignationGroupId + "',Today=" + bToday + ")", {
+				oModel.read("/TicketSet(EmployeeId='" + sEmployeeId + "',AssignationGroupId='" + sAssignationGroupId + "',Today=" + oModelLocalBinding.getProperty("/today") + ")", {
 					urlParameters: {
 			        	"$expand": "ToPieces"
 			    	},
