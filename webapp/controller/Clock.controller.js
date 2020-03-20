@@ -224,6 +224,7 @@ sap.ui.define(
 		                	if (fSuccessCallbackFnc){
 		                		fSuccessCallbackFnc.call(this);
 		                	}
+							oView.getParent().setVisible(true);
 							this.handleBusy(false);
 		                }).bind(this),
 	                error: (
@@ -243,6 +244,7 @@ sap.ui.define(
 		                	if (fErrorCallbackFnc){
 		                		fErrorCallbackFnc.call(this);
 		                	}
+		                	oView.getParent().setVisible(true);
 							this.handleBusy(false);
 		                }).bind(this)
 				});
