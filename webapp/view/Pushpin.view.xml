@@ -16,7 +16,7 @@
 		</customData>
 		<content>
 			<ScrollContainer vertical="true" class="sapUiSmallMargin">
-				<HBox justifyContent="SpaceBetween">
+				<HBox justifyContent="SpaceBetween" class="BoxDate">
 					<Text text="{
 						parts: [
 							'localBinding>/Date'
