@@ -11,15 +11,16 @@
 		<content>
 			<ScrollContainer vertical="true" class="sapUiSmallMargin">
 				
-				<HBox justifyContent="SpaceBetween">
+				<HBox justifyContent="SpaceBetween" class="BoxDate">
 					<Text text="{
 						parts: [
 							'localBinding>/Clock/Date'
 						],
 						formatter: '.formatDate'
 					}"/>
+					<Button icon="sap-icon://navigation-left-arrow" visible="false"/>
 				</HBox>
-
+				
 				<VBox class="formFilters">
 					<HBox justifyContent="SpaceBetween" alignItems="Center">
 						<HBox>
@@ -36,17 +37,15 @@
 							<VBox>
 								<Text text="{
 									parts: [
-										'i18n>zone',
 										'localBinding>/Clock/ZoneId'
 									],
-									formatter: 'jQuery.sap.formatMessage'
+									formatter: '.formatZone'
 								}"/>
 								<Text text="{
 									parts: [
-										'i18n>shift',
 										'localBinding>/Clock/ShiftNumber'
 									],
-									formatter: 'jQuery.sap.formatMessage'
+									formatter: '.formatShift'
 								}"/>
 							</VBox>
 						</HBox>

@@ -100,3 +100,7 @@
 .digitalticket button.ButtonTextTMB > span > span {
 	line-height: 32px;
 }
+
+.BoxDate {
+    height: 2.2rem;
+}
