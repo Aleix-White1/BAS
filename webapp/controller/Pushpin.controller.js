@@ -5,10 +5,78 @@ sap.ui.define(
 		"sap/ui/model/json/JSONModel",
 		"sap/ui/model/Filter",
 		"zui5controlstmb/utils/CommonUtils",
-		"sap/ui/model/FilterOperator"
+		"sap/ui/model/FilterOperator",
+		"sap/m/MessageBox"
 	],
-	function (BaseController, Analytics, JSONModel, Filter, CommonUtils, FilterOperator) {
+	function (BaseController, Analytics, JSONModel, Filter, CommonUtils, FilterOperator, MessageBox) {
 		"use strict";
+		/* global LocalFileSystem */
+
+		var _downloadFile = function(sUrl, fOnSuccess, fOnError, oScope) {
+			var oAjaxRequest = new XMLHttpRequest();
+
+			oAjaxRequest.open("GET", sUrl, true);
+			oAjaxRequest.responseType = "blob";
+			oAjaxRequest.onload = function (e) {
+				window.requestFileSystem(
+					LocalFileSystem.PERSISTENT,
+					0,
+					function() {
+						window.resolveLocalFileSystemURL(
+							cordova.file.externalDataDirectory,
+							function(oFolder) {
+								var sFileName = "Ticket_AAC.pdf";
+
+								oFolder.getFile(
+									sFileName, {
+										create: true,
+										exclusive: false
+									},
+									function(oFile) {
+										oFile.createWriter(
+											function(oFileWriter) {
+												oFileWriter.onwriteend = function(oInfo) {
+													if (typeof fOnSuccess === "function") {
+														fOnSuccess.call(oScope, sFileName);
+													}
+												};
+												oFileWriter.onerror = function(oError) {
+													if (typeof fOnError === "function") {
+														fOnError.call(oScope, oError);
+													}
+												};
+												oFileWriter.write(oAjaxRequest.response);
+											},
+											function(oError) {
+												if (typeof fOnError === "function") {
+													fOnError.call(oScope, oError);
+												}
+											}
+										);
+									},
+									function(oError) {
+										if (typeof fOnError === "function") {
+											fOnError.call(oScope, oError);
+										}
+									}
+								);
+							},
+							function(oError) {
+								if (typeof fOnError === "function") {
+									fOnError.call(oScope, oError);
+								}
+							}
+						);
+					},
+					function(oError) {
+						if (typeof fOnError === "function") {
+							fOnError.call(oScope, oError);
+						}
+					}
+				);
+			};
+			oAjaxRequest.send();
+		};
 
 		return BaseController.extend("zdigitalticket.controller.Pushpin", {
 			/* =========================================================== */
@@ -100,10 +168,32 @@ sap.ui.define(
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					if (!this.getView().getModel("appView").getProperty("/isAdmin")) {
 						sUrl = this.getOwnerComponent().getModel().sServiceUrl + "/TicketSet(EmployeeId='" + sap.ushell.Container.getService("UserInfo").getId().substr(0, 10) + "',AssignationGroupId='%20',Today=true)/$value";
-						sap.m.URLHelper.redirect(
-							sUrl,
-							true
-						);
+						if (window.requestFileSystem) {
+							//We are running inside the app
+							_downloadFile(
+								sUrl,
+								function(sFileName) {
+									var oResourceBundle = this.getView().getModel("i18n").getResourceBundle();
+
+									MessageBox.show(
+										oResourceBundle.getText("info.pdf.descarregat", [sFileName]), {
+											title: oResourceBundle.getText("info.title"),
+											styleClass: this.getOwnerComponent().getContentDensityClass(),
+											actions: [MessageBox.Action.CLOSE]
+										}
+									);
+								},
+								undefined,
+								this
+							);
+						}
+						else {
+							//We are running in a browser
+							sap.m.URLHelper.redirect(
+								sUrl,
+								true
+							);
+						}
 					}
 				}
 				catch (oError) {
