@@ -76,23 +76,8 @@ sap.ui.define(
 					var oModelLocalBinding = oView.getModel("localBinding");
 					
 					//Inicializamos la propiedad raiz de la pantalla en el modelo localbinding.
-					oModelLocalBinding.setProperty("/Clock", []);
-					
-					if( oModelLocalBinding.getProperty("/Line") === undefined ){
-						//Se pasa por parámetros la función callback para recuperar la información de la actividad diaria.
-						this._getTicketData(
-							this.getActivityData,
-							function() {
-								this.getView().getParent().setVisible(true);
-							}
-						);
-					}else{
-						//Si la propiedad Line está informada quiere decir que ya se ha recuperado la información del 
-						//empleado en otra llamada. Así que para obtener una carga más rapida, se llama directamente a
-						//la función que recuperará la información de la actividad diraria 
-						this.getActivityData();
-					}
-					
+					oModelLocalBinding.setProperty("/Clock", {});
+					this._getActivityTicketData();
 				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
@@ -206,6 +191,64 @@ sap.ui.define(
 				}
 			},
 			
+			
+			
+			_getActivityTicketData: function(fSuccessCallbackFnc, fErrorCallbackFnc) {
+				var oModel = this.getView().getModel();
+				var sEmployeeId;
+				var sAssignationGroupId;
+				var oModelLocalBinding;
+
+				this.handleBusy(true);
+				oModelLocalBinding = this.getView().getModel("localBinding");
+				if (this.getView().getModel("appView").getProperty("/isAdmin")) {
+					sEmployeeId = oModelLocalBinding.getProperty("/EmployeeId");
+					sAssignationGroupId = oModelLocalBinding.getProperty("/AssignationGroupId");
+				} else {
+					sEmployeeId = sap.ushell.Container.getService("UserInfo").getId().substr(0, 10);
+					sAssignationGroupId = "%20";
+				}
+				oModel.read("/ActivityTicketSet(EmployeeId='" + sEmployeeId + "',AssignationGroupId='" + sAssignationGroupId + "')", {
+					urlParameters: {
+			        	"$expand": "ToActivities"
+			    	},
+	                success: (
+	                	function(oData, response) {
+	                		var oView;
+		                	try {
+		                		oView = this.getView();
+		                		oView.getModel("localBinding").setProperty("/Clock", oData);
+		                	} catch (oError) {
+		                		oView.getModel("localBinding").setProperty("/PieceSet", {});
+		                	}
+		                	if (fSuccessCallbackFnc){
+		                		fSuccessCallbackFnc.call(this);
+		                	}
+							this.handleBusy(false);
+		                }).bind(this),
+	                error: (
+	                	function(oData) {
+	                		var sText = "";
+	                		var oView;
+	
+							try {
+								oView = this.getView();
+								oView.getModel("localBinding").setProperty("/PieceSet", {});
+								sText = JSON.parse(oData.responseText).error.innererror.errordetails[0].message;
+							}
+							catch (oError) {
+								sText = oView.getModel("i18n").getResourceBundle().getText("error.loading.data");
+							}
+							this.showErrorMessageBox(sText);
+		                	if (fErrorCallbackFnc){
+		                		fErrorCallbackFnc.call(this);
+		                	}
+							this.handleBusy(false);
+		                }).bind(this)
+				});
+			},
+			
+			
 			_changeBtnStatus: function(bConfirm){
 				var sFunctionName = "_changeBtnStatus";
 				var oView = this.getView();
@@ -214,7 +257,7 @@ sap.ui.define(
 				try {
 					if(bConfirm){
 						sText = oView.getModel("i18n").getResourceBundle().getText("Clock.button.activityConfirmed");
-						sType = "Accept";
+					sType = "Accept";
 						oConfirmBtn.setEnabled(false);
 					}else{
 						sText = oView.getModel("i18n").getResourceBundle().getText("Clock.button.confirmActivity");

@@ -14,7 +14,7 @@
 				<HBox justifyContent="SpaceBetween">
 					<Text text="{
 						parts: [
-							'localBinding>/Date'
+							'localBinding>/Clock/Date'
 						],
 						formatter: '.formatDate'
 					}"/>
@@ -27,24 +27,24 @@
 								<customData>
 									<core:CustomData
 										key="line"
-										value="{localBinding>/Line}"
+										value="{localBinding>/Clock/Line}"
 										writeToDom="true"
 									/>
 								</customData>
-								<Text text="L{localBinding>/Line}"/>
+								<Text text="L{localBinding>/Clock/Line}"/>
 							</VBox>
 							<VBox>
 								<Text text="{
 									parts: [
 										'i18n>zone',
-										'localBinding>/Zone'
+										'localBinding>/Clock/ZoneId'
 									],
 									formatter: 'jQuery.sap.formatMessage'
 								}"/>
 								<Text text="{
 									parts: [
 										'i18n>shift',
-										'localBinding>/Shift'
+										'localBinding>/Clock/ShiftNumber'
 									],
 									formatter: 'jQuery.sap.formatMessage'
 								}"/>
@@ -72,18 +72,18 @@
 				<Table class="tableWithNoData">
 					<columns>
 						<Column hAlign="Center" width="25%">
-							<Text text="{localBinding>/ServiceId}"/>
+							<Text text="{localBinding>/Clock/ServiceId}"/>
 						</Column>
 						<Column hAlign="Center" width="20%">
-							<Text text="{localBinding>/EmployeeId}"/>
+							<Text text="{localBinding>/Clock/EmployeeId}"/>
 						</Column>
 						<Column hAlign="Center" width="55%">
-							<Text text="{localBinding>/EmployeeName}"/>
+							<Text text="{localBinding>/Clock/EmployeeName}"/>
 						</Column>
 					</columns>
 				</Table>
 				
-				<Table id="activitiesTable" items="{localBinding>/Clock/ActivitySet}">
+				<Table id="activitiesTable" items="{localBinding>/Clock/ToActivities/results}">
 					<columns>
 						<Column>
 							<Text text="{i18n>Clock.hour}"/>
