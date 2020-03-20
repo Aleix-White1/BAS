@@ -269,7 +269,16 @@ sap.ui.define(
 					this._handleCatchException(oError, sFunctionName);
 				}
 				return sText;
+			},
+			
+			formatZone: function(sValue){
+				return (sValue) ? this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("zone", sValue) : "";	
+			},
+			
+			formatShift: function(sValue){
+				return (sValue) ? this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("shift", sValue) : "";	
 			}
+				
 		});
 	}
 );
