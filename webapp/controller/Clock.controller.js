@@ -4,9 +4,10 @@ sap.ui.define(
 		"zui5controlstmb/utils/Analytics",
 		"zui5controlstmb/utils/CommonUtils",
 		"sap/ui/model/Filter",
-		"sap/ui/model/FilterOperator"
+		"sap/ui/model/FilterOperator",
+		"sap/m/MessageBox"
 	],
-	function (BaseController, Analytics, CommonUtils, Filter, FilterOperator) {
+	function (BaseController, Analytics, CommonUtils, Filter, FilterOperator, MessageBox) {
 		"use strict";
 
 		return BaseController.extend("zdigitalticket.controller.Clock", {
@@ -31,7 +32,32 @@ sap.ui.define(
 			/* =========================================================== */
 			onPressConfirmActivity: function(oEvent){
 				var that = this;
-				var sFunctionName = "onPressConfirmActivity";
+				var oView = this.getView();
+				var oResourceBundle = oView.getModel("i18n").getResourceBundle();
+				
+				var date = oView.getModel("localBinding").getProperty("/Clock/Date");
+				var sDate =  date.getDate() + " " + oResourceBundle.getText("month." + date.getMonth()) + " " + oResourceBundle.getText("year.prefix") + " " + date.getFullYear();
+				var sTitle = oResourceBundle.getText("Clock.title.confirmingActivity");
+				var sMessage = oResourceBundle.getText("Clock.message.confirmActivity", [sDate]);
+				
+				MessageBox.show(
+					sMessage, {
+						icon: MessageBox.Icon.INFORMATION,
+						title: sTitle,
+						actions: [MessageBox.Action.YES, MessageBox.Action.NO],
+						emphasizedAction: MessageBox.Action.YES,
+						onClose: function(oAction) { 
+							if(oAction === MessageBox.Action.YES){
+								that.sendConfirmActivity();
+							}
+						}
+					}
+				);
+			},
+			
+			sendConfirmActivity: function(oEvent){
+				var that = this;
+				var sFunctionName = "sendConfirmActivity";
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					var sEmpId = this.getView().getModel("localBinding").getProperty("/EmployeeId");	
@@ -45,10 +71,12 @@ sap.ui.define(
 						},
 						success: function (oResponse) {
 							var sResponseMsg = oResponse.SetActivityConfirmation.res_message;
-							if(oResponse.SetActivityConfirmation.is_confirmed){
+							var bIsConfirmed = oResponse.SetActivityConfirmation.is_confirmed;
+							if(bIsConfirmed){
 								that._changeBtnStatus(true);
-							}else if(sResponseMsg!=undefined && sResponseMsg.length>0){
-								that.showErrorMessageBox(sResponseMsg);
+							}
+							if(sResponseMsg!=undefined && sResponseMsg.length>0){
+								MessageBox.information(sResponseMsg);
 							} 
 						},
 						error: function (oError) {
@@ -86,7 +114,7 @@ sap.ui.define(
 			/* =========================================================== */
 			/* formatters and other public methods                         */
 			/* =========================================================== */
-			formtterConfirmActivity: function(aActivity){
+			formtterConfirmActivity: function(oClock){
 				var oView = this.getView();
 				var oConfirmBtn = oView.byId("confirmActivityBtn");
 				
@@ -94,14 +122,16 @@ sap.ui.define(
 				var sText = oView.getModel("i18n").getResourceBundle().getText("Clock.button.confirmActivity");
 				oConfirmBtn.setEnabled(true);
 				
-				if(aActivity && aActivity.length>0){
-					var iItemsApproved = 0;
-					aActivity.forEach(function(oActivity){ 
-						if(oActivity.IsApproved === "X"){
-							iItemsApproved++;
-						}
-					});
-					if(iItemsApproved === aActivity.length){
+				var aActivity;
+				try{
+					aActivity = oClock.ToActivities.results;
+				}catch(oError2){
+					aActivity = [];
+				}
+				
+				if(aActivity && aActivity.length>0 ){
+					var bIsConfirmed = oClock.IsConfirmed;
+					if(bIsConfirmed){
 						sText = oView.getModel("i18n").getResourceBundle().getText("Clock.button.activityConfirmed");
 						oConfirmBtn.setType(sap.m.ButtonType.Accept);
 						oConfirmBtn.setEnabled(false);

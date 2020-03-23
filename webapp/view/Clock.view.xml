@@ -58,7 +58,7 @@
 						id="confirmActivityBtn"
 						text="{
 							parts: [
-								'localBinding>/Clock/ActivitySet'
+								'localBinding>/Clock'
 							],
 							formatter: '.formtterConfirmActivity'
 						}"
