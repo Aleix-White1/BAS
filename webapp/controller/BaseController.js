@@ -219,6 +219,7 @@ sap.ui.define(
 	                success: (
 	                	function(oData, response) {
 	                		var oView;
+	                		var oDate;
 	
 		                	try {
 		                		oView = this.getView();
@@ -228,7 +229,8 @@ sap.ui.define(
 		                		oView.getModel("localBinding").setProperty("/Line", oData.Line);
 								oView.getModel("localBinding").setProperty("/Shift", oData.ShiftNumber);
 								oView.getModel("localBinding").setProperty("/Zone", oData.ZoneId);
-								oView.getModel("localBinding").setProperty("/Date", oData.Date);
+								oDate = this._convertDateFromUTC(oData.Date);
+								oView.getModel("localBinding").setProperty("/Date", oDate);
 		                		oView.getModel("localBinding").setProperty("/PieceSet", oData.ToPieces.results);
 		                	}
 		                	catch (oError) {
@@ -238,7 +240,8 @@ sap.ui.define(
 		                		fSuccessCallbackFnc.call(this);
 		                	}
 							this.handleBusy(false);
-		                }).bind(this),
+		                }
+		            ).bind(this),
 	                error: (
 	                	function(oData) {
 	                		var sText = "";
@@ -257,8 +260,13 @@ sap.ui.define(
 		                		fErrorCallbackFnc.call(this);
 		                	}
 							this.handleBusy(false);
-		                }).bind(this)
+		                }
+		            ).bind(this)
 				});
+			},
+
+			_convertDateFromUTC: function(oDate) {
+				return new Date(oDate.getFullYear(), oDate.getMonth(), oDate.getDate());
 			}
 		});
 	}
