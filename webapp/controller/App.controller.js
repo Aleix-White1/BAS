@@ -122,7 +122,7 @@ sap.ui.define(
 
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
-					this.onNavBack();
+					window.history.go(-1);
 				}
 				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
