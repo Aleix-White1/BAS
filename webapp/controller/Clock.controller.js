@@ -120,7 +120,8 @@ sap.ui.define(
 				
 				oConfirmBtn.setType(sap.m.ButtonType.Negative);
 				var sText = oView.getModel("i18n").getResourceBundle().getText("Clock.button.confirmActivity");
-				oConfirmBtn.setEnabled(true);
+				var isDriver = oView.getModel("appView").getProperty("/isDriver");
+				oConfirmBtn.setEnabled(isDriver);
 				
 				var aActivity;
 				try{
@@ -141,10 +142,10 @@ sap.ui.define(
 					oConfirmBtn.setEnabled(false);
 				}
 				
-				var isAdmin = oView.getModel("appView").getProperty("/isAdmin");
-				if(isAdmin){
-					oConfirmBtn.setEnabled(false);
-				}
+				// var isAdmin = oView.getModel("appView").getProperty("/isAdmin");
+				// if(isAdmin){
+				// 	oConfirmBtn.setEnabled(false);
+				// }
 				
 				return sText;
 			},
