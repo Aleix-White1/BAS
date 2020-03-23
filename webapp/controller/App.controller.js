@@ -31,19 +31,22 @@ sap.ui.define(
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
 					BaseController.prototype.onInit.call(this);
 					oViewModel = new JSONModel();
-					oViewModel.loadData(
-						this.getOwnerComponent().getModel().sServiceUrl + "/GetUserInformation",
-						undefined,
-					    false, //Synchronous call
-					    "GET"
-					);
+					// oViewModel.loadData(
+					// 	this.getOwnerComponent().getModel().sServiceUrl + "/GetUserInformation",
+					// 	undefined,
+					//     false, //Synchronous call
+					//     "GET"
+					// );
 					oViewModel = new JSONModel({
 						busy: true,
 						busyCounter: 0,
 						backButtonVisible: false,
-						isAdmin: oViewModel.getProperty("/d/GetUserInformation/isAdmin")
+						// isAdmin: oViewModel.getProperty("/d/GetUserInformation/isAdmin")
 					});
 					this.getView().setModel(oViewModel, "appView");
+					
+					this.getUserInformationIsAdmin();
+					
 					//Disable busy indication when the metadata is loaded and in case of errors
 					this.getOwnerComponent().getModel().attachMetadataFailed(
 						fnSetAppNotBusy = function() {
@@ -155,7 +158,32 @@ sap.ui.define(
 				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
+			},
+			
+			getUserInformationIsAdmin: function(){
+				var that = this;
+				var sFunctionName = "getUserInformationIsAdmin";
+				try {
+					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
+					var sEmpId = this.getView().getModel("localBinding").getProperty("/EmployeeId");	
+					that.getView().getModel().callFunction("/GetUserInformation", {
+						method: "GET",
+						urlParameters: {
+							"EmployeeId": sEmpId
+						},
+						success: function (oResponse) {
+							var oViewModel = that.getView().getModel("appView");
+							oViewModel.setProperty("isAdmin", oResponse);
+						},
+						error: function (oError) {
+							var oViewModel = that.getView().getModel("appView");
+							oViewModel.setProperty("isAdmin", false);						}
+					});
+				} catch (oError) {
+					this._handleCatchException(oError, sFunctionName);
+				}
 			}
+			
 		});
 	}
 );
