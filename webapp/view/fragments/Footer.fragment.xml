@@ -12,11 +12,11 @@
 				<core:CustomData key="buttonTarget" value="RouteClock"/>
 			</customData>
 		</Button>
-		<Button icon="sap-icon://unfavorite" press="onPressToolbarButton" class="tmbButton" visible="{= !${appView>/backButtonVisible} }">
-			<customData>
-				<core:CustomData key="buttonTarget" value="RouteStar"/>
-			</customData>
-		</Button>
+		<!--<Button icon="sap-icon://unfavorite" press="onPressToolbarButton" class="tmbButton" visible="{= !${appView>/backButtonVisible} }">-->
+		<!--	<customData>-->
+		<!--		<core:CustomData key="buttonTarget" value="RouteStar"/>-->
+		<!--	</customData>-->
+		<!--</Button>-->
 		<Button icon="sap-icon://nav-back" press="onPressBackButton" class="tmbButton" visible="{appView>/backButtonVisible}"/>
 	</Toolbar>
 </core:FragmentDefinition>
