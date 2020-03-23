@@ -101,6 +101,14 @@
 	line-height: 32px;
 }
 
-.BoxDate {
-    height: 2.2rem;
+.digitalticket .BoxDate {
+    height: 3rem;
+}
+.digitalticket .BoxDate > div {
+	display: flex;
+}
+.digitalticket .BoxDate > div > span,
+.digitalticket .BoxDate > div > button {
+	margin-top: auto;
+	margin-bottom: auto;
 }
