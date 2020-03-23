@@ -31,21 +31,19 @@ sap.ui.define(
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
 					BaseController.prototype.onInit.call(this);
 					oViewModel = new JSONModel();
-					// oViewModel.loadData(
-					// 	this.getOwnerComponent().getModel().sServiceUrl + "/GetUserInformation",
-					// 	undefined,
-					//     false, //Synchronous call
-					//     "GET"
-					// );
+					oViewModel.loadData(
+					 	this.getOwnerComponent().getModel().sServiceUrl + "/GetUserInformation",
+					 	undefined,
+					     false, //Synchronous call
+					     "GET"
+					);
 					oViewModel = new JSONModel({
 						busy: true,
 						busyCounter: 0,
 						backButtonVisible: false,
-						// isAdmin: oViewModel.getProperty("/d/GetUserInformation/isAdmin")
+						isAdmin: oViewModel.getProperty("/d/GetUserInformation/isAdmin")
 					});
 					this.getView().setModel(oViewModel, "appView");
-					
-					this.getUserInformationIsAdmin();
 					
 					//Disable busy indication when the metadata is loaded and in case of errors
 					this.getOwnerComponent().getModel().attachMetadataFailed(
@@ -72,15 +70,20 @@ sap.ui.define(
 						if (!sAssignationGroupId) {
 							sAssignationGroupId = "";
 						}
-					}
-					else {
+						this.getView().getModel("appView").setProperty("/isDriver", false);
+					} else {
+						this.getView().getModel("appView").setProperty("/isDriver", true);
 						sEmployeeId = "";
 						sAssignationGroupId = "";
 					}
+					
+					//this.getUserInformationIsAdmin(sEmployeeId);
+					
 					oModelLocalBinding = this.getView().getModel("localBinding");
 					oModelLocalBinding.setProperty("/EmployeeId", sEmployeeId);
 					oModelLocalBinding.setProperty("/AssignationGroupId", sAssignationGroupId);
 					oModelLocalBinding.setProperty("/today", true);
+					
 					this.getOwnerComponent().getRouter().attachRouteMatched(this.onRouteMatched, this);
 					this.getOwnerComponent().getRouter().attachBypassed(this.onRouteMatched, this);
 				}
@@ -160,12 +163,12 @@ sap.ui.define(
 				}
 			},
 			
-			getUserInformationIsAdmin: function(){
+			getUserInformationIsAdmin: function(sEmpId){
 				var that = this;
 				var sFunctionName = "getUserInformationIsAdmin";
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
-					var sEmpId = this.getView().getModel("localBinding").getProperty("/EmployeeId");	
+					// var sEmpId = this.getView().getModel("localBinding").getProperty("/EmployeeId");	
 					that.getView().getModel().callFunction("/GetUserInformation", {
 						method: "GET",
 						urlParameters: {

@@ -56,7 +56,7 @@
 								}"/>
 							</VBox>
 						</HBox>
-						<core:Icon src="sap-icon://download" size="20px" press="onDownloadTicket" visible="{= ${localBinding>/today} &amp;&amp; !${appView>/isAdmin} &amp;&amp; ${localBinding>/PieceSet}.length &gt; 0 }"/>
+						<core:Icon src="sap-icon://download" size="20px" press="onDownloadTicket" visible="{= ${localBinding>/today} &amp;&amp; ${appView>/isDriver} &amp;&amp; ${localBinding>/PieceSet}.length &gt; 0 }"/>
 					</HBox>
 					<Text text="{i18n>zone.activities.for.today}"/>
 				</VBox>

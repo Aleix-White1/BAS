@@ -166,8 +166,9 @@ sap.ui.define(
 
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
-					if (!this.getView().getModel("appView").getProperty("/isAdmin")) {
-						sUrl = this.getOwnerComponent().getModel().sServiceUrl + "/TicketSet(EmployeeId='" + sap.ushell.Container.getService("UserInfo").getId().substr(0, 10) + "',AssignationGroupId='%20',Today=true)/$value";
+					if (this.getView().getModel("appView").getProperty("/isDriver")) {
+						sUrl = this.getOwnerComponent().getModel().sServiceUrl + "/TicketSet(EmployeeId='',AssignationGroupId='%20',Today=true)/$value";
+						// sUrl = this.getOwnerComponent().getModel().sServiceUrl + "/TicketSet(EmployeeId='" + sap.ushell.Container.getService("UserInfo").getId().substr(0, 10) + "',AssignationGroupId='%20',Today=true)/$value";
 						if (window.requestFileSystem) {
 							//We are running inside the app
 							_downloadFile(
