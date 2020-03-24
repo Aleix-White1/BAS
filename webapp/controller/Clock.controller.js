@@ -16,13 +16,11 @@ sap.ui.define(
 			/* =========================================================== */
 			onInit: function() {
 				var sFunctionName = "onInit";
-
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
 					BaseController.prototype.onInit.call(this);
 					this.getRouter().getRoute("RouteClock").attachPatternMatched(this.onClockMatched, this);
-				}
-				catch (oError) {
+				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
@@ -36,10 +34,10 @@ sap.ui.define(
 				var oResourceBundle = oView.getModel("i18n").getResourceBundle();
 				
 				var date = oView.getModel("localBinding").getProperty("/Clock/Date");
-				var iMonth = ( date.getMonth() + 1 );
-				var sMonth = ( iMonth > 9 ) ? iMonth : "0" + iMonth;
-				var sDate =  date.getDate() + " / " + sMonth + " / " + date.getFullYear();
-				// var sDate =  date.getDate() + " " + oResourceBundle.getText("month." + date.getMonth()) + " " + oResourceBundle.getText("year.prefix") + " " + date.getFullYear();
+				// var iMonth = ( date.getMonth() + 1 );
+				// var sMonth = ( iMonth > 9 ) ? iMonth : "0" + iMonth;
+				// var sDate =  date.getDate() + " / " + sMonth + " / " + date.getFullYear();
+				var sDate =  date.getDate() + " " + oResourceBundle.getText("month." + date.getMonth()) + " " + oResourceBundle.getText("year.prefix") + " " + date.getFullYear();
 				var sTitle = oResourceBundle.getText("Clock.title.confirmingActivity");
 				var sMessage = oResourceBundle.getText("Clock.message.confirmActivity", [sDate]);
 				
