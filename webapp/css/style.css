@@ -22,9 +22,12 @@
 	background-color: white;
 }
 .digitalticket .colorBackground[data-italic],
-.digitalticket .colorBackground[data-italic] *:not(a) {
+.digitalticket .colorBackground[data-italic] *:not(a):not(.sapUiIcon) {
 	font-style: italic;
 	color: #aaa;
+}
+.digitalticket .colorBackground[data-italic] .sapUiIcon::before {
+	font-style: normal;
 }
 .digitalticket .bigFont input {
 	font-size: 25px;
