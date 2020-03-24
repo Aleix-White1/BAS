@@ -82,7 +82,9 @@
 					</columns>
 				</Table>
 				
-				<Table id="activitiesTable" items="{localBinding>/Clock/ToActivities/results}">
+				<Table id="activitiesTable" items="{localBinding>/Clock/ToActivities/results}"
+					visible="{= ${localBinding>/Clock/ToActivities/results}.length &gt; 0 }"
+				>
 					<columns>
 						<Column>
 							<Text text="{i18n>Clock.hour}"/>
