@@ -206,7 +206,7 @@ sap.ui.define(
 		                success: (function(oResponse) {
 	                		var oView = that.getView();
 	                		oView.getModel("localBinding").setProperty("/Clock/ActivitySet", oResponse.results);
-	                		that.getView().getParent().setVisible(true);
+	                		oView.getParent().setVisible(true);
 							that.handleBusy(false);
 		                }),
 		                error: (function(oResponse) {
@@ -214,7 +214,7 @@ sap.ui.define(
 							oView.getModel("localBinding").setProperty("/Clock/ActivitySet", []);
 							var sText = oView.getModel("i18n").getResourceBundle().getText("error.loading.data");
 							that.showErrorMessageBox(sText);
-							that.getView().getParent().setVisible(true);
+							oView.getParent().setVisible(true);
 							that.handleBusy(false);
 		                })
 		            });

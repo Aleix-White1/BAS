@@ -94,7 +94,8 @@ sap.ui.define(
 						var oSelect = oView.byId("selectTrackCombo");
 						oSelect.fireEvent("change");
 					}
-					oModelLocalBinding.setProperty("/StationInfo/lines", aTracksTmp);	
+					oModelLocalBinding.setProperty("/StationInfo/lines", aTracksTmp);
+					oView.getParent().setVisible(true);
 				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
@@ -126,7 +127,7 @@ sap.ui.define(
 					oModelLocalBinding.setProperty("/StationInfo/Date", new Date());
 					oModelLocalBinding.setProperty("/StationInfo/Line", sLine);
 					oModelLocalBinding.setProperty("/StationInfo/CurrTime", this.formatTime());
-					
+					oView.getParent().setVisible(true);
 				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
