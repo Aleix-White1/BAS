@@ -52,10 +52,20 @@
 								<Label text="{i18n>TEInfo.departure.departureTime}:" class="sapUiSmallMarginEnd" /><Text text="{localBinding>/TEInfo/departureTime}"/>
 							</HBox>
 							<HBox>
-								<Label text="{i18n>TEInfo.departure.departureStation}:" class="sapUiSmallMarginEnd" /><Text text="{localBinding>/TEInfo/departureStationCode} ( {localBinding>/TEInfo/departureStationName} )"/>
+								<Label text="{i18n>TEInfo.departure.departureStation}:" class="sapUiSmallMarginEnd" />
+								<Text text="{
+										parts: [
+											'localBinding>/TEInfo/departureStationCode',
+											'localBinding>/TEInfo/departureStationName'
+										],
+										formatter: '.formatStationText'
+									}"
+								/>
 							</HBox>
 							<HBox>
-								<Label text="{i18n>TEInfo.departure.departureTrack}:" class="sapUiSmallMarginEnd" /><Text text="{localBinding>/TEInfo/departureTrack}"/>
+								<Label text="{i18n>TEInfo.departure.departureTrack}:" class="sapUiSmallMarginEnd" />
+								<Text text="{localBinding>/TEInfo/departureTrack}"
+									  visible="{localBinding>/TEInfo/departureTrack}" />
 							</HBox>
 						</content>
 					</Panel>
@@ -68,13 +78,24 @@
 						</headerToolbar>
 						<content>
 							<HBox>
-								<Label text="{i18n>TEInfo.current.currentTime}:" class="sapUiSmallMarginEnd" /><Text text="{localBinding>/TEInfo/currTime}"/>
+								<Label text="{i18n>TEInfo.current.currentTime}:" class="sapUiSmallMarginEnd" />
+								<Text text="{localBinding>/TEInfo/currTime}"/>
 							</HBox>
 							<HBox>
-								<Label text="{i18n>TEInfo.current.currentStation}:" class="sapUiSmallMarginEnd" /><Text text="{localBinding>/TEInfo/currStationCode} ( {localBinding>/TEInfo/currStationName} )"/>
+								<Label text="{i18n>TEInfo.current.currentStation}:" class="sapUiSmallMarginEnd" />
+								<Text text="{
+										parts: [
+											'localBinding>/TEInfo/currStationCode',
+											'localBinding>/TEInfo/currStationName'
+										],
+										formatter: '.formatStationText'
+									}"
+								/>
 							</HBox>
 							<HBox>
-								<Label text="{i18n>TEInfo.current.currentTrack}:" class="sapUiSmallMarginEnd" /><Text text="{localBinding>/TEInfo/currTrack}"/>
+								<Label text="{i18n>TEInfo.current.currentTrack}:" class="sapUiSmallMarginEnd" />
+								<Text text="{localBinding>/TEInfo/currTrack}"
+									  visible="{localBinding>/TEInfo/currTrack}" />
 							</HBox>
 						</content>
 					</Panel>

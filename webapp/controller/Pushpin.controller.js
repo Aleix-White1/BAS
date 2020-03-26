@@ -234,12 +234,23 @@ sap.ui.define(
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					oModelLocalBinding = this.getView().getModel("localBinding");
 					oTrainInfo = oModelLocalBinding.getProperty(oEvent.getSource().getParent().getParent().getBindingContextPath());
+					
+					var sLine = oModelLocalBinding.getProperty("/Line");
+					var sStation = oTrainInfo.StartStation;
+					var sTrain = oTrainInfo.TrainStation;
+					var sTrack = oTrainInfo.StartTrack;
+					
+					if( sTrack == undefined || sTrack.length == 0){
+						sTrack = "-";
+					}  
+					
 					var oParams = {
-						"Line": oModelLocalBinding.getProperty("/Line"),
-						"Station": oTrainInfo.StartStation,
-						"Train": oTrainInfo.TrainStation,
-						"Track": oTrainInfo.StartTrack
+						"Line": sLine,
+						"Station": sStation,
+						"Train": sTrain,
+						"Track": sTrack
 					};
+					
 					this.getRouter().navTo(
 						"RouteTEInfo",
 						oParams,

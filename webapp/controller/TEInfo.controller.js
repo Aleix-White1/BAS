@@ -147,7 +147,12 @@ sap.ui.define(
 					oModelLocalBinding.setProperty("/TEInfo/departureTime", "");
 					oModelLocalBinding.setProperty("/TEInfo/departureStationCode", sStation);
 					oModelLocalBinding.setProperty("/TEInfo/departureStationName", "");
-					oModelLocalBinding.setProperty("/TEInfo/departureTrack", oResourceBundle.getText("stationInfo.trackNumber", [sTrack]) );
+					
+					if(sTrack == "-"){
+						oModelLocalBinding.setProperty("/TEInfo/departureTrack", "" );	
+					}else {
+						oModelLocalBinding.setProperty("/TEInfo/departureTrack", oResourceBundle.getText("stationInfo.trackNumber", [sTrack]) );
+					}
 					
 					oModelLocalBinding.setProperty("/TEInfo/currTime", "");
 					oModelLocalBinding.setProperty("/TEInfo/currStationCode", "");
@@ -194,7 +199,19 @@ sap.ui.define(
 					this._handleCatchException(oError, sFunctionName);
 				}
 				return dateFormatted;
+			},
+			
+			formatStationText: function(sCode, sText){
+				var sStationText = "";
+				if(sCode){
+					sStationText += sCode;	
+				}
+				if(sText){
+					sStationText += "( " + sText + ")";	
+				}
+				return sStationText;
 			}
+			
 		});
 	}
 );
