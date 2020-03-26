@@ -3,9 +3,10 @@ sap.ui.define(
 		"zdigitalticket/controller/BaseController",
 		"zui5controlstmb/utils/Analytics",
 		"sap/ui/model/json/JSONModel",
-		"zui5controlstmb/utils/CommonUtils"
+		"zui5controlstmb/utils/CommonUtils",
+		"sap/ui/core/routing/History"
 	],
-	function (BaseController, Analytics, JSONModel, CommonUtils) {
+	function (BaseController, Analytics, JSONModel, CommonUtils, History) {
 		"use strict";
 
 		return BaseController.extend("zdigitalticket.controller.App", {
@@ -128,7 +129,9 @@ sap.ui.define(
 
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
-					window.history.go(-1);
+					if (History.getInstance().getPreviousHash() !== undefined) {
+						window.history.go(-1);
+					}
 				}
 				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);

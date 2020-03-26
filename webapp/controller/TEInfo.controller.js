@@ -44,7 +44,7 @@ sap.ui.define(
 					var sDepartStationCode = oModelLocalBinding.getProperty("/TEInfo/departureStationCode");
 					var sDepartStationName = this.getStationName(_sLine, sDepartStationCode);
 					oModelLocalBinding.setProperty("/TEInfo/departureStationName", sDepartStationName);
-					
+					oView.getParent().setVisible(true);
 				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
