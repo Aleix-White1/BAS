@@ -82,11 +82,13 @@ sap.ui.define(
 					var oModelMiralin = oView.getModel("miralinModel");
 					
 					var sTrain = oModelLocalBinding.getProperty("/TEInfo/Train");
+					var sLine = oModelLocalBinding.getProperty("/TEInfo/Line");
+					var sLineTrain = this.getTrainNumber(sLine, sTrain);
 					var aTracks = oModelMiralin.getProperty("/arrivals/tracks");
 					aTracks.forEach(function(oItemTrack){
 						var aTrainsPosition = oItemTrack.trainsPositions;
 						aTrainsPosition.forEach(function(oItemTrain){
-							if(oItemTrain.trainCode == sTrain){
+							if(oItemTrain.trainCode == sLineTrain){
 								oModelLocalBinding.setProperty("/TEInfo/currStationCode", oItemTrain.stopCode);
 								oModelLocalBinding.setProperty("/TEInfo/currTrack",  oResourceBundle.getText("stationInfo.trackNumber", [oItemTrain.track]));
 								var sDepartureTime = that.formatTime(oItemTrain.arrivalTime);
@@ -163,6 +165,19 @@ sap.ui.define(
 				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
+			},
+			
+			getTrainNumber: function(sLine, sTrain){
+				var sFunctionName = "getTrainNumber";
+				var sTrainResult;
+				try {
+					sTrainResult = sLine;
+					var iTrain = parseInt(sTrain, 10);
+					sTrainResult += (iTrain < 10) ? "0" + iTrain : iTrain;
+				} catch (oError) {
+					this._handleCatchException(oError, sFunctionName);
+				}
+				return sTrainResult;	
 			},
 			
 			/* =========================================================== */
