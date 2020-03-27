@@ -64,8 +64,7 @@
 							</HBox>
 							<HBox>
 								<Label text="{i18n>TEInfo.departure.departureTrack}:" class="sapUiSmallMarginEnd" />
-								<Text text="{localBinding>/TEInfo/departureTrack}"
-									  visible="{localBinding>/TEInfo/departureTrack}" />
+								<Text text="{localBinding>/TEInfo/departureTrack}" />
 							</HBox>
 						</content>
 					</Panel>
@@ -94,8 +93,7 @@
 							</HBox>
 							<HBox>
 								<Label text="{i18n>TEInfo.current.currentTrack}:" class="sapUiSmallMarginEnd" />
-								<Text text="{localBinding>/TEInfo/currTrack}"
-									  visible="{localBinding>/TEInfo/currTrack}" />
+								<Text text="{localBinding>/TEInfo/currTrack}" />
 							</HBox>
 						</content>
 					</Panel>
