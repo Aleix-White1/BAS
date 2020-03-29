@@ -231,6 +231,7 @@ sap.ui.define(
 								oView.getModel("localBinding").setProperty("/Zone", oData.ZoneId);
 								oDate = this._convertDateFromUTC(oData.Date);
 								oView.getModel("localBinding").setProperty("/Date", oDate);
+								oView.getModel("localBinding").setProperty("/PieceSet", {}); //If we set property "/PieceSet" without clearing it before, previous and new data are mixed
 		                		oView.getModel("localBinding").setProperty("/PieceSet", oData.ToPieces.results);
 		                	}
 		                	catch (oError) {
