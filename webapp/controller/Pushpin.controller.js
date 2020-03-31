@@ -115,7 +115,7 @@ sap.ui.define(
 						Line: "",
 						Shift: "",
 						Zone: "",
-						Date: new Date(),
+						Date: "",
 						downloadable: false
 					});
 					oView.byId("dataTable").addStyleClass("tableWithNoData");
@@ -141,18 +141,12 @@ sap.ui.define(
 				var sFunctionName = "onChangeDay";
 				var oView;
 				var oModel;
-				var bToday;
-				var oDate;
 
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					oView = this.getView();
 					oModel = oView.getModel("localBinding");
-					oDate = new Date();
-					oModel.setProperty("/today", bToday = !oModel.getProperty("/today"));
-					if (!bToday) {
-						oDate.setDate(oDate.getDate() - 1);
-					}
+					oModel.setProperty("/today", !oModel.getProperty("/today"));
 					this._hideTable();
 					this._getTicketData(this._showTable, this._showTable);
 				}
@@ -273,12 +267,15 @@ sap.ui.define(
 			_hideTable: function() {
 				var sFunctionName = "_hideTable";
 				var oView;
+				var oModel;
 
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.OTHER);
 					oView = this.getView();
 					oView.byId("dataTable").addStyleClass("tableWithNoData");
-					oView.getModel("localBinding").setProperty("/downloadable", false);
+					oModel = oView.getModel("localBinding");
+					oModel.setProperty("/downloadable", false);
+					oModel.setProperty("/Date", "");
 				}
 				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
