@@ -115,7 +115,8 @@ sap.ui.define(
 						Line: "",
 						Shift: "",
 						Zone: "",
-						Date: new Date()
+						Date: new Date(),
+						downloadable: false
 					});
 					oView.byId("dataTable").addStyleClass("tableWithNoData");
 					this._getTicketData(
@@ -271,10 +272,13 @@ sap.ui.define(
 			/* =========================================================== */
 			_hideTable: function() {
 				var sFunctionName = "_hideTable";
+				var oView;
 
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.OTHER);
-					this.getView().byId("dataTable").addStyleClass("tableWithNoData");
+					oView = this.getView();
+					oView.byId("dataTable").addStyleClass("tableWithNoData");
+					oView.getModel("localBinding").setProperty("/downloadable", false);
 				}
 				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
@@ -283,11 +287,15 @@ sap.ui.define(
 
 			_showTable: function() {
 				var sFunctionName = "_showTable";
+				var oView;
+				var oModel;
 
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.OTHER);
-					this.getView().getParent().setVisible(true);
-					this.getView().byId("dataTable").removeStyleClass("tableWithNoData");
+					oModel = (oView = this.getView()).getModel("localBinding");
+					oView.getParent().setVisible(true);
+					oView.byId("dataTable").removeStyleClass("tableWithNoData");
+					oModel.setProperty("/downloadable", oModel.getProperty("/today") && oView.getModel("appView").getProperty("/isDriver") && oModel.getProperty("/PieceSet").length > 0);
 				}
 				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
