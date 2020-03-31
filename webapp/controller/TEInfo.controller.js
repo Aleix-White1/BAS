@@ -86,15 +86,18 @@ sap.ui.define(
 					var sLineTrain = this.getTrainNumber(sLine, sTrain);
 					var aTracks = oModelMiralin.getProperty("/arrivals/tracks");
 					aTracks.forEach(function(oItemTrack){
-						var aTrainsPosition = oItemTrack.trainsPositions;
-						aTrainsPosition.forEach(function(oItemTrain){
-							if(oItemTrain.trainCode == sLineTrain){
-								oModelLocalBinding.setProperty("/TEInfo/currStationCode", oItemTrain.stopCode);
-								oModelLocalBinding.setProperty("/TEInfo/currTrack",  oResourceBundle.getText("stationInfo.trackNumber", [oItemTrain.track]));
-								var sDepartureTime = that.formatTime(oItemTrain.arrivalTime);
-								oModelLocalBinding.setProperty("/TEInfo/departureTime", sDepartureTime);
-							}
-						});
+						var sTrack = oModelLocalBinding.getProperty("/TEInfo/Track");
+						if(oItemTrack.track == sTrack){
+							var aTrainsPosition = oItemTrack.trainsPositions;
+							aTrainsPosition.forEach(function(oItemTrain){
+								if(oItemTrain.trainCode == sLineTrain){
+									oModelLocalBinding.setProperty("/TEInfo/currStationCode", oItemTrain.stopCode);
+									oModelLocalBinding.setProperty("/TEInfo/currTrack",  oResourceBundle.getText("stationInfo.trackNumber", [oItemTrain.track]));
+									var sDepartureTime = that.formatTime(oItemTrain.arrivalTime);
+									oModelLocalBinding.setProperty("/TEInfo/departureTime", sDepartureTime);
+								}
+							});
+						}
 					});
 					this.onLoadLineStationData();
 				} catch (oError) {
@@ -207,7 +210,7 @@ sap.ui.define(
 					sStationText += sCode;	
 				}
 				if(sText){
-					sStationText += "( " + sText + ")";	
+					sStationText += " ( " + sText + " )";	
 				}
 				return sStationText;
 			}
