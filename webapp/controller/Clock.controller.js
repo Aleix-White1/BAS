@@ -106,7 +106,7 @@ sap.ui.define(
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					var oView = this.getView();
 					var oModelLocalBinding = oView.getModel("localBinding");
-					
+					oView.byId("activitiesTable").addStyleClass("tableWithNoData");
 					//Inicializamos la propiedad raiz de la pantalla en el modelo localbinding.
 					oModelLocalBinding.setProperty("/Clock", {});
 					this._getActivityTicketData();
@@ -158,76 +158,6 @@ sap.ui.define(
 			/* private methods                                             */
 			/* =========================================================== */
 			//Función que ejecuta la llamada al oData para recuperar las actividades del empleado.
-			getActivityData: function(){
-				var sFunctionName = "getActivityData";
-				var oModel = this.getView().getModel();
-				var oModelLocalBinding = this.getView().getModel("localBinding");
-				var that = this;
-				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
-					
-					var aFilters = [];
-					// var oDate = oModelLocalBinding.getProperty("/Date");
-					
-					var oDate = new Date();
-					var oDateUTC = CommonUtils.convertDateToUTC( oDate );
-					aFilters.push(
-						new Filter({
-							path: "Date",
-							operator: FilterOperator.EQ,
-							value1: oDateUTC
-						})
-					);
-	
-					var sEmpId = oModelLocalBinding.getProperty("/EmployeeId");	
-					if(!sEmpId){
-						sEmpId = sap.ushell.Container.getService("UserInfo").getId().substr(0, 10);
-					}
-					if(sEmpId){
-						aFilters.push(
-							new Filter({
-								path: "Employeenumber",
-								operator: FilterOperator.EQ,
-								value1: sEmpId
-							})
-						);
-					}
-					var sAssignationGroupId = oModelLocalBinding.getProperty("/AssignationGroupId");
-					if(sAssignationGroupId){
-						aFilters.push(
-							new Filter({
-								path: "AssignationGroupId",
-								operator: FilterOperator.EQ,
-								value1: sAssignationGroupId
-							})
-						);
-					}
-				
-					this.handleBusy(true);
-					oModel.read("/ActivitySet", {
-	                	filters: aFilters,
-		                success: (function(oResponse) {
-	                		var oView = that.getView();
-	                		oView.getModel("localBinding").setProperty("/Clock/ActivitySet", oResponse.results);
-	                		oView.getParent().setVisible(true);
-							that.handleBusy(false);
-		                }),
-		                error: (function(oResponse) {
-	                		var oView = that.getView();
-							oView.getModel("localBinding").setProperty("/Clock/ActivitySet", []);
-							var sText = oView.getModel("i18n").getResourceBundle().getText("error.loading.data");
-							that.showErrorMessageBox(sText);
-							oView.getParent().setVisible(true);
-							that.handleBusy(false);
-		                })
-		            });
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
-				}
-			},
-			
-			
-			
 			_getActivityTicketData: function(fSuccessCallbackFnc, fErrorCallbackFnc) {
 				var oModel = this.getView().getModel();
 				var sEmployeeId;
@@ -243,6 +173,7 @@ sap.ui.define(
 					sEmployeeId = sap.ushell.Container.getService("UserInfo").getId().substr(0, 10);
 					sAssignationGroupId = "%20";
 				}
+				this.getView().byId("activitiesTable").addStyleClass("tableWithNoData");
 				oModel.read("/ActivityTicketSet(EmployeeId='" + sEmployeeId + "',AssignationGroupId='" + sAssignationGroupId + "')", {
 					urlParameters: {
 			        	"$expand": "ToActivities"
@@ -261,6 +192,7 @@ sap.ui.define(
 		                	}
 							oView.getParent().setVisible(true);
 							this.handleBusy(false);
+							oView.byId("activitiesTable").removeStyleClass("tableWithNoData");
 		                }).bind(this),
 	                error: (
 	                	function(oData) {
@@ -281,6 +213,7 @@ sap.ui.define(
 		                	}
 		                	oView.getParent().setVisible(true);
 							this.handleBusy(false);
+							oView.byId("activitiesTable").removeStyleClass("tableWithNoData");
 		                }).bind(this)
 				});
 			},
