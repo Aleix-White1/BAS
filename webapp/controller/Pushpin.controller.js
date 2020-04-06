@@ -121,13 +121,18 @@ sap.ui.define(
 					oView.byId("dataTable").addStyleClass("tableWithNoData");
 					this._getTicketData(
 						function() {
-							oView.getModel().callFunction("/SetTicketAsRead", {
-								method: "GET",
-								urlParameters: {
-								},
-								success: this._showTable.bind(this),
-								error: this._showTable.bind(this)
-							});
+							if (oView.getModel("appView").getProperty("/isDriver")) {
+								oView.getModel().callFunction("/SetTicketAsRead", {
+									method: "GET",
+									urlParameters: {
+									},
+									success: this._showTable.bind(this),
+									error: this._showTable.bind(this)
+								});
+							}
+							else {
+								this._showTable();
+							}
 						},
 						this._showTable
 					);
