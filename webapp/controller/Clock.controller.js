@@ -61,14 +61,17 @@ sap.ui.define(
 				var sFunctionName = "sendConfirmActivity";
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
-					var sEmpId = this.getView().getModel("localBinding").getProperty("/EmployeeId");	
+					var oModelLocalBinding = this.getView().getModel("localBinding");
+					var sEmpId = oModelLocalBinding.getProperty("/EmployeeId");	
 					if(!sEmpId){
 						sEmpId = sap.ushell.Container.getService("UserInfo").getId();
 					}
-					that.getView().getModel().callFunction("/SetActivityConfirmation", {
+					var oDate = oModelLocalBinding.getProperty("/Clock/Date");
+					this.getView().getModel().callFunction("/SetActivityConfirmation", {
 						method: "GET",
 						urlParameters: {
-							"EmployeeId": sEmpId
+							"EmployeeId": sEmpId,
+							"Date": oDate
 						},
 						success: function (oResponse) {
 							var sResponseMsg = oResponse.SetActivityConfirmation.res_message;
