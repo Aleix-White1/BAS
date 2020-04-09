@@ -3,8 +3,8 @@
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:core="sap.ui.core"
 	xmlns:f="sap.ui.layout.form"
-	displayBlock="true"
 	xmlns:tmb="zui5controlstmb.controls"
+	displayBlock="true"
 	controllerName="zdigitalticket.controller.StationInfo"
 >
 	<Page showHeader="false" class="colorBackground" title="{i18n>stationInfo.title}" >
@@ -34,21 +34,22 @@
 						<VBox>
 							<Text text="{localBinding>/StationInfo/Name}"/>
 							<Text text="{localBinding>/StationInfo/CurrTime}"/>
-							<ComboBox 
+							<Select 
 								id="selectTrackCombo"
 								items="{localBinding>/StationInfo/lines}" 
 								selectedKey="{localBinding>/StationInfo/selectedTrack}"
 								change="onChangeTrack"
+								width="200px"
 							>
 								<core:Item key="{localBinding>trackNum}" text="{localBinding>trackName}" />
-							</ComboBox>
+							</Select>
 						</VBox>
 					</HBox>
 				</VBox>
 				
 				<Text text=" "/>  <!-- Spacer -->
 
-				<Table	items="{localBinding>/StationInfo/StationInfoTrainSet}" growing="false" >
+				<Table id="dataTable" items="{localBinding>/StationInfo/StationInfoTrainSet}" growing="false" class="tableWithNoData">
 					<!-- Hay una constante (NUM_TRAINS_IN_LIST) en el controller de la vista que limita los registros visualizados -->
 					<columns>
 						<Column hAlign="Center"><Text text="{i18n>stationInfo.train}"/></Column>

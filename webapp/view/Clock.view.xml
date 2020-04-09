@@ -22,7 +22,7 @@
 				</HBox>
 				
 				<VBox class="formFilters">
-					<HBox justifyContent="SpaceBetween" alignItems="Center">
+					<HBox justifyContent="SpaceBetween" alignItems="Center" id="headerData">
 						<HBox>
 							<VBox width="40px" height="40px" class="lineLogo" justifyContent="Center" alignItems="Center">
 								<customData>

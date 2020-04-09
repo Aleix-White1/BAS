@@ -119,6 +119,9 @@ sap.ui.define(
 						downloadable: false
 					});
 					oView.byId("dataTable").addStyleClass("tableWithNoData");
+					oView.byId("headerData").addStyleClass("containerWithNoData");
+					oView.byId("viewDescription").addStyleClass("containerWithNoData");
+					oView.byId("employeeId").addStyleClass("containerWithNoData");
 					this._getTicketData(
 						function() {
 							if (oView.getModel("appView").getProperty("/isDriver")) {
@@ -168,7 +171,6 @@ sap.ui.define(
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					if (this.getView().getModel("appView").getProperty("/isDriver")) {
 						sUrl = this.getOwnerComponent().getModel().sServiceUrl + "/TicketSet(EmployeeId='',AssignationGroupId='%20',Today=true)/$value";
-						// sUrl = this.getOwnerComponent().getModel().sServiceUrl + "/TicketSet(EmployeeId='" + sap.ushell.Container.getService("UserInfo").getId().substr(0, 10) + "',AssignationGroupId='%20',Today=true)/$value";
 						if (window.requestFileSystem) {
 							//We are running inside the app
 							_downloadFile(
@@ -288,20 +290,25 @@ sap.ui.define(
 			},
 
 			_showTable: function() {
-				var sFunctionName = "_showTable";
-				var oView;
-				var oModel;
-
-				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.OTHER);
-					oModel = (oView = this.getView()).getModel("localBinding");
-					oView.getParent().setVisible(true);
-					oView.byId("dataTable").removeStyleClass("tableWithNoData");
-					oModel.setProperty("/downloadable", oModel.getProperty("/today") && oView.getModel("appView").getProperty("/isDriver") && oModel.getProperty("/PieceSet").length > 0);
-				}
-				catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
-				}
+				setTimeout((function() {
+					var sFunctionName = "_showTable";
+					var oView;
+					var oModel;
+	
+					try {
+						this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.OTHER);
+						oModel = (oView = this.getView()).getModel("localBinding");
+						oView.getParent().setVisible(true);
+						oView.byId("dataTable").removeStyleClass("tableWithNoData");
+						oView.byId("headerData").removeStyleClass("containerWithNoData");
+						oView.byId("viewDescription").removeStyleClass("containerWithNoData");
+						oView.byId("employeeId").removeStyleClass("containerWithNoData");
+						oModel.setProperty("/downloadable", oModel.getProperty("/today") && oView.getModel("appView").getProperty("/isDriver") && oModel.getProperty("/PieceSet").length > 0);
+					}
+					catch (oError) {
+						this._handleCatchException(oError, sFunctionName);
+					}
+				}).bind(this), 0);
 			}
 		});
 	}

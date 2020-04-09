@@ -96,6 +96,9 @@ sap.ui.define(
 					}
 					oModelLocalBinding.setProperty("/StationInfo/lines", aTracksTmp);
 					oView.getParent().setVisible(true);
+					setTimeout((function() {
+						oView.byId("dataTable").removeStyleClass("tableWithNoData");
+					}).bind(this), 0);
 				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
@@ -179,7 +182,7 @@ sap.ui.define(
 				var oArguments, sLine, sTation;
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
-					oView = this.getView();
+					(oView = this.getView()).byId("dataTable").addStyleClass("tableWithNoData");
 					oModelLocalBinding = oView.getModel("localBinding");
 					oModelLocalBinding.setProperty("/StationInfo", {});
 					

@@ -27,7 +27,7 @@
 					<Button icon="sap-icon://navigation-right-arrow" press="onChangeDay" visible="{= !${localBinding>/today} }"/>
 				</HBox>
 				<VBox class="formFilters">
-					<HBox justifyContent="SpaceBetween" alignItems="Center">
+					<HBox justifyContent="SpaceBetween" alignItems="Center" id="headerData">
 						<HBox>
 							<VBox width="40px" height="40px" class="lineLogo" justifyContent="Center" alignItems="Center">
 								<customData>
@@ -40,25 +40,29 @@
 								<Text text="L{localBinding>/Line}"/>
 							</VBox>
 							<VBox>
-								<Text text="{
-									parts: [
-										'i18n>zone',
-										'localBinding>/Zone'
-									],
-									formatter: 'jQuery.sap.formatMessage'
-								}"/>
-								<Text text="{
-									parts: [
-										'i18n>shift',
-										'localBinding>/Shift'
-									],
-									formatter: 'jQuery.sap.formatMessage'
-								}"/>
+								<Text
+									text="{
+										parts: [
+											'i18n>zone',
+											'localBinding>/Zone'
+										],
+										formatter: 'jQuery.sap.formatMessage'
+									}"
+								/>
+								<Text
+									text="{
+										parts: [
+											'i18n>shift',
+											'localBinding>/Shift'
+										],
+										formatter: 'jQuery.sap.formatMessage'
+									}"
+								/>
 							</VBox>
 						</HBox>
 						<core:Icon src="sap-icon://download" size="20px" press="onDownloadTicket" visible="{localBinding>/downloadable}"/>
 					</HBox>
-					<Text text="{i18n>zone.activities.for.today}"/>
+					<Text text="{i18n>zone.activities.for.today}" id="viewDescription"/>
 				</VBox>
 				<Text text=" "/>  <!-- Spacer -->
 				<Table class="tableWithNoData">
@@ -67,7 +71,7 @@
 							<Text text="{localBinding>/ServiceId}"/>
 						</Column>
 						<Column hAlign="Center" width="20%">
-							<Text text="{localBinding>/EmployeeId}"/>
+							<Text text="{localBinding>/EmployeeId}" id="employeeId"/>
 						</Column>
 						<Column hAlign="Center" width="55%">
 							<Text text="{localBinding>/EmployeeName}"/>

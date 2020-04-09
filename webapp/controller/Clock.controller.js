@@ -102,14 +102,28 @@ sap.ui.define(
 			
 			onClockMatched: function(oEvent){
 				var sFunctionName = "onClockMatched";
+				var fCallback = function() {
+					setTimeout((function() {
+						var oView = this.getView();
+	
+						oView.getParent().setVisible(true);
+						this.handleBusy(false);
+						oView.byId("activitiesTable").removeStyleClass("tableWithNoData");
+						oView.byId("headerData").removeStyleClass("containerWithNoData");
+					}).bind(this), 0);
+				};
+
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					var oView = this.getView();
 					var oModelLocalBinding = oView.getModel("localBinding");
 					oView.byId("activitiesTable").addStyleClass("tableWithNoData");
+					oView.byId("headerData").addStyleClass("containerWithNoData");
 					//Inicializamos la propiedad raiz de la pantalla en el modelo localbinding.
-					oModelLocalBinding.setProperty("/Clock", {});
-					this._getActivityTicketData();
+					oModelLocalBinding.setProperty("/Clock", {
+						Line: ""
+					});
+					this._getActivityTicketData(fCallback, fCallback);
 				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
@@ -174,6 +188,7 @@ sap.ui.define(
 					sAssignationGroupId = "%20";
 				}
 				this.getView().byId("activitiesTable").addStyleClass("tableWithNoData");
+				this.getView().byId("headerData").addStyleClass("containerWithNoData");
 				oModel.read("/ActivityTicketSet(EmployeeId='" + sEmployeeId + "',AssignationGroupId='" + sAssignationGroupId + "')", {
 					urlParameters: {
 			        	"$expand": "ToActivities"
@@ -190,9 +205,6 @@ sap.ui.define(
 		                	if (fSuccessCallbackFnc){
 		                		fSuccessCallbackFnc.call(this);
 		                	}
-							oView.getParent().setVisible(true);
-							this.handleBusy(false);
-							oView.byId("activitiesTable").removeStyleClass("tableWithNoData");
 		                }).bind(this),
 	                error: (
 	                	function(oData) {
@@ -211,15 +223,11 @@ sap.ui.define(
 		                	if (fErrorCallbackFnc){
 		                		fErrorCallbackFnc.call(this);
 		                	}
-		                	oView.getParent().setVisible(true);
-							this.handleBusy(false);
-							oView.byId("activitiesTable").removeStyleClass("tableWithNoData");
 		                }).bind(this)
 				});
 			},
-			
-			
-			_changeBtnStatus: function(bConfirm){
+
+			_changeBtnStatus: function(bConfirm) {
 				var sFunctionName = "_changeBtnStatus";
 				var oView = this.getView();
 				var sText, sType;

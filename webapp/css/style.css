@@ -53,6 +53,9 @@
 .digitalticket .tableWithNoData tbody {
 	display: none;
 }
+.digitalticket .containerWithNoData {
+	visibility: hidden;
+}
 .digitalticket .formFilters {
 	background-color: #eff4f9;
     border-bottom: 1px solid #d1e0ee;
