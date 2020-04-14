@@ -4,7 +4,7 @@
 	xmlns:mvc="sap.ui.core.mvc"
 	controllerName="zdigitalticket.controller.App"
 	displayBlock="true">
-	<Page id="basePage" class="digitalticket pageWithFooterHeight" showHeader="false" showFooter="true" busy="{appView>/busy}" busyIndicatorDelay="{appView>/delay}">
+	<Page id="basePage" class="digitalticket pageWithFooterHeight" showHeader="false" showFooter="true" busy="false" busyIndicatorDelay="{appView>/delay}">
 		<content>
 			<App id="app" visible="false"/>
 		</content>

@@ -283,6 +283,7 @@ sap.ui.define(
 					oModel = oView.getModel("localBinding");
 					oModel.setProperty("/downloadable", false);
 					oModel.setProperty("/Date", "");
+					oModel.setProperty("/ServiceId", "");
 				}
 				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
