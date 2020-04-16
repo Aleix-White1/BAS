@@ -102,33 +102,43 @@ sap.ui.define(
 			
 			onClockMatched: function(oEvent){
 				var sFunctionName = "onClockMatched";
+				var oView;
+				var oModelLocalBinding;
 				var fCallback = function() {
 					setTimeout((function() {
-						var oView = this.getView();
-	
+						var aResults = oModelLocalBinding.getProperty("/Clock/ToActivities/results");
+
+						if (Array.isArray(aResults) && aResults.length > 0) {
+							oView.byId("activitiesTable").removeStyleClass("containerWithNoData");
+							oView.byId("activitiesTable").setVisible(true);
+						}
+						
 						oView.getParent().setVisible(true);
 						this.handleBusy(false);
-						oView.byId("activitiesTable").removeStyleClass("tableWithNoData");
 						oView.byId("headerData").removeStyleClass("containerWithNoData");
 					}).bind(this), 0);
 				};
 
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
-					var oView = this.getView();
-					var oModelLocalBinding = oView.getModel("localBinding");
-					oView.byId("activitiesTable").addStyleClass("tableWithNoData");
+					oView = this.getView();
+					
+					oView.byId("activitiesTable").addStyleClass("containerWithNoData");
+					oView.byId("activitiesTable").setVisible(false);
+					
 					oView.byId("headerData").addStyleClass("containerWithNoData");
-					//Inicializamos la propiedad raiz de la pantalla en el modelo localbinding.
+					//Inicializamos la propiedad raíz de la pantalla en el modelo localBinding.
+					oModelLocalBinding = oView.getModel("localBinding");
 					oModelLocalBinding.setProperty("/Clock", {
 						Line: ""
 					});
 					this._getActivityTicketData(fCallback, fCallback);
-				} catch (oError) {
+				}
+				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
-			
+
 			/* =========================================================== */
 			/* formatters and other public methods                         */
 			/* =========================================================== */
@@ -187,7 +197,6 @@ sap.ui.define(
 					sEmployeeId = sap.ushell.Container.getService("UserInfo").getId().substr(0, 10);
 					sAssignationGroupId = "%20";
 				}
-				this.getView().byId("activitiesTable").addStyleClass("tableWithNoData");
 				this.getView().byId("headerData").addStyleClass("containerWithNoData");
 				oModel.read("/ActivityTicketSet(EmployeeId='" + sEmployeeId + "',AssignationGroupId='" + sAssignationGroupId + "')", {
 					urlParameters: {

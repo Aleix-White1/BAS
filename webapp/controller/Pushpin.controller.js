@@ -112,7 +112,7 @@ sap.ui.define(
 						EmployeeId: oModelLocalBinding.getProperty("/EmployeeId"), //This was set by App.controller
 						AssignationGroupId: oModelLocalBinding.getProperty("/AssignationGroupId"), //This was set by App.controller
 						EmployeeName: "",
-						Line: "",
+						Line: " ",
 						Shift: "",
 						Zone: "",
 						Date: "",

@@ -81,10 +81,8 @@
 						</Column>
 					</columns>
 				</Table>
-				
-				<Table id="activitiesTable" items="{localBinding>/Clock/ToActivities/results}"
-					visible="{= ${localBinding>/Clock/ToActivities/results}.length &gt; 0 }"
-				>
+
+				<Table id="activitiesTable" items="{localBinding>/Clock/ToActivities/results}">
 					<columns>
 						<Column>
 							<Text text="{i18n>Clock.hour}"/>
@@ -106,7 +104,7 @@
 						</ColumnListItem>
 					</items>
 				</Table>
-				
+
 				<VBox>
 					<Text text=" "/>  <!-- Spacer -->
 					<Text text=" "/>  <!-- Spacer -->
