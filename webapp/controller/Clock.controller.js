@@ -32,7 +32,7 @@ sap.ui.define(
 				var that = this;
 				var oView = this.getView();
 				var oResourceBundle = oView.getModel("i18n").getResourceBundle();
-				this.sendHitEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
+				
 				var date = oView.getModel("localBinding").getProperty("/Clock/Date");
 				// var iMonth = ( date.getMonth() + 1 );
 				// var sMonth = ( iMonth > 9 ) ? iMonth : "0" + iMonth;
@@ -61,6 +61,7 @@ sap.ui.define(
 				var sFunctionName = "sendConfirmActivity";
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
+					this.sendHitEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					var oModelLocalBinding = this.getView().getModel("localBinding");
 					var sEmpId = oModelLocalBinding.getProperty("/EmployeeId");	
 					if(!sEmpId){
