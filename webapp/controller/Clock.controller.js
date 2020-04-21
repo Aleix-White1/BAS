@@ -32,7 +32,7 @@ sap.ui.define(
 				var that = this;
 				var oView = this.getView();
 				var oResourceBundle = oView.getModel("i18n").getResourceBundle();
-				
+				this.sendHitEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 				var date = oView.getModel("localBinding").getProperty("/Clock/Date");
 				// var iMonth = ( date.getMonth() + 1 );
 				// var sMonth = ( iMonth > 9 ) ? iMonth : "0" + iMonth;
