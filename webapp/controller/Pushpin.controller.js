@@ -11,6 +11,7 @@ sap.ui.define(
 	function (BaseController, Analytics, JSONModel, Filter, CommonUtils, FilterOperator, MessageBox) {
 		"use strict";
 		/* global LocalFileSystem */
+		/* global device */
 
 		var _downloadFile = function(sUrl, fOnSuccess, fOnError, oScope) {
 			var oAjaxRequest = new XMLHttpRequest();
@@ -22,8 +23,16 @@ sap.ui.define(
 					LocalFileSystem.PERSISTENT,
 					0,
 					function() {
+						var sPath;
+						
+						if (typeof device !== "undefined" && device.platform && device.platform.toLowerCase() === "ios") {
+							sPath = cordova.file.documentsDirectory;
+						}
+						else {
+							sPath = cordova.file.externalDataDirectory;
+						}
 						window.resolveLocalFileSystemURL(
-							cordova.file.externalDataDirectory,
+							sPath,
 							function(oFolder) {
 								var sFileName = "Ticket_AAC.pdf";
 
