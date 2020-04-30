@@ -6,12 +6,31 @@ sap.ui.define(
 		"sap/ui/model/Filter",
 		"zui5controlstmb/utils/CommonUtils",
 		"sap/ui/model/FilterOperator",
-		"sap/m/MessageBox"
+		"sap/m/MessageBox",
+		"sap/ui/core/util/File"
 	],
-	function (BaseController, Analytics, JSONModel, Filter, CommonUtils, FilterOperator, MessageBox) {
+	function (BaseController, Analytics, JSONModel, Filter, CommonUtils, FilterOperator, MessageBox, File) {
 		"use strict";
 		/* global LocalFileSystem */
 		/* global device */
+
+/*
+		//VMC: Posible solución pero parece que funciona mejor le PDFViewer.donwloadPDF();
+		var _downloadFile = function(sUrl) {
+			var oAjaxRequest = new XMLHttpRequest();
+
+			oAjaxRequest.open("GET", sUrl, true);
+			oAjaxRequest.responseType = "blob";
+			oAjaxRequest.onload = function (e) {
+				var sFileName = "Ticket_AAC";
+				var sFileContent = oAjaxRequest.response;
+				var sFileType = "pdf";
+				var sMime = "application/pdf"; 
+				File.save(sFileContent, sFileName, sFileType, sMime, null);
+			};
+			oAjaxRequest.send();
+		};
+*/
 
 		var _downloadFile = function(sUrl, fOnSuccess, fOnError, oScope) {
 			var oAjaxRequest = new XMLHttpRequest();

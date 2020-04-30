@@ -130,8 +130,11 @@ sap.ui.define(
 
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
-					if (History.getInstance().getPreviousHash() !== undefined) {
+					if (History && History.getInstance && History.getInstance().getPreviousHash() !== undefined) {
 						window.history.go(-1);
+					}else if( sap.ui.getCore().byId("backBtn") ){
+						var oBackBtn = sap.ui.getCore().byId("backBtn");
+						oBackBtn.firePress(oEvent);
 					}
 				}
 				catch (oError) {
