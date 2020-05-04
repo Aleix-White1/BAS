@@ -7,16 +7,86 @@ sap.ui.define(
 		"zui5controlstmb/utils/CommonUtils",
 		"sap/ui/model/FilterOperator",
 		"sap/m/MessageBox",
-		"sap/m/PDFViewer"
+		"sap/m/PDFViewer",
+		"sap/ui/core/util/File"
 	],
-	function (BaseController, Analytics, JSONModel, Filter, CommonUtils, FilterOperator, MessageBox, PDFViewer) {
+	function (BaseController, Analytics, JSONModel, Filter, CommonUtils, FilterOperator, MessageBox, PDFViewer, File) {
 		"use strict";
+		/* global LocalFileSystem */
+		/* global device */
 
-		var _downloadFile = function(sUrl) {
-			var oPDF = new PDFViewer({
-				"source": sUrl 
-			}); 
-			oPDF.downloadPDF();
+		var _downloadFile = function(sUrl, fOnSuccess, fOnError, oScope) {
+			var oAjaxRequest = new XMLHttpRequest();
+
+			oAjaxRequest.open("GET", sUrl, true);
+			oAjaxRequest.responseType = "blob";
+			oAjaxRequest.onload = function (e) {
+				window.requestFileSystem(
+					LocalFileSystem.PERSISTENT,
+					0,
+					function() {
+						var sPath;
+						
+						if (typeof device !== "undefined" && device.platform && device.platform.toLowerCase() === "ios") {
+							sPath = cordova.file.documentsDirectory;
+						}
+						else {
+							sPath = cordova.file.externalDataDirectory;
+						}
+						window.resolveLocalFileSystemURL(
+							sPath,
+							function(oFolder) {
+								var sFileName = "Ticket_AAC.pdf";
+
+								oFolder.getFile(
+									sFileName, {
+										create: true,
+										exclusive: false
+									},
+									function(oFile) {
+										oFile.createWriter(
+											function(oFileWriter) {
+												oFileWriter.onwriteend = function(oInfo) {
+													if (typeof fOnSuccess === "function") {
+														fOnSuccess.call(oScope, sFileName);
+													}
+												};
+												oFileWriter.onerror = function(oError) {
+													if (typeof fOnError === "function") {
+														fOnError.call(oScope, oError);
+													}
+												};
+												oFileWriter.write(oAjaxRequest.response);
+											},
+											function(oError) {
+												if (typeof fOnError === "function") {
+													fOnError.call(oScope, oError);
+												}
+											}
+										);
+									},
+									function(oError) {
+										if (typeof fOnError === "function") {
+											fOnError.call(oScope, oError);
+										}
+									}
+								);
+							},
+							function(oError) {
+								if (typeof fOnError === "function") {
+									fOnError.call(oScope, oError);
+								}
+							}
+						);
+					},
+					function(oError) {
+						if (typeof fOnError === "function") {
+							fOnError.call(oScope, oError);
+						}
+					}
+				);
+			};
+			oAjaxRequest.send();
 		};
 
 		return BaseController.extend("zdigitalticket.controller.Pushpin", {
@@ -112,7 +182,7 @@ sap.ui.define(
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					if (this.getView().getModel("appView").getProperty("/isDriver")) {
 						sUrl = this.getOwnerComponent().getModel().sServiceUrl + "/TicketSet(EmployeeId='',AssignationGroupId='%20',Today=true)/$value";
-						if (window.cordova) {
+						if (window.requestFileSystem) {
 							//We are running inside the app
 							_downloadFile(
 								sUrl,
