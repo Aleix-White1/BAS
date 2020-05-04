@@ -32,8 +32,11 @@
 							<Text text="L{localBinding>/StationInfo/Line}"/>
 						</VBox>
 						<VBox>
-							<Text text="{localBinding>/StationInfo/Name}"/>
-							<Text text="{localBinding>/StationInfo/CurrTime}"/>
+							<Text text="Miralin" class="sapUiSmallMarginEnd"/>
+							<HBox>
+								<Text text="{localBinding>/StationInfo/Name}" class="sapUiSmallMarginEnd"/>
+								<Text text="{localBinding>/StationInfo/CurrTime}" class="sapUiSmallMarginEnd"/>
+							</HBox>
 							<Select 
 								id="selectTrackCombo"
 								items="{localBinding>/StationInfo/lines}" 

@@ -29,10 +29,11 @@
 							</customData>
 							<Text text="L{localBinding>/TEInfo/Line}"/>
 						</VBox>
-						<VBox justifyContent="Center" alignItems="Center">
+						<VBox>
+							<Text text="Miralin" class="sapUiSmallMarginEnd"/>
 							<HBox>
-								<Label text="{i18n>TEInfo.train}:" class="sapUiSmallMarginEnd" />
-								<Text text="{localBinding>/TEInfo/Train}"/>
+								<Text text="{i18n>TEInfo.train}:" class="sapUiSmallMarginEnd" />
+								<Text text="{localBinding>/TEInfo/Train}" class="sapUiSmallMarginEnd"/>
 							</HBox>
 						</VBox>
 					</HBox>
