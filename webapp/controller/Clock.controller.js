@@ -61,6 +61,7 @@ sap.ui.define(
 				var sFunctionName = "sendConfirmActivity";
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
+					this.sendHitEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					var oModelLocalBinding = this.getView().getModel("localBinding");
 					var sEmpId = oModelLocalBinding.getProperty("/EmployeeId");	
 					if(!sEmpId){
@@ -118,6 +119,10 @@ sap.ui.define(
 						oView.byId("headerData").removeStyleClass("containerWithNoData");
 					}).bind(this), 0);
 				};
+				
+				var fCallbackError = function() {
+					oView.getController().onNavBack();	
+				};
 
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
@@ -132,7 +137,7 @@ sap.ui.define(
 					oModelLocalBinding.setProperty("/Clock", {
 						Line: ""
 					});
-					this._getActivityTicketData(fCallback, fCallback);
+					this._getActivityTicketData(fCallback, fCallbackError);
 				}
 				catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
@@ -228,10 +233,10 @@ sap.ui.define(
 							catch (oError) {
 								sText = oView.getModel("i18n").getResourceBundle().getText("error.loading.data");
 							}
-							this.showErrorMessageBox(sText);
-		                	if (fErrorCallbackFnc){
-		                		fErrorCallbackFnc.call(this);
-		                	}
+							this.showErrorMessageBox(sText, undefined, fErrorCallbackFnc);
+		                	// if (fErrorCallbackFnc){
+		                	// 	fErrorCallbackFnc.call(this);
+		                	// }
 		                }).bind(this)
 				});
 			},
