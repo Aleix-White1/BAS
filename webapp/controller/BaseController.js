@@ -50,9 +50,9 @@ sap.ui.define(
 				return undefined;
 			},
 
-			showErrorMessageBox: function(sText, pTitle){
+			showErrorMessageBox: function(sText, pTitle, pFncOnClose){
 				var sFunctionName = "showErrorMessageBox";
-
+				var that = this;
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.OTHER);
 					var oView = this.getView();
@@ -71,6 +71,7 @@ sap.ui.define(
 								actions: [MessageBox.Action.CLOSE],
 								onClose: function(oAction) { 
 									oModelLocalBinding.setProperty("/errorMessage", undefined);
+									pFncOnClose.call(that);
 								}
 							}
 						);
