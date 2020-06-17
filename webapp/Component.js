@@ -40,7 +40,7 @@ sap.ui.define(
 					this.setModel(models.createDeviceModel(), "device");
 				}
 				catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+					Analytics.handleCatchException(oError, "Component", sFunctionName);
 				}
 			}
 		});

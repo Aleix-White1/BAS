@@ -93,7 +93,6 @@ sap.ui.define(
 
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
-					this.sendHitEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					oView = this.getView();
 					oModel = oView.getModel("localBinding");
 					oModel.setProperty("/today", !oModel.getProperty("/today"));
@@ -111,7 +110,6 @@ sap.ui.define(
 
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
-					this.sendHitEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					if (this.getView().getModel("appView").getProperty("/isDriver")) {
 						sUrl = this.getOwnerComponent().getModel().sServiceUrl + "/TicketSet(EmployeeId='',AssignationGroupId='%20',Today=true)/$value";
 						if (window.cordova) {

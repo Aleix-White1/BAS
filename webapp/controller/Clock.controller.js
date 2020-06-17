@@ -61,7 +61,6 @@ sap.ui.define(
 				var sFunctionName = "sendConfirmActivity";
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
-					this.sendHitEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					var oModelLocalBinding = this.getView().getModel("localBinding");
 					var sEmpId = oModelLocalBinding.getProperty("/EmployeeId");	
 					if(!sEmpId){
