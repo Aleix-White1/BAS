@@ -71,7 +71,9 @@ sap.ui.define(
 								actions: [MessageBox.Action.CLOSE],
 								onClose: function(oAction) { 
 									oModelLocalBinding.setProperty("/errorMessage", undefined);
-									pFncOnClose.call(that);
+									if(pFncOnClose){
+										pFncOnClose.call(that);
+									}
 								}
 							}
 						);
