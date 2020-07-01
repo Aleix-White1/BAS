@@ -42,7 +42,7 @@ sap.ui.define(
 						busy: true,
 						busyCounter: 0,
 						backButtonVisible: false,
-						delay: 0,
+						delay: 100, //100ms
 						isAdmin: oViewModel.getProperty("/d/GetUserInformation/isAdmin")
 					});
 					this.getView().setModel(oViewModel, "appView");

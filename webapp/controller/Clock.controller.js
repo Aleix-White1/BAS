@@ -61,6 +61,7 @@ sap.ui.define(
 				var sFunctionName = "sendConfirmActivity";
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
+					this.handleBusy(true);
 					var oModelLocalBinding = this.getView().getModel("localBinding");
 					var sEmpId = oModelLocalBinding.getProperty("/EmployeeId");	
 					if(!sEmpId){
@@ -82,6 +83,7 @@ sap.ui.define(
 							if(sResponseMsg!=undefined && sResponseMsg.length>0){
 								MessageBox.information(sResponseMsg);
 							} 
+							that.handleBusy(false);
 						},
 						error: function (oError) {
 							var oView = that.getView();
@@ -93,10 +95,12 @@ sap.ui.define(
 								sText = oView.getModel("i18n").getResourceBundle().getText("Clock.button.errorConfirmingActivity");
 							}
 							that.showErrorMessageBox(sText);
+							that.handleBusy(false);
 						}
 					});
 				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
+					this.handleBusy(false);
 				}
 			},
 			
@@ -104,6 +108,7 @@ sap.ui.define(
 				var sFunctionName = "onClockMatched";
 				var oView;
 				var oModelLocalBinding;
+				var that = this; 
 				var fCallback = function() {
 					setTimeout((function() {
 						var aResults = oModelLocalBinding.getProperty("/Clock/ToActivities/results");
@@ -114,13 +119,14 @@ sap.ui.define(
 						}
 						
 						oView.getParent().setVisible(true);
-						this.handleBusy(false);
+						that.handleBusy(false);
 						oView.byId("headerData").removeStyleClass("containerWithNoData");
-					}).bind(this), 0);
+					}), 0);
 				};
 				
 				var fCallbackError = function() {
 					oView.getController().onNavBack();	
+					that.handleBusy(false);
 				};
 
 				try {
@@ -191,7 +197,6 @@ sap.ui.define(
 				var sEmployeeId;
 				var sAssignationGroupId;
 				var oModelLocalBinding;
-
 				this.handleBusy(true);
 				oModelLocalBinding = this.getView().getModel("localBinding");
 				if (this.getView().getModel("appView").getProperty("/isAdmin")) {
@@ -218,6 +223,7 @@ sap.ui.define(
 		                	if (fSuccessCallbackFnc){
 		                		fSuccessCallbackFnc.call(this);
 		                	}
+		                	this.handleBusy(false);
 		                }).bind(this),
 	                error: (
 	                	function(oData) {
@@ -236,6 +242,7 @@ sap.ui.define(
 		                	// if (fErrorCallbackFnc){
 		                	// 	fErrorCallbackFnc.call(this);
 		                	// }
+		                	this.handleBusy(false);
 		                }).bind(this)
 				});
 			},
