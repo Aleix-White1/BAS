@@ -31,7 +31,12 @@ sap.ui.define(
 				else {
 					oAppViewModel.setProperty("/busyCounter", --iBusyCounter);
 					if (iBusyCounter <= 0) {
-						oAppViewModel.setProperty("/busy", false);
+						var iInterval = setInterval(function(){ 
+							oAppViewModel.setProperty("/busy", false);
+							clearInterval(iInterval);
+						}, 500);
+						
+						// oAppViewModel.setProperty("/busy", false);
 						oAppViewModel.setProperty("/busyCounter", 0);
 					}
 				}
