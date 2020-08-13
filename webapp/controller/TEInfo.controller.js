@@ -1,10 +1,10 @@
+"use strict";
 sap.ui.define(
 	[
 		"zdigitalticket/controller/BaseController",
 		"zui5controlstmb/utils/Analytics"
 	],
 	function (BaseController, Analytics) {
-		"use strict";
 	
 		return BaseController.extend("zdigitalticket.controller.TEInfo", {
 			/* =========================================================== */
@@ -61,7 +61,7 @@ sap.ui.define(
 					if(aStops){
 						aStops.forEach(function(oItem){ 
 							var oProperties = oItem.properties;
-							if(oProperties.CODI_ESTACIO == _sStation){
+							if(oProperties.CODI_ESTACIO === _sStation){
 								sStationName = oProperties.NOM_ESTACIO;
 							}
 						});
@@ -87,10 +87,10 @@ sap.ui.define(
 					var aTracks = oModelMiralin.getProperty("/arrivals/tracks");
 					aTracks.forEach(function(oItemTrack){
 						var sTrack = oModelLocalBinding.getProperty("/TEInfo/Track");
-						if(oItemTrack.track == sTrack){
+						if(oItemTrack.track === sTrack){
 							var aTrainsPosition = oItemTrack.trainsPositions;
 							aTrainsPosition.forEach(function(oItemTrain){
-								if(oItemTrain.trainCode == sLineTrain){
+								if(oItemTrain.trainCode === sLineTrain){
 									oModelLocalBinding.setProperty("/TEInfo/currStationCode", oItemTrain.stopCode);
 									oModelLocalBinding.setProperty("/TEInfo/currTrack",  oResourceBundle.getText("stationInfo.trackNumber", [oItemTrain.track]));
 									var sDepartureTime = that.formatTime(oItemTrain.arrivalTime);
@@ -104,7 +104,7 @@ sap.ui.define(
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
-			
+	/*eslint no-unused-vars: ["error", { "args": "none" }]*/		
 			loadCurrDate: function(oEvent){
 				var sFunctionName = "loadCurrDate";
 				try {
@@ -151,7 +151,7 @@ sap.ui.define(
 					oModelLocalBinding.setProperty("/TEInfo/departureStationCode", sStation);
 					oModelLocalBinding.setProperty("/TEInfo/departureStationName", "");
 					
-					if(sTrack == "-"){
+					if(sTrack === "-"){
 						oModelLocalBinding.setProperty("/TEInfo/departureTrack", "" );	
 					}else {
 						oModelLocalBinding.setProperty("/TEInfo/departureTrack", oResourceBundle.getText("stationInfo.trackNumber", [sTrack]) );

@@ -1,10 +1,10 @@
+"use strict";
 sap.ui.define(
 	[
 		"zdigitalticket/controller/BaseController",
 		"zui5controlstmb/utils/Analytics"
 	],
 	function (BaseController, Analytics) {
-		"use strict";
 
 		return BaseController.extend("zdigitalticket.controller.Star", {
 			/* =========================================================== */
@@ -17,8 +17,7 @@ sap.ui.define(
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
 					BaseController.prototype.onInit.call(this);
 					this.getRouter().getRoute("RouteStar").attachPatternMatched(this.onRouteMatched, this);
-				}
-				catch (oError) {
+				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
@@ -26,6 +25,7 @@ sap.ui.define(
 			/* =========================================================== */
 			/* event handlers                       					   */
 			/* =========================================================== */
+			/*eslint no-unused-vars: ["error", { "args": "none" }]*/
 			onRouteMatched: function(oEvent) {
 				this.getView().getParent().setVisible(true);
 			}

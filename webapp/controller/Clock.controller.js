@@ -1,3 +1,4 @@
+"use strict";
 sap.ui.define(
 	[
 		"zdigitalticket/controller/BaseController",
@@ -8,7 +9,6 @@ sap.ui.define(
 		"sap/m/MessageBox"
 	],
 	function (BaseController, Analytics, CommonUtils, Filter, FilterOperator, MessageBox) {
-		"use strict";
 
 		return BaseController.extend("zdigitalticket.controller.Clock", {
 			/* =========================================================== */
@@ -80,7 +80,7 @@ sap.ui.define(
 							if(bIsConfirmed){
 								that._changeBtnStatus(true);
 							}
-							if(sResponseMsg!=undefined && sResponseMsg.length>0){
+							if(sResponseMsg !== undefined && sResponseMsg.length > 0){
 								MessageBox.information(sResponseMsg);
 							} 
 							that.handleBusy(false);
@@ -103,8 +103,8 @@ sap.ui.define(
 					this.handleBusy(false);
 				}
 			},
-			
-			onClockMatched: function(oEvent){
+/*eslint no-unused-vars: ["error", { "args": "none" }]*/
+			onClockMatched: function (oEvent){
 				var sFunctionName = "onClockMatched";
 				var oView;
 				var oModelLocalBinding;
@@ -143,8 +143,7 @@ sap.ui.define(
 						Line: ""
 					});
 					this._getActivityTicketData(fCallback, fCallbackError);
-				}
-				catch (oError) {
+				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
@@ -168,7 +167,7 @@ sap.ui.define(
 					aActivity = [];
 				}
 				
-				if(aActivity && aActivity.length>0 ){
+				if(aActivity && aActivity.length > 0 ){
 					var bIsConfirmed = oClock.IsConfirmed;
 					if(bIsConfirmed){
 						sText = oView.getModel("i18n").getResourceBundle().getText("Clock.button.activityConfirmed");
@@ -234,8 +233,7 @@ sap.ui.define(
 								oView = this.getView();
 								oView.getModel("localBinding").setProperty("/PieceSet", {});
 								sText = JSON.parse(oData.responseText).error.innererror.errordetails[0].message;
-							}
-							catch (oError) {
+							} catch (oError) {
 								sText = oView.getModel("i18n").getResourceBundle().getText("error.loading.data");
 							}
 							this.showErrorMessageBox(sText, undefined, fErrorCallbackFnc);

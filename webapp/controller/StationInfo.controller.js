@@ -1,3 +1,4 @@
+"use strict";
 sap.ui.define(
 	[
 		"zdigitalticket/controller/BaseController",
@@ -6,7 +7,6 @@ sap.ui.define(
 		"sap/m/MessageBox"
 	],
 	function (BaseController, Analytics, DateFormat, MessageBox) {
-		"use strict";
 	
 		return BaseController.extend("zdigitalticket.controller.StationInfo", {
 			
@@ -33,6 +33,7 @@ sap.ui.define(
 				Evento que se lanza cuando se modifica el valor del SelectCombo de la vía seleccionada, recogiendo el valor de este
 				y ejecutando la función para cargar los trenes para esa vía.
 			*/
+			/*eslint no-unused-vars: ["error", { "args": "none" }]*/
 			onChangeTrack: function(oEvent){
 				var sFunctionName = "onChangeTrack";
 				try {
@@ -59,7 +60,7 @@ sap.ui.define(
 					var _sTrackNumber = sTrackNumer;
 					var aTracks = oModelMiralin.getProperty("/arrivals/tracks");
 					aTracks.forEach(function(oItemTrack){
-						if(oItemTrack.track == _sTrackNumber){
+						if(oItemTrack.track === _sTrackNumber){
 							var aTrainsPositions = oItemTrack.trainsPositions.slice(0, that.NUM_TRAINS_IN_LIST);
 							oModelLocalBinding.setProperty("/StationInfo/StationInfoTrainSet", aTrainsPositions);
 						}
@@ -98,7 +99,7 @@ sap.ui.define(
 					oView.getParent().setVisible(true);
 					setTimeout((function() {
 						oView.byId("dataTable").removeStyleClass("tableWithNoData");
-					}).bind(this), 0);
+					}), 0);
 				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
@@ -121,7 +122,7 @@ sap.ui.define(
 					if(aStops){
 						aStops.forEach(function(oItem){ 
 							var oProperties = oItem.properties;
-							if(oProperties.CODI_ESTACIO == _sStation){
+							if(oProperties.CODI_ESTACIO === _sStation){
 								oModelLocalBinding.setProperty("/StationInfo/Name", oProperties.NOM_ESTACIO);
 								return false;
 							}
@@ -150,8 +151,12 @@ sap.ui.define(
 					//Para evitar hacer uso de un formatter, extraemos la hora y los minutos para setearlos en la propiedad
 					var iHours   = parseInt(sHours, 10);
 				    var iMinutes = parseInt(sMinutes, 10);
-				    if (iHours   < 10) { iHours   = "0" + iHours; }
-				    if (iMinutes < 10) { iMinutes = "0" + iMinutes; }
+				    if (iHours   < 10) {
+ iHours   = "0" + iHours; 
+}
+				    if (iMinutes < 10) {
+ iMinutes = "0" + iMinutes; 
+}
 					oModelLocalBinding.setProperty( "/StationInfo/CurrTime", iHours + ":" + iMinutes ); 
 				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
@@ -240,9 +245,15 @@ sap.ui.define(
 				    var iMinutes = Math.floor((iSecNnum - (iHours * 3600)) / 60);
 				    var iSeconds = iSecNnum - (iHours * 3600) - (iMinutes * 60);
 				
-				    if (iHours   < 10) { iHours   = "0" + iHours; }
-				    if (iMinutes < 10) { iMinutes = "0" + iMinutes; }
-				    if (iSeconds < 10) { iSeconds = "0" + iSeconds; }
+				    if (iHours   < 10) {
+						iHours   = "0" + iHours; 
+					}
+				    if (iMinutes < 10) {
+						iMinutes = "0" + iMinutes; 
+					}
+				    if (iSeconds < 10) {
+						 iSeconds = "0" + iSeconds; 
+					}
 				    
 				    // return hours+':'+minutes+':'+iSeconds;
 				    sDAntFormated = iMinutes + ":" + iSeconds;

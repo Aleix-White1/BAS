@@ -1,3 +1,4 @@
+"use strict";
 sap.ui.define(
 	[
 		"zdigitalticket/controller/BaseController",
@@ -10,7 +11,6 @@ sap.ui.define(
 		"sap/m/PDFViewer"
 	],
 	function (BaseController, Analytics, JSONModel, Filter, CommonUtils, FilterOperator, MessageBox, PDFViewer) {
-		"use strict";
 
 		var _downloadFile = function(sUrl) {
 			var oPDF = new PDFViewer({
@@ -29,8 +29,7 @@ sap.ui.define(
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
 					this.getRouter().getRoute("RoutePushpin").attachPatternMatched(this.onPushpinMatched, this);
-				}
-				catch (oError) {
+				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
@@ -73,19 +72,17 @@ sap.ui.define(
 									success: this._showTable.bind(this),
 									error: this._showTable.bind(this)
 								});
-							}
-							else {
+							} else {
 								this._showTable();
 							}
 						},
 						this._showTable
 					);
-				}
-				catch (oError) {
+				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
-
+/*eslint no-unused-vars: ["error", { "args": "none" }]*/
 			onChangeDay: function(oEvent) {
 				var sFunctionName = "onChangeDay";
 				var oView;
@@ -98,12 +95,10 @@ sap.ui.define(
 					oModel.setProperty("/today", !oModel.getProperty("/today"));
 					this._hideTable();
 					this._getTicketData(this._showTable, this._showTable);
-				}
-				catch (oError) {
+				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
-
 			onDownloadTicket: function(oEvent) {
 				var sFunctionName = "onDownloadTicket";
 				var sUrl;
@@ -130,8 +125,7 @@ sap.ui.define(
 								undefined,
 								this
 							);
-						}
-						else {
+						} else {
 							//We are running in a browser
 							sap.m.URLHelper.redirect(
 								sUrl,
@@ -139,8 +133,7 @@ sap.ui.define(
 							);
 						}
 					}
-				}
-				catch (oError) {
+				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
@@ -162,8 +155,7 @@ sap.ui.define(
 						},
 						false
 					);
-				}
-				catch (oError) {
+				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
@@ -183,7 +175,7 @@ sap.ui.define(
 					var sTrain = oTrainInfo.TrainStation;
 					var sTrack = oTrainInfo.StartTrack;
 					
-					if( sTrack == undefined || sTrack.length == 0){
+					if( sTrack === undefined || sTrack.length === 0){
 						sTrack = "-";
 					}  
 					
@@ -199,8 +191,7 @@ sap.ui.define(
 						oParams,
 						false
 					);
-				}
-				catch (oError) {
+				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
@@ -225,8 +216,7 @@ sap.ui.define(
 					oModel.setProperty("/downloadable", false);
 					oModel.setProperty("/Date", "");
 					oModel.setProperty("/ServiceId", "");
-				}
-				catch (oError) {
+				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
@@ -246,8 +236,7 @@ sap.ui.define(
 						oView.byId("viewDescription").removeStyleClass("containerWithNoData");
 						oView.byId("employeeId").removeStyleClass("containerWithNoData");
 						oModel.setProperty("/downloadable", oModel.getProperty("/today") && oView.getModel("appView").getProperty("/isDriver") && oModel.getProperty("/PieceSet").length > 0);
-					}
-					catch (oError) {
+					} catch (oError) {
 						this._handleCatchException(oError, sFunctionName);
 					}
 				}).bind(this), 0);

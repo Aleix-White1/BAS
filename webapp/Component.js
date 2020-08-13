@@ -1,3 +1,4 @@
+"use strict";
 sap.ui.define(
 	[
 		"zui5controlstmb/BaseComponent",
@@ -6,8 +7,9 @@ sap.ui.define(
 		"sap/ui/fl/Utils",
 		"sap/ui/Device"
 	],
-	function (BaseComponent, models, Analytics, Utils, Device) {	
-		"use strict";
+	/*eslint no-unused-vars: ["error", { "args": "none" }]*/
+	function (BaseComponent, models, Analytics, Utils, device) {	
+
 	
 		return BaseComponent.extend("zdigitalticket.Component", {
 			/**
@@ -38,8 +40,7 @@ sap.ui.define(
 					this.getRouter().initialize();
 					//Set the device model
 					this.setModel(models.createDeviceModel(), "device");
-				}
-				catch (oError) {
+				} catch (oError) {
 					Analytics.handleCatchException(oError, "Component", sFunctionName);
 				}
 			}

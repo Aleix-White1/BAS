@@ -1,3 +1,4 @@
+"use strict";
 sap.ui.define(
 	[
 		"zdigitalticket/controller/BaseController",
@@ -6,8 +7,8 @@ sap.ui.define(
 		"zui5controlstmb/utils/CommonUtils",
 		"sap/ui/core/routing/History"
 	],
+	
 	function (BaseController, Analytics, JSONModel, CommonUtils, History) {
-		"use strict";
 
 		return BaseController.extend("zdigitalticket.controller.App", {
 			/* =========================================================== */
@@ -88,8 +89,7 @@ sap.ui.define(
 					
 					this.getOwnerComponent().getRouter().attachRouteMatched(this.onRouteMatched, this);
 					this.getOwnerComponent().getRouter().attachBypassed(this.onRouteMatched, this);
-				}
-				catch (oError) {
+				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
@@ -98,7 +98,7 @@ sap.ui.define(
 			/* event handlers for all app                                  */
 			/* =========================================================== */
 
-			/**
+			/*
 			 * Event handler that is invoked when the user clicks any footer button (except back button)
 			 * @event
 			 * @param {sap.ui.base.Event} oEvent Information about the event
@@ -115,12 +115,11 @@ sap.ui.define(
 						{},
 						false
 					);
-				}
-				catch (oError) {
+				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
-			/**
+			/*
 			 * Event handler that is invoked when the user clicks back button in footer
 			 * @event
 			 * @param {sap.ui.base.Event} oEvent Information about the event
@@ -136,12 +135,11 @@ sap.ui.define(
 						var oBackBtn = sap.ui.getCore().byId("backBtn");
 						oBackBtn.firePress(oEvent);
 					}
-				}
-				catch (oError) {
+				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
-			/**
+			/*
 			 * Event handler that is invoked when the user navigates to some known url
 			 * @event
 			 * @param {sap.ui.base.Event} oEvent Information about the event
@@ -157,19 +155,17 @@ sap.ui.define(
 					this.getView().byId("footerButtons").getContent().forEach(function(oButton) {
 						if (CommonUtils.getPropertyValueCustomData(oButton, "buttonTarget") !== sRouteName) {
 							oButton.setType("Default");
-						}
-						else {
+						} else {
 							oButton.setType("Emphasized");
 							backButtonVisible = false;
 						}
 					});
 					this.getView().getModel("appView").setProperty("/backButtonVisible", backButtonVisible);
-				}
-				catch (oError) {
+				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
 			},
-			
+/*eslint no-unused-vars: ["error", { "args": "none" }]*/			
 			getUserInformationIsAdmin: function(sEmpId){
 				var that = this;
 				var sFunctionName = "getUserInformationIsAdmin";
@@ -187,7 +183,8 @@ sap.ui.define(
 						},
 						error: function (oError) {
 							var oViewModel = that.getView().getModel("appView");
-							oViewModel.setProperty("isAdmin", false);						}
+							oViewModel.setProperty("isAdmin", false);						
+}
 					});
 				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);

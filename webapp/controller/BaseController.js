@@ -1,3 +1,4 @@
+"use strict";
 sap.ui.define(
 	[
 		"zui5controlstmb/controller/BaseController",
@@ -6,7 +7,6 @@ sap.ui.define(
 		"zui5controlstmb/utils/CommonUtils"
 	],
 	function (BaseController, Analytics, MessageBox, CommonUtils) {
-		"use strict";
 
 		return BaseController.extend("zdigitalticket.controller.BaseController", {
 			/* =========================================================== */
@@ -27,8 +27,7 @@ sap.ui.define(
 				if (bShowBusy) {
 					oAppViewModel.setProperty("/busyCounter", ++iBusyCounter);
 					oAppViewModel.setProperty("/busy", true);
-				}
-				else {
+				} else {
 					oAppViewModel.setProperty("/busyCounter", --iBusyCounter);
 					if (iBusyCounter <= 0) {
 						var iInterval = setInterval(function(){ 
@@ -41,15 +40,14 @@ sap.ui.define(
 					}
 				}
 			},
-
+/*eslint no-unused-vars: ["error", { "args": "none" }]*/
 			getRouter: function() {
 				var sFunctionName = "getRouter";
 
 				try {
 					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.OTHER);
 					return sap.ui.core.UIComponent.getRouterFor(this);
-				}
-				catch (oError) {
+				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}
 				return undefined;
@@ -83,8 +81,7 @@ sap.ui.define(
 							}
 						);
 					}
-				}
-				catch (oError) {
+				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
 				}	
 			},
@@ -151,7 +148,7 @@ sap.ui.define(
 				                    _oGetStopsCallbackFnc.call(this, _sLine, _sStation);
 				                    that.handleBusy(false);
 				                };
-							})(this),
+							}(this)),
 			                error: (function(that) {
 								return function(result) {
 									oMiralinModel.setProperty("/stops", {});
@@ -164,7 +161,7 @@ sap.ui.define(
 									);
 									that.handleBusy(false);
 				                };
-			                })(this)
+			                }(this))
 						});
 					}else{
 						//En este caso, si que tenemos la información correspondiente a las paradas de la línea y solo hemos de actualizarla
@@ -184,7 +181,7 @@ sap.ui.define(
 								_oGetArrivalsCallbackFnc.call(this);
 								that.handleBusy(false);
 			                };
-						})(this),
+						}(this)),
 		                error: (function(that) {
 		                	return function(result) {
 			                	oMiralinModel.setProperty("/arrivals", {});
@@ -197,7 +194,7 @@ sap.ui.define(
 								);
 								that.handleBusy(false);
 			                };
-		                })(this)
+		                }(this))
 					});
 				} catch (oError) {
 					this._handleCatchException(oError, sFunctionName);
@@ -215,8 +212,7 @@ sap.ui.define(
 				if (this.getView().getModel("appView").getProperty("/isAdmin")) {
 					sEmployeeId = oModelLocalBinding.getProperty("/EmployeeId");
 					sAssignationGroupId = oModelLocalBinding.getProperty("/AssignationGroupId");
-				}
-				else {
+				} else {
 					sEmployeeId = sap.ushell.Container.getService("UserInfo").getId().substr(0, 10);
 					sAssignationGroupId = "%20";
 				}
@@ -241,8 +237,7 @@ sap.ui.define(
 								oView.getModel("localBinding").setProperty("/Date", oDate);
 								oView.getModel("localBinding").setProperty("/PieceSet", {}); //If we set property "/PieceSet" without clearing it before, previous and new data are mixed
 		                		oView.getModel("localBinding").setProperty("/PieceSet", oData.ToPieces.results);
-		                	}
-		                	catch (oError) {
+		                	} catch (oError) {
 		                		oView.getModel("localBinding").setProperty("/PieceSet", {});
 		                	}
 		                	if (fSuccessCallbackFnc){
@@ -260,8 +255,7 @@ sap.ui.define(
 								oView = this.getView();
 								oView.getModel("localBinding").setProperty("/PieceSet", {});
 								sText = JSON.parse(oData.responseText).error.message.value;
-							}
-							catch (oError) {
+							} catch (oError) {
 								sText = oView.getModel("i18n").getResourceBundle().getText("error.loading.data");
 							}
 							this.showErrorMessageBox(sText);
@@ -272,6 +266,15 @@ sap.ui.define(
 		                }
 		            ).bind(this)
 				});
+			},
+			
+			//pruebas
+			formatZone: function(sValue){
+				return (sValue) ? this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("zone", sValue) : "";	
+			},
+			
+			formatShift: function(sValue){
+				return (sValue) ? this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("shift", sValue) : "";	
 			},
 
 			_convertDateFromUTC: function(oDate) {
