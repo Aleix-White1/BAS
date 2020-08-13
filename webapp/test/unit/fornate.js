@@ -21,9 +21,9 @@ sap.ui.define([
 		assert.strictEqual(fNumber, fExpectedNumber, "The rounding was correct");
 	}
 	
-	beforeEach: QUnit.test("testeando format date", function (assert) {
-		formatDate.call(this, assert, "", "");
-	});
+	// beforeEach: QUnit.test("testeando format date", function (assert) {
+	// 	formatDate.call(this, assert, "", "");
+	// });
 	
 	QUnit.test("testeando format shift", function (assert) {
 		formatShift.call(this, assert, "3455", "3.89");
@@ -56,3 +56,4 @@ sap.ui.define([
 	QUnit.test("Should round a zero", function (assert) {
 		numberUnitValueTestCase.call(this, assert, "0", "0.00");
 	});
+});

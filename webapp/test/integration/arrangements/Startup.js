@@ -1,9 +1,9 @@
+"use strict";	
 sap.ui.define([
 	"sap/ui/test/Opa5",
 	"zdigitalticket/localService/mockserver",
 	"sap/ui/model/odata/v2/ODataModel"
 ], function(Opa5, mockserver, ODataModel) {
-	"use strict";
 
 	return Opa5.extend("zdigitalticket.test.integration.arrangements.Startup", {
 
