@@ -1,7 +1,7 @@
 sap.ui.define(
 	[
 		"zdigitalticket/controller/BaseController",
-		"zui5controlstmb/utils/Analytics",
+		"sap/base/Log",
 		"sap/ui/model/json/JSONModel",
 		"sap/ui/model/Filter",
 		"zui5controlstmb/utils/CommonUtils",
@@ -9,7 +9,7 @@ sap.ui.define(
 		"sap/m/MessageBox",
 		"sap/m/PDFViewer"
 	],
-	function (BaseController, Analytics, JSONModel, Filter, CommonUtils, FilterOperator, MessageBox, PDFViewer) {
+	function (BaseController, Log, JSONModel, Filter, CommonUtils, FilterOperator, MessageBox, PDFViewer) {
 		"use strict";
 
 		var _downloadFile = function(sUrl) {
@@ -24,14 +24,11 @@ sap.ui.define(
 			/* lifecycle methods                                           */
 			/* =========================================================== */
 			onInit: function() {
-				var sFunctionName = "onInit";
-
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
 					this.getRouter().getRoute("RoutePushpin").attachPatternMatched(this.onPushpinMatched, this);
 				}
 				catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+					Log.error(oError.message);
 				}
 			},
 
@@ -39,12 +36,10 @@ sap.ui.define(
 			/* event handlers                       					   */
 			/* =========================================================== */
 			onPushpinMatched: function(oEvent) {
-				var sFunctionName = "onPushpinMatched";
 				var oView;
 				var oModelLocalBinding;
 
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					oView = this.getView();
 					oModelLocalBinding = oView.getModel("localBinding");
 					oModelLocalBinding.setProperty("/", {
@@ -82,17 +77,15 @@ sap.ui.define(
 					);
 				}
 				catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+					Log.error(oError.message);
 				}
 			},
 
 			onChangeDay: function(oEvent) {
-				var sFunctionName = "onChangeDay";
 				var oView;
 				var oModel;
 
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					oView = this.getView();
 					oModel = oView.getModel("localBinding");
 					oModel.setProperty("/today", !oModel.getProperty("/today"));
@@ -100,16 +93,14 @@ sap.ui.define(
 					this._getTicketData(this._showTable, this._showTable);
 				}
 				catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+					Log.error(oError.message);
 				}
 			},
 
 			onDownloadTicket: function(oEvent) {
-				var sFunctionName = "onDownloadTicket";
 				var sUrl;
 
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					if (this.getView().getModel("appView").getProperty("/isDriver")) {
 						sUrl = this.getOwnerComponent().getModel().sServiceUrl + "/TicketSet(EmployeeId='',AssignationGroupId='%20',Today=true)/$value";
 						if (window.cordova) {
@@ -141,17 +132,15 @@ sap.ui.define(
 					}
 				}
 				catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+					Log.error(oError.message);
 				}
 			},
 
 			onStartStationClicked: function(oEvent) {
-				var sFunctionName = "onStartStationClicked";
 				var oModelLocalBinding;
 				var oTrainInfo;
 
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					oModelLocalBinding = this.getView().getModel("localBinding");
 					oTrainInfo = oModelLocalBinding.getProperty(oEvent.getSource().getParent().getParent().getBindingContextPath());
 					this.getRouter().navTo(
@@ -164,17 +153,15 @@ sap.ui.define(
 					);
 				}
 				catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+					Log.error(oError.message);
 				}
 			},
 
 			onTrainStationClicked: function(oEvent) {
-				var sFunctionName = "onTrainStationClicked";
 				var oModelLocalBinding;
 				var oTrainInfo;
 
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					oModelLocalBinding = this.getView().getModel("localBinding");
 					oTrainInfo = oModelLocalBinding.getProperty(oEvent.getSource().getParent().getParent().getBindingContextPath());
 					
@@ -201,7 +188,7 @@ sap.ui.define(
 					);
 				}
 				catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+					Log.error(oError.message);
 				}
 			},
 
@@ -213,12 +200,10 @@ sap.ui.define(
 			/* private methods                                             */
 			/* =========================================================== */
 			_hideTable: function() {
-				var sFunctionName = "_hideTable";
 				var oView;
 				var oModel;
 
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.OTHER);
 					oView = this.getView();
 					oView.byId("dataTable").addStyleClass("tableWithNoData");
 					oModel = oView.getModel("localBinding");
@@ -227,18 +212,16 @@ sap.ui.define(
 					oModel.setProperty("/ServiceId", "");
 				}
 				catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+					Log.error(oError.message);
 				}
 			},
 
 			_showTable: function() {
 				setTimeout((function() {
-					var sFunctionName = "_showTable";
 					var oView;
 					var oModel;
 	
 					try {
-						this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.OTHER);
 						oModel = (oView = this.getView()).getModel("localBinding");
 						oView.getParent().setVisible(true);
 						oView.byId("dataTable").removeStyleClass("tableWithNoData");
@@ -248,7 +231,7 @@ sap.ui.define(
 						oModel.setProperty("/downloadable", oModel.getProperty("/today") && oView.getModel("appView").getProperty("/isDriver") && oModel.getProperty("/PieceSet").length > 0);
 					}
 					catch (oError) {
-						this._handleCatchException(oError, sFunctionName);
+						Log.error(oError.message);
 					}
 				}).bind(this), 0);
 			}

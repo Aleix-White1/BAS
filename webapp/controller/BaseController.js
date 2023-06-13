@@ -1,11 +1,11 @@
 sap.ui.define(
 	[
 		"zui5controlstmb/controller/BaseController",
-		"zui5controlstmb/utils/Analytics",
+		"sap/base/Log",
 		"sap/m/MessageBox",
 		"zui5controlstmb/utils/CommonUtils"
 	],
-	function (BaseController, Analytics, MessageBox, CommonUtils) {
+	function (BaseController, Log, MessageBox, CommonUtils) {
 		"use strict";
 
 		return BaseController.extend("zdigitalticket.controller.BaseController", {
@@ -43,23 +43,19 @@ sap.ui.define(
 			},
 
 			getRouter: function() {
-				var sFunctionName = "getRouter";
-
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.OTHER);
 					return sap.ui.core.UIComponent.getRouterFor(this);
 				}
 				catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+					Log.error(oError.message);
 				}
 				return undefined;
 			},
 
 			showErrorMessageBox: function(sText, pTitle, pFncOnClose){
-				var sFunctionName = "showErrorMessageBox";
 				var that = this;
+
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.OTHER);
 					var oView = this.getView();
 					var oModelLocalBinding = oView.getModel("localBinding");
 					var oResourceBundle = oView.getModel("i18n").getResourceBundle();
@@ -85,16 +81,18 @@ sap.ui.define(
 					}
 				}
 				catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+					Log.error(oError.message);
 				}	
 			},
-			
+
 			formatDate: function(date) {
 				var oTranslator;
+
 				if (date) {
 					oTranslator = this.getView().getModel("i18n").getResourceBundle();
 					return oTranslator.getText("week.day." + date.getDay()) + " " + date.getDate() + " " + oTranslator.getText("month." + date.getMonth()) + " " + oTranslator.getText("year.prefix") + " " + date.getFullYear();
-				} else {
+				}
+				else {
 					return "";
 				}
 			},
@@ -104,30 +102,25 @@ sap.ui.define(
 			/* =========================================================== */
 
 			getMiralinInfo: function(sLine, sStation, sTrain, oGetStopsCallbackFnc, oGetArrivalsCallbackFnc){
-				var sFunctionName = "onDailyActivityMatched";
 				var oView = this.getView();
 				// var oModelLocalBinding = oView.getModel("localBinding");
 				var oMiralinModel = oView.getModel("miralinModel");
+
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					oView = this.getView();
 					// oModelLocalBinding = oView.getModel("localBinding");
 					// oModelLocalBinding.setProperty("/StationInfo", {});
-					
-					if(!oMiralinModel.getProperty("/stops")){
+					if (!oMiralinModel.getProperty("/stops")) {
 						oMiralinModel.setProperty("/stops", {});
 					}
-					
 					this._loadStationData(sLine, sStation, sTrain, oGetStopsCallbackFnc, oGetArrivalsCallbackFnc);
-
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 				}
 			},
 
 			_loadStationData: function(sLine, sStation, sTrain, oGetStopsCallbackFnc, oGetArrivalsCallbackFnc){
-				var sFunctionName = "_loadStationData";
-
 				try {
 					var oView = this.getView();
 					var _sLine = sLine;
@@ -135,9 +128,9 @@ sap.ui.define(
 					var _oGetStopsCallbackFnc = oGetStopsCallbackFnc;
 					var _oGetArrivalsCallbackFnc = oGetArrivalsCallbackFnc;
 					var oMiralinModel = oView.getModel("miralinModel");
-					
 					var oLineData = oMiralinModel.getProperty("/stops/" + _sLine);
-					if(!oLineData){
+
+					if (!oLineData) {
 						//Si entramos en este punto es que no tenemos la información correspondiente a las paradas de la línea
 						this.handleBusy(true);
 						$.ajax({
@@ -199,8 +192,9 @@ sap.ui.define(
 			                };
 		                })(this)
 					});
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 				}
 			},
 

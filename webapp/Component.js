@@ -2,11 +2,11 @@ sap.ui.define(
 	[
 		"zui5controlstmb/BaseComponent",
 		"zdigitalticket/model/models",
-		"zui5controlstmb/utils/Analytics",
+		"sap/base/Log",
 		"sap/ui/fl/Utils",
 		"sap/ui/Device"
 	],
-	function (BaseComponent, models, Analytics, Utils, Device) {	
+	function (BaseComponent, models, Log, Utils, Device) {	
 		"use strict";
 	
 		return BaseComponent.extend("zdigitalticket.Component", {
@@ -24,23 +24,16 @@ sap.ui.define(
 			 * @override
 			 */
 			init: function (oEvent) {
-				var sFunctionName = "init"; //For Google Analytics
-
 				try {
 					//Call the base component's init function
-					BaseComponent.prototype.init.call(
-						this,
-						oEvent,
-						Utils.getComponentClassName(this).split(".").shift(),
-						Analytics.APPLICATION_GROUP.METRO
-					);
+					BaseComponent.prototype.init.call(this, oEvent);
 					//Enable routing
 					this.getRouter().initialize();
 					//Set the device model
 					this.setModel(models.createDeviceModel(), "device");
 				}
 				catch (oError) {
-					Analytics.handleCatchException(oError, "Component", sFunctionName);
+					Log.error(oError.message);
 				}
 			}
 		});

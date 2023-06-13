@@ -1,9 +1,9 @@
 sap.ui.define(
 	[
 		"zdigitalticket/controller/BaseController",
-		"zui5controlstmb/utils/Analytics"
+		"sap/base/Log"
 	],
-	function (BaseController, Analytics) {
+	function (BaseController, Log) {
 		"use strict";
 	
 		return BaseController.extend("zdigitalticket.controller.TEInfo", {
@@ -11,13 +11,12 @@ sap.ui.define(
 			/* lifecycle methods                                           */
 			/* =========================================================== */
 			onInit: function() {
-				var sFunctionName = "onInit";
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
 					BaseController.prototype.onInit.call(this);
 					this.getRouter().getRoute("RouteTEInfo").attachPatternMatched(this.onTEInfoMatched, this);
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 				}
 			},
 
@@ -28,11 +27,10 @@ sap.ui.define(
 			//Función que sirve para recuperar el nombre de la estación. Se llama tanto en el callback de la consulta de las estaciones de la linea
 			//como en el callback de recuperar los trenes de una parada.
 			onLoadLineStationData: function(sLine, sStation){
-				var sFunctionName = "onLoadLineStationData";
 				var oView = this.getView();
 				var oModelLocalBinding = oView.getModel("localBinding");
+
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					var _sLine = oModelLocalBinding.getProperty("/TEInfo/Line");
 					
 					var sCurrStationCode = oModelLocalBinding.getProperty("/TEInfo/currStationCode");
@@ -45,20 +43,21 @@ sap.ui.define(
 					var sDepartStationName = this.getStationName(_sLine, sDepartStationCode);
 					oModelLocalBinding.setProperty("/TEInfo/departureStationName", sDepartStationName);
 					oView.getParent().setVisible(true);
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 				}
 			},
 			
 			getStationName: function(sLine, sStation){
-				var sFunctionName = "getStationName";
 				var sStationName;
+
 				try {
 					var oView = this.getView();
 					var _sStation = sStation;
 					var oMiralinModel = oView.getModel("miralinModel");					
 					var aStops = oMiralinModel.getProperty("/stops/" + sLine);
-					if(aStops){
+					if (aStops) {
 						aStops.forEach(function(oItem){ 
 							var oProperties = oItem.properties;
 							if(oProperties.CODI_ESTACIO == _sStation){
@@ -66,28 +65,28 @@ sap.ui.define(
 							}
 						});
 					}
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 				}
 				return sStationName;
 			},
 			
 			onLoadStationArrivals: function(){
-				var sFunctionName = "loadStationTracks";
 				try {
 					var that = this;
 					var oView = this.getView();
 					var	oResourceBundle = oView.getModel("i18n").getResourceBundle();
 					var oModelLocalBinding = oView.getModel("localBinding");
 					var oModelMiralin = oView.getModel("miralinModel");
-					
 					var sTrain = oModelLocalBinding.getProperty("/TEInfo/Train");
 					var sLine = oModelLocalBinding.getProperty("/TEInfo/Line");
 					var sLineTrain = this.getTrainNumber(sLine, sTrain);
 					var aTracks = oModelMiralin.getProperty("/arrivals/tracks");
+
 					aTracks.forEach(function(oItemTrack){
 						var sTrack = oModelLocalBinding.getProperty("/TEInfo/Track");
-						if(oItemTrack.track == sTrack){
+						if (oItemTrack.track == sTrack) {
 							var aTrainsPosition = oItemTrack.trainsPositions;
 							aTrainsPosition.forEach(function(oItemTrain){
 								if(oItemTrain.trainCode == sLineTrain){
@@ -100,32 +99,32 @@ sap.ui.define(
 						}
 					});
 					this.onLoadLineStationData();
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 				}
 			},
 			
 			loadCurrDate: function(oEvent){
-				var sFunctionName = "loadCurrDate";
 				try {
 					var oView = this.getView();
 					var oModelLocalBinding = oView.getModel("localBinding"); 
 					var oCurrDate = new Date();
 					//La fecha se formatea en la configuración del campo en la TEInfo.view.xml
 					oModelLocalBinding.setProperty("/TEInfo/Date", oCurrDate); 
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 				}
 			},
 			
 			onTEInfoMatched: function(oEvent){
-				var sFunctionName = "onTEInfoMatched";
 				var oView = this.getView();
 				var oModelLocalBinding = oView.getModel("localBinding");
 				var	oResourceBundle = oView.getModel("i18n").getResourceBundle();
 				var oArguments, sLine, sStation, sTrain, sTrack;
+
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					oView = this.getView();
 					oModelLocalBinding = oView.getModel("localBinding");
 					oModelLocalBinding.setProperty("/TEInfo", {});
@@ -170,20 +169,22 @@ sap.ui.define(
 						this.onLoadStationArrivals
 					);
 					this.loadCurrDate();
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 				}
 			},
 			
 			getTrainNumber: function(sLine, sTrain){
-				var sFunctionName = "getTrainNumber";
 				var sTrainResult;
+
 				try {
 					sTrainResult = sLine;
 					var iTrain = parseInt(sTrain, 10);
 					sTrainResult += (iTrain < 10) ? "0" + iTrain : iTrain;
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 				}
 				return sTrainResult;	
 			},
@@ -192,14 +193,15 @@ sap.ui.define(
 			/* formatters and other public methods                         */
 			/* =========================================================== */
 			formatTime: function(sTime){
-				var sFunctionName = "formatTime";
 				var dateFormatted;
+
 				try {
 					var dateObject = new Date(sTime);
 					var dateFormat = sap.ui.core.format.DateFormat.getDateTimeInstance({pattern : "HH:mm" }); // SAPUI5 date formatter
 					dateFormatted = dateFormat.format(dateObject); // Format the date
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 				}
 				return dateFormatted;
 			},

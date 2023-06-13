@@ -1,47 +1,45 @@
 sap.ui.define(
 	[
 		"zdigitalticket/controller/BaseController",
-		"zui5controlstmb/utils/Analytics",
+		"sap/base/Log",
 		"sap/ui/core/format/DateFormat",
 		"sap/m/MessageBox"
 	],
-	function (BaseController, Analytics, DateFormat, MessageBox) {
+	function (BaseController, Log, DateFormat, MessageBox) {
 		"use strict";
 	
 		return BaseController.extend("zdigitalticket.controller.StationInfo", {
-			
 			NUM_TRAINS_IN_LIST : 5,
-			
 			/* =========================================================== */
 			/* lifecycle methods                                           */
 			/* =========================================================== */
 			onInit: function() {
-				var sFunctionName = "onInit";
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
 					BaseController.prototype.onInit.call(this);
 					this.getRouter().getRoute("RouteStationInfo").attachPatternMatched(this.onStationInfoMatched, this);
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 				}
 			},
 
 			/* =========================================================== */
 			/* event handlers                       					   */
 			/* =========================================================== */
-			/*
-				Evento que se lanza cuando se modifica el valor del SelectCombo de la vía seleccionada, recogiendo el valor de este
-				y ejecutando la función para cargar los trenes para esa vía.
-			*/
+
+			/**
+			 * Evento que se lanza cuando se modifica el valor del SelectCombo de la vía seleccionada, recogiendo el valor de este
+			 * y ejecutando la función para cargar los trenes para esa vía.
+			 */
 			onChangeTrack: function(oEvent){
-				var sFunctionName = "onChangeTrack";
 				try {
 					var oView = this.getView();
 					var oModelLocalBinding = oView.getModel("localBinding");
 					var sTrackNumber = oModelLocalBinding.getProperty("/StationInfo/selectedTrack");
 					this.loadTrainsPositions(sTrackNumber);
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 				}
 			},
 			
@@ -49,8 +47,7 @@ sap.ui.define(
 				Recibe por parámetro el indicador de la vía de la que se desean consultar los trenes y recarga la información en la tabla 
 				moviendo los datos del "miralinModel" al modelo contra el que está biendeada la tabla.
 			*/
-			loadTrainsPositions: function(sTrackNumer){
-				var sFunctionName = "loadTrainsPositions";
+			loadTrainsPositions: function(sTrackNumer) {
 				try {
 					var that = this;
 					var oView = this.getView();
@@ -64,8 +61,9 @@ sap.ui.define(
 							oModelLocalBinding.setProperty("/StationInfo/StationInfoTrainSet", aTrainsPositions);
 						}
 					});
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 				}
 			},
 			
@@ -74,7 +72,6 @@ sap.ui.define(
 				Con esta información recibida se carga el desplegable del vías y se fuerza el evento change del desplegable para que se recargue la información de los trenes para esa vía.
 			*/
 			loadStationTracks: function(){
-				var sFunctionName = "loadStationTracks";
 				try {
 					var aTracksTmp = [];
 					var oView = this.getView();
@@ -99,29 +96,28 @@ sap.ui.define(
 					setTimeout((function() {
 						oView.byId("dataTable").removeStyleClass("tableWithNoData");
 					}).bind(this), 0);
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 				}
 			},
-			
+
 			/*
 				Función que recoge la información referente a las estaciones de una línea y
 				recarga la información necesaria en el modelo "localBinding" contra el que están mapeados los campos de la pantalla.
 			*/
 			updateStationDataInLocalBindingModel: function(sLine, sStation){
-				var sFunctionName = "updateStationDataInLocalBindingModel";
 				try {
 					var oView = this.getView();
 					var _sStation = sStation;
-					
 					var oMiralinModel = oView.getModel("miralinModel");					
 					var oModelLocalBinding = oView.getModel("localBinding"); 
-					
 					var aStops = oMiralinModel.getProperty("/stops/" + sLine);
-					if(aStops){
+
+					if (aStops) {
 						aStops.forEach(function(oItem){ 
 							var oProperties = oItem.properties;
-							if(oProperties.CODI_ESTACIO == _sStation){
+							if (oProperties.CODI_ESTACIO == _sStation) {
 								oModelLocalBinding.setProperty("/StationInfo/Name", oProperties.NOM_ESTACIO);
 								return false;
 							}
@@ -131,14 +127,14 @@ sap.ui.define(
 					oModelLocalBinding.setProperty("/StationInfo/Line", sLine);
 					oModelLocalBinding.setProperty("/StationInfo/CurrTime", this.formatTime());
 					oView.getParent().setVisible(true);
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 				}
 			},
 
 			//Función para actualizar los campos que aparecen en la pantalla con la fechas y hora actual.
-			loadCurrDateAndTime: function(){
-				var sFunctionName = "loadCurrDateAndTime";
+			loadCurrDateAndTime: function() {
 				try {
 					var oView = this.getView();
 					var oModelLocalBinding = oView.getModel("localBinding"); 
@@ -153,11 +149,12 @@ sap.ui.define(
 				    if (iHours   < 10) { iHours   = "0" + iHours; }
 				    if (iMinutes < 10) { iMinutes = "0" + iMinutes; }
 					oModelLocalBinding.setProperty( "/StationInfo/CurrTime", iHours + ":" + iMinutes ); 
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 				}
 			},
-			
+
 			/*
 				Función encargada de lanzar la llamada contra los servicios  de miralin.
 				Se realizan dos llamadas a los servicios de Miralín:
@@ -174,18 +171,15 @@ sap.ui.define(
 					y al modificar el valor de este, carga la información de los trenes para esa vía.
 					2- updateStationDataInLocalBindingModel: Actualiza la información estática referente a la estación.
 			*/
-			onStationInfoMatched: function(oEvent){
-				var sFunctionName = "onStationInfoMatched";
+			onStationInfoMatched: function(oEvent) {
 				var oView = this.getView();
 				var oModelLocalBinding = oView.getModel("localBinding");
-				
 				var oArguments, sLine, sTation;
+
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					(oView = this.getView()).byId("dataTable").addStyleClass("tableWithNoData");
 					oModelLocalBinding = oView.getModel("localBinding");
 					oModelLocalBinding.setProperty("/StationInfo", {});
-					
 					oArguments = oEvent.getParameter("arguments");
 					if (oArguments.Line) {
 						sLine = oArguments.Line;
@@ -195,7 +189,6 @@ sap.ui.define(
 						sTation = oArguments.Station;
 						oModelLocalBinding.setProperty("/StationInfo/Station", sTation);
 					}
-					
 					this.getMiralinInfo(
 						sLine,
 						sTation,
@@ -203,19 +196,19 @@ sap.ui.define(
 						this.updateStationDataInLocalBindingModel,
 						this.loadStationTracks
 					);
-					
 					this.loadCurrDateAndTime();
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 				}
 			},
-			
+
 			/* =========================================================== */
 			/* formatters and other public methods                         */
 			/* =========================================================== */
 			formatTime: function(sTime){
-				var sFunctionName = "formatTime";
 				var dateFormatted;
+
 				try {
 					var dateObject;
 					if(sTime){
@@ -225,15 +218,16 @@ sap.ui.define(
 					}
 					var dateFormat = sap.ui.core.format.DateFormat.getDateTimeInstance({pattern : "HH:mm" }); // SAPUI5 date formatter
 					dateFormatted = dateFormat.format(dateObject); // Format the date
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 				}
 				return dateFormatted;
 			},
-			
+
 			formatDAntTime: function(sTime){
-				var sFunctionName = "formatDAntTime";
 				var sDAntFormated;
+
 				try {
 				    var iSecNnum = parseInt(sTime, 10); // don't forget the second param
 				    var iHours   = Math.floor(iSecNnum / 3600);
@@ -246,12 +240,13 @@ sap.ui.define(
 				    
 				    // return hours+':'+minutes+':'+iSeconds;
 				    sDAntFormated = iMinutes + ":" + iSeconds;
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 				}
 				return sDAntFormated;
 			}
-			
+
 			/* =========================================================== */
 			/* private methods                                             */
 			/* =========================================================== */

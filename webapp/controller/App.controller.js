@@ -1,12 +1,12 @@
 sap.ui.define(
 	[
 		"zdigitalticket/controller/BaseController",
-		"zui5controlstmb/utils/Analytics",
+		"sap/base/Log",
 		"sap/ui/model/json/JSONModel",
 		"zui5controlstmb/utils/CommonUtils",
 		"sap/ui/core/routing/History"
 	],
-	function (BaseController, Analytics, JSONModel, CommonUtils, History) {
+	function (BaseController, Log, JSONModel, CommonUtils, History) {
 		"use strict";
 
 		return BaseController.extend("zdigitalticket.controller.App", {
@@ -20,7 +20,6 @@ sap.ui.define(
 			 * @override
 			 */
 			onInit: function() {
-				var sFunctionName = "onInit";
 				var oViewModel;
 				var fnSetAppNotBusy;
 				var oModelLocalBinding;
@@ -29,7 +28,6 @@ sap.ui.define(
 				var sAssignationGroupId;
 
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
 					BaseController.prototype.onInit.call(this);
 					oViewModel = new JSONModel();
 					oViewModel.loadData(
@@ -46,7 +44,6 @@ sap.ui.define(
 						isAdmin: oViewModel.getProperty("/d/GetUserInformation/isAdmin")
 					});
 					this.getView().setModel(oViewModel, "appView");
-					
 					//Disable busy indication when the metadata is loaded and in case of errors
 					this.getOwnerComponent().getModel().attachMetadataFailed(
 						fnSetAppNotBusy = function() {
@@ -73,24 +70,22 @@ sap.ui.define(
 							sAssignationGroupId = "";
 						}
 						this.getView().getModel("appView").setProperty("/isDriver", false);
-					} else {
+					}
+					else {
 						this.getView().getModel("appView").setProperty("/isDriver", true);
 						sEmployeeId = "";
 						sAssignationGroupId = "";
 					}
-					
 					//this.getUserInformationIsAdmin(sEmployeeId);
-					
 					oModelLocalBinding = this.getView().getModel("localBinding");
 					oModelLocalBinding.setProperty("/EmployeeId", sEmployeeId);
 					oModelLocalBinding.setProperty("/AssignationGroupId", sAssignationGroupId);
 					oModelLocalBinding.setProperty("/today", true);
-					
 					this.getOwnerComponent().getRouter().attachRouteMatched(this.onRouteMatched, this);
 					this.getOwnerComponent().getRouter().attachBypassed(this.onRouteMatched, this);
 				}
 				catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+					Log.error(oError.message);
 				}
 			},
 
@@ -104,11 +99,9 @@ sap.ui.define(
 			 * @param {sap.ui.base.Event} oEvent Information about the event
 			 */
 			onPressToolbarButton: function(oEvent) {
-				var sFunctionName = "onPressToolbarButton";
 				var sTarget;
 
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					sTarget = CommonUtils.getPropertyValueCustomData(oEvent.getSource(), "buttonTarget");
 					this.getRouter().navTo(
 						sTarget,
@@ -117,7 +110,7 @@ sap.ui.define(
 					);
 				}
 				catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+					Log.error(oError.message);
 				}
 			},
 			/**
@@ -126,19 +119,17 @@ sap.ui.define(
 			 * @param {sap.ui.base.Event} oEvent Information about the event
 			 */
 			onPressBackButton: function(oEvent) {
-				var sFunctionName = "onPressBackButton";
-
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					if (History && History.getInstance && History.getInstance().getPreviousHash() !== undefined) {
 						window.history.go(-1);
-					}else if( sap.ui.getCore().byId("backBtn") ){
+					}
+					else if (sap.ui.getCore().byId("backBtn")) {
 						var oBackBtn = sap.ui.getCore().byId("backBtn");
 						oBackBtn.firePress(oEvent);
 					}
 				}
 				catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+					Log.error(oError.message);
 				}
 			},
 			/**
@@ -147,12 +138,10 @@ sap.ui.define(
 			 * @param {sap.ui.base.Event} oEvent Information about the event
 			 */
 			onRouteMatched: function(oEvent) {
-				var sFunctionName = "onRouteMatched";
 				var backButtonVisible = true;
 				var sRouteName;
 
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 		            sRouteName = oEvent.getParameters().name;
 					this.getView().byId("footerButtons").getContent().forEach(function(oButton) {
 						if (CommonUtils.getPropertyValueCustomData(oButton, "buttonTarget") !== sRouteName) {
@@ -166,15 +155,14 @@ sap.ui.define(
 					this.getView().getModel("appView").setProperty("/backButtonVisible", backButtonVisible);
 				}
 				catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+					Log.error(oError.message);
 				}
 			},
 			
 			getUserInformationIsAdmin: function(sEmpId){
 				var that = this;
-				var sFunctionName = "getUserInformationIsAdmin";
+
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					// var sEmpId = this.getView().getModel("localBinding").getProperty("/EmployeeId");	
 					that.getView().getModel().callFunction("/GetUserInformation", {
 						method: "GET",
@@ -187,13 +175,14 @@ sap.ui.define(
 						},
 						error: function (oError) {
 							var oViewModel = that.getView().getModel("appView");
-							oViewModel.setProperty("isAdmin", false);						}
+							oViewModel.setProperty("isAdmin", false);
+						}
 					});
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 				}
 			}
-			
 		});
 	}
 );

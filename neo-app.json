@@ -13,10 +13,11 @@
     {
       "path": "/resources/zui5controlstmb",
       "target": {
-        "type": "application",
-        "name": "zui5controlstmb"
+        "type": "destination",
+        "name": "GTD",
+        "entryPath": "/sap/bc/ui5_ui5/sap/zui5controlstmb"
       },
-      "description": ""
+      "description": "Custom shared library"
     },
     {
       "path": "/sap/bc/ui5_ui5/sap/zui5controlstmb",
@@ -24,7 +25,7 @@
         "type": "application",
         "name": "zui5controlstmb"
       },
-      "description": ""
+      "description": "CSS of custom shared library"
     },
     {
       "path": "/resources",
@@ -61,16 +62,6 @@
         "type": "destination",
         "name": "GTD",
         "entryPath": "/sap/opu/odata"
-      },
-      "description": "Gateway Central DES"
-    },
-    {
-      "path": "/sap/bc/zrs_analytics",
-      "target": {
-        "type": "destination",
-        "name": "GTD",
-        "entryPath": "/sap/bc/zrs_analytics",
-        "version": "1.52.28"
       },
       "description": "Gateway Central DES"
     }

@@ -1,13 +1,13 @@
 sap.ui.define(
 	[
 		"zdigitalticket/controller/BaseController",
-		"zui5controlstmb/utils/Analytics",
+		"sap/base/Log",
 		"zui5controlstmb/utils/CommonUtils",
 		"sap/ui/model/Filter",
 		"sap/ui/model/FilterOperator",
 		"sap/m/MessageBox"
 	],
-	function (BaseController, Analytics, CommonUtils, Filter, FilterOperator, MessageBox) {
+	function (BaseController, Log, CommonUtils, Filter, FilterOperator, MessageBox) {
 		"use strict";
 
 		return BaseController.extend("zdigitalticket.controller.Clock", {
@@ -15,13 +15,12 @@ sap.ui.define(
 			/* lifecycle methods                                           */
 			/* =========================================================== */
 			onInit: function() {
-				var sFunctionName = "onInit";
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.LIFECYCLE);
 					BaseController.prototype.onInit.call(this);
 					this.getRouter().getRoute("RouteClock").attachPatternMatched(this.onClockMatched, this);
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 				}
 			},
 			
@@ -58,9 +57,8 @@ sap.ui.define(
 			
 			sendConfirmActivity: function(oEvent){
 				var that = this;
-				var sFunctionName = "sendConfirmActivity";
+
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					this.handleBusy(true);
 					var oModelLocalBinding = this.getView().getModel("localBinding");
 					var sEmpId = oModelLocalBinding.getProperty("/EmployeeId");	
@@ -98,14 +96,14 @@ sap.ui.define(
 							that.handleBusy(false);
 						}
 					});
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 					this.handleBusy(false);
 				}
 			},
 			
 			onClockMatched: function(oEvent){
-				var sFunctionName = "onClockMatched";
 				var oView;
 				var oModelLocalBinding;
 				var that = this; 
@@ -130,7 +128,6 @@ sap.ui.define(
 				};
 
 				try {
-					this._handleAnalyticsSendEvent(sFunctionName, Analytics.FUNCTION_TYPE.EVENT);
 					oView = this.getView();
 					
 					oView.byId("activitiesTable").addStyleClass("containerWithNoData");
@@ -145,7 +142,7 @@ sap.ui.define(
 					this._getActivityTicketData(fCallback, fCallbackError);
 				}
 				catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+					Log.error(oError.message);
 				}
 			},
 
@@ -248,10 +245,10 @@ sap.ui.define(
 			},
 
 			_changeBtnStatus: function(bConfirm) {
-				var sFunctionName = "_changeBtnStatus";
 				var oView = this.getView();
 				var sText, sType;
 				var oConfirmBtn = oView.byId("confirmActivityBtn");
+
 				try {
 					if(bConfirm){
 						sText = oView.getModel("i18n").getResourceBundle().getText("Clock.button.activityConfirmed");
@@ -263,8 +260,9 @@ sap.ui.define(
 					}
 					oConfirmBtn.setText(sText);
 					oConfirmBtn.setType(sType);
-				} catch (oError) {
-					this._handleCatchException(oError, sFunctionName);
+				}
+				catch (oError) {
+					Log.error(oError.message);
 				}
 				return sText;
 			},

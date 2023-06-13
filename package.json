@@ -1,11 +1,10 @@
 {
-  "name": "grunt-build",
+  "name": "zdigitalticket",
   "version": "0.0.1",
   "description": "Grunt build",
   "private": true,
   "devDependencies": {
     "@sap/grunt-sapui5-bestpractice-build": "1.3.65",
-    "@sap/grunt-sapui5-bestpractice-test": "2.0.1",
     "vscode-uri": "1.0.6",
     "grunt-openui5": "0.12.0"
   }
