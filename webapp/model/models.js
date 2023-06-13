@@ -11,7 +11,7 @@ sap.ui.define(
 			createDeviceModel: function () {
 				var oDevice = JSON.parse(JSON.stringify(Device));
 				var oModel;
-debugger;
+
 				oDevice.system.tablet = CommonUtils.isTablet();
 				oDevice.system.phone = CommonUtils.isPhone();
 				oDevice.system.desktop = CommonUtils.isDesktop();
