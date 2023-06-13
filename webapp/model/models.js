@@ -1,21 +1,15 @@
 sap.ui.define(
 	[
 		"sap/ui/model/json/JSONModel",
-		"sap/ui/Device",
-		"zui5controlstmb/utils/CommonUtils"
+		"sap/ui/Device"
 	],
-	function (JSONModel, Device, CommonUtils) {
+	function (JSONModel, Device) {
 		"use strict";
 
 		return {
 			createDeviceModel: function () {
-				var oDevice = JSON.parse(JSON.stringify(Device));
-				var oModel;
+				var oModel = new JSONModel(Device);
 
-				oDevice.system.tablet = CommonUtils.isTablet();
-				oDevice.system.phone = CommonUtils.isPhone();
-				oDevice.system.desktop = CommonUtils.isDesktop();
-				oModel = new JSONModel(oDevice);
 				oModel.setDefaultBindingMode("OneWay");
 				return oModel;
 			}
