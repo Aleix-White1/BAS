@@ -103,8 +103,8 @@ sap.ui.define(
 				try {
 					if (this.getView().getModel("appView").getProperty("/isDriver")) {
 						sUrl = this.getOwnerComponent().getModel().sServiceUrl + "/TicketSet(EmployeeId='',AssignationGroupId='%20',Today=true)/$value";
-						if (window.cordova) {
-							//We are running inside the app
+						if (CommonUtils.isCordova()) {
+							//We are running inside the Cordova app
 							_downloadFile(
 								sUrl,
 								function(sFileName) {
