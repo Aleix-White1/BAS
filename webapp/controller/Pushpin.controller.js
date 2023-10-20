@@ -104,26 +104,11 @@ sap.ui.define(
 					if (this.getView().getModel("appView").getProperty("/isDriver")) {
 						sUrl = this.getOwnerComponent().getModel().sServiceUrl + "/TicketSet(EmployeeId='',AssignationGroupId='%20',Today=true)/$value";
 						if (CommonUtils.isCordova()) {
-							//We are running inside the Cordova app
-							_downloadFile(
-								sUrl,
-								function(sFileName) {
-									var oResourceBundle = this.getView().getModel("i18n").getResourceBundle();
-
-									MessageBox.show(
-										oResourceBundle.getText("info.pdf.descarregat", [sFileName]), {
-											title: oResourceBundle.getText("info.title"),
-											styleClass: this.getOwnerComponent().getContentDensityClass(),
-											actions: [MessageBox.Action.CLOSE]
-										}
-									);
-								},
-								undefined,
-								this
-							);
+							//We are running in the Cordova app
+							_downloadFile(sUrl);
 						}
 						else {
-							//We are running in a browser
+							//We are running in a browser or in WebViewGold app
 							sap.m.URLHelper.redirect(
 								sUrl,
 								true
